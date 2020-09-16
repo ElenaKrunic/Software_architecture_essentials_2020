@@ -2,6 +2,7 @@ package com.projekat.demo.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -22,18 +23,29 @@ import javax.persistence.Column;
 @Table(name="photos")
 public class Photo {
 	
+
 	@Id
-	@GeneratedValue(strategy=IDENTITY)
-	@Column(name="id", unique=true, nullable=false)
-	private Integer id; 
-	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", columnDefinition = "BIGINT", unique = true, nullable = false)
+	private Integer id;
+
 	@Lob
-	@Column(name="path", nullable=true)
+	@Column(name = "path", nullable = false)
 	private byte[] path;
-	
+
 	@ManyToOne
-	@JoinColumn(name="contact", referencedColumnName = "id", nullable=false)
+	@JoinColumn(name = "contact", referencedColumnName = "id", nullable = false)
 	private Contact contact;
+	
+	public Photo() {
+		super();
+	}
+
+	public Photo(byte[] path) {
+		super();
+		
+		this.path = path;
+	}
 
 	public Integer getId() {
 		return id;
@@ -42,6 +54,8 @@ public class Photo {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
+	
 
 	public byte[] getPath() {
 		return path;
@@ -58,15 +72,4 @@ public class Photo {
 	public void setContact(Contact contact) {
 		this.contact = contact;
 	}
-
-	public Photo(Integer id, byte[] path, Contact contact) {
-		super();
-		this.id = id;
-		this.path = path;
-		this.contact = contact;
-	}
-
-	public Photo() {
-		super();
-	} 
 }

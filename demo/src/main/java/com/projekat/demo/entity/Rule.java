@@ -15,26 +15,25 @@ import javax.persistence.Table;
 public class Rule {
 
 	@Id
-	@GeneratedValue(strategy= GenerationType.IDENTITY)
-	@Column(name="id", unique=true, nullable=false)
-	private Integer id; 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", columnDefinition = "BIGINT", unique = true, nullable = false)
+	private Integer id;
 	
 	@Enumerated
-	@Column(name="condition", nullable=false)
+	@Column(columnDefinition = "BIGINT", name = "rule_condition", nullable = false)
 	private RuleCondition condition;
 	
-	@Column(name="value", nullable=false)
-	private String value; 
+	@Column(name = "value", nullable = false)
+	private String value;
 	
 	@Enumerated
-	@Column(name="operation", nullable=false)
-	private RuleOperation operation;
+	@Column(columnDefinition = "BIGINT", name = "rule_operation", nullable = false)
+	private RuleOperation operation; 
 	
-	//veze many to one sa folder 
 	@ManyToOne
-	@JoinColumn(name="folder", referencedColumnName = "id", nullable=true)
+	@JoinColumn(name = "folder", referencedColumnName = "id", nullable = true)
 	private Folder folder;
-
+	
 	public enum RuleCondition {
 		TO,
 		FROM,
@@ -64,7 +63,7 @@ public class Rule {
 		this.condition = condition;
 	}
 
-	public String getValue() {
+	public String getConditionValue() {
 		return value;
 	}
 
@@ -88,18 +87,7 @@ public class Rule {
 		this.folder = folder;
 	}
 
-	public Rule(Integer id, RuleCondition condition, String value, RuleOperation operation, Folder folder) {
-		super();
-		this.id = id;
-		this.condition = condition;
-		this.value = value;
-		this.operation = operation;
-		this.folder = folder;
+	public String getValue() {
+		return value;
 	}
-
-	public Rule() {
-		super();
-	}
-
-	
 }

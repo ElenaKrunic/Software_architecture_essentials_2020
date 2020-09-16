@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.projekat.demo.entity.MMessage;
 
 
-public interface MessageRepository extends JpaRepository<MMessage, Integer> {
+public interface MMessageRepository extends JpaRepository<MMessage, Integer> {
 
 }

@@ -1,5 +1,6 @@
 package com.projekat.demo.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -19,22 +20,18 @@ import javax.persistence.Table;
 public class Tag {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id", unique=true, nullable=false)
-	private Integer id; 
-	
-	@Column(name="name",unique=false, nullable=false)
-	private String name; 
-	
-	//veze tagova : many to many sa mess
-	//many to one sa userom 
-	//
-	
-	@ManyToMany(cascade= {CascadeType.ALL}, fetch = FetchType.LAZY,mappedBy="tags")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", columnDefinition = "BIGINT", unique = true, nullable = false)
+	private Integer id;
+
+	@Column(name = "name", unique = false, nullable = false)
+	private String name;
+
+	@ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "tags")
 	private List<MMessage> messages;
 	
 	@ManyToOne
-	@JoinColumn(name="user", referencedColumnName = "id", nullable=false)
+	@JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
 	private User user;
 
 	public Integer getId() {
@@ -57,7 +54,7 @@ public class Tag {
 		return messages;
 	}
 
-	public void setMessages(List<MMessage> messages) {
+	public void setMessages(ArrayList<MMessage> messages) {
 		this.messages = messages;
 	}
 
@@ -68,24 +65,4 @@ public class Tag {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
-	public Tag(Integer id, String name, List<MMessage> messages, User user) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.messages = messages;
-		this.user = user;
-	}
-
-	public Tag() {
-		super();
-	}
-
-	@Override
-	public String toString() {
-		return "Tag [id=" + id + ", name=" + name + ", messages=" + messages + ", user=" + user + "]";
-	} 
-	
-	
-	
 }
