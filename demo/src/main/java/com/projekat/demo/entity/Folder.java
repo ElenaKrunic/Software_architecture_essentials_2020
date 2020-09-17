@@ -23,7 +23,6 @@ import javax.persistence.Table;
 @Table(name="folders")
 public class Folder {
 
-	// ----- FIELDS
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		@Column(name = "id", unique = true, nullable = false)

@@ -14,13 +14,11 @@ import javax.persistence.Table;
 @Table(name="attachments")
 public class Attachment {
 	
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", columnDefinition = "BIGINT", unique = true, nullable = false)
 	private Integer id;
 
-	//BASE64 IN COLUMN DEFINITION ???
 	@Column(name = "data", columnDefinition = "LONGTEXT", nullable = false)
 	private String data;
 

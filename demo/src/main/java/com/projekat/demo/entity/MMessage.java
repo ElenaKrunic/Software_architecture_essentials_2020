@@ -33,7 +33,6 @@ public class MMessage {
 	@Column(name = "message_to", columnDefinition = "TEXT", unique = false, nullable = true)
 	private String to;
 
-	// CC AND BCC NULLABLE TRUE OR FALSE??
 	@Column(name = "cc", columnDefinition = "TEXT", unique = false, nullable = true)
 	private String cc;
 

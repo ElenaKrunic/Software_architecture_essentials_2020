@@ -1,5 +1,6 @@
 package com.projekat.demo.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.projekat.demo.entity.Contact;
@@ -8,35 +9,50 @@ import com.projekat.demo.entity.Photo;
 public class ContactDTO {
 	//atributi se isto zovu u Contact i u DTO 
 	private Integer id; 
-	private String firstname; 
-	private String lastname; 
-	private String displayname; 	
+	private String firstName; 
+	private String lastName; 
+	private String displayName; 	
 	private String email; 
 	private String note; 
-	private List<Photo> photos;
+	private List<PhotoDTO> photos = new ArrayList<PhotoDTO>();
+	
+	public ContactDTO(Contact contact) {
+		this.id = contact.getId();
+		this.firstName=contact.getFirstName(); 
+		this.lastName = contact.getLastName(); 
+		this.displayName = contact.getDisplayName(); 
+		this.email = contact.getEmail(); 
+		this.note = contact.getNote(); 
+		
+		for(Photo photo : contact.getPhotos()) {
+			//this.photos.add(new PhotoDTO(photo));
+			photos.add(new PhotoDTO(photo));
+		}
+	}
+	
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getFirstname() {
-		return firstname;
+	public String getFirstName() {
+		return firstName;
 	}
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
-	public String getLastname() {
-		return lastname;
+	public String getLastName() {
+		return lastName;
 	}
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
-	public String getDisplayname() {
-		return displayname;
+	public String getDisplayName() {
+		return displayName;
 	}
-	public void setDisplayname(String displayname) {
-		this.displayname = displayname;
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 	public String getEmail() {
 		return email;
@@ -50,17 +66,13 @@ public class ContactDTO {
 	public void setNote(String note) {
 		this.note = note;
 	}
-	public List<Photo> getPhotos() {
+	public List<PhotoDTO> getPhotos() {
 		return photos;
 	}
-	public void setPhotos(List<Photo> photos) {
+	public void setPhotos(List<PhotoDTO> photos) {
 		this.photos = photos;
 	}
-	@Override
-	public String toString() {
-		return "ContactDTO [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", displayname="
-				+ displayname + ", email=" + email + ", note=" + note + ", photos=" + photos + "]";
-	} 
+	
 	
 	
 }

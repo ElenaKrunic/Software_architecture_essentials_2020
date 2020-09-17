@@ -23,7 +23,6 @@ import javax.persistence.Column;
 @Table(name="photos")
 public class Photo {
 	
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", columnDefinition = "BIGINT", unique = true, nullable = false)
