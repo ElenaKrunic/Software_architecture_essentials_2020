@@ -1,7 +1,9 @@
 package javamail;
 
-import java.util.Base64;
 import java.util.Properties;
+
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.stereotype.Component;
 
 import javax.mail.Authenticator;
 import javax.mail.MessagingException;
@@ -19,6 +21,7 @@ import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.Attachment;
 import com.projekat.demo.entity.MMessage;
 
+@Component
 public class SendMail {
 	
 	//public static String myeMail = "lelekrunic@gmail.com";
@@ -74,15 +77,33 @@ public class SendMail {
             	 mimeMess.setRecipients(javax.mail.Message.RecipientType.BCC,
                          InternetAddress.parse(message.getBcc()));
             }
-            
             mimeMess.setSubject(message.getSubject());
             
-            mimeMess.setText(message.getContent());
+            //postavljanje text + attachments 
+            Multipart mp = new MimeMultipart();
+            MimeBodyPart body = new MimeBodyPart();
+            body.setContent(message.getContent(), "text/plain");
+            mp.addBodyPart(body);
             
+            for(Attachment attachment : message.getAttachments()) {
+            	MimeBodyPart attach = new MimeBodyPart();
+            	String dataForAttachment = attachment.getData(); 
+            	String mimeType = attachment.getMimeType();
+          
+            	attach.setContent(Base64.decodeBase64(dataForAttachment), mimeType);
+            	attach.setFileName(attachment.getName());
+            	
+            	mp.addBodyPart(attach);
+            }
+            
+            //za attachment 
+            mimeMess.setContent(mp);
+            //za obicnu 
+            //mimeMess.setText(message.getContent());
             Transport.send(mimeMess);
            
             System.out.println("Sent message successfully....");
-        	
+        	return true; 
         } catch(Exception e) {
         	e.printStackTrace();
         	//throw new RuntimeErrorException(e);

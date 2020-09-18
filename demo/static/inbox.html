@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Inboks</title>
+<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="js/inbox.js"></script>
+</head>
+<body>
+
+<h3> Pretrazi po mejlu: </h3>
+<div id="searchByMail">
+	<input type="text" id="searchInput"></input>
+	<button type="button" id="searchMailButton">Pretrazi</button>
+	<button type="button" id="reloadMailButton">Osvjezi</button>
+	<br>
+	<br>
+</div>
+
+<div id="messages"></div>
+
+<div>
+<h3>Poruke</h3>
+<button id="refreshMailButton">Osvjezi listu</button><br>
+<select id="sort">
+<option value="subject">Subject:</option>
+<option value="from">From:</option>
+<option value="date">Date:</option>
+</select>
+
+<select id="ascDesc">
+<option value="asc">Ascending:</option>
+<option value="desc">Descending:</option>
+</select>
+<button type="button" id="sort"> Odaberi </button>
+</div>
+
+
+
+</body>
+</html>

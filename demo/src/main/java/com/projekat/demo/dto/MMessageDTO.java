@@ -145,4 +145,14 @@ public class MMessageDTO {
 		this.tags = tags;
 	}
 
+	public static String recipientsToString(List<EmailDTO> recipients) {
+		//kontra tokenizeru 
+		StringBuilder builder = new StringBuilder();
+		for(EmailDTO recipient : recipients) {
+			builder.append(recipient.getEmail() + ", "); 
+		}
+		
+		return (builder.length() > 0) ? builder.toString().substring(0, builder.length()-2) : builder.toString();
+	}
+
 }
