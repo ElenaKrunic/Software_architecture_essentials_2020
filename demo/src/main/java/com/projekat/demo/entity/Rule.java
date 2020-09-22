@@ -90,4 +90,5 @@ public class Rule {
 	public String getValue() {
 		return value;
 	}
+	
 }

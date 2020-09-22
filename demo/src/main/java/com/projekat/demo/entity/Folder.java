@@ -39,6 +39,9 @@ public class Folder {
 		@JoinColumn(name = "parent_folder", referencedColumnName = "id", nullable = true)
 		private Folder parentFolder;
 		
+		@OneToMany(cascade = { REMOVE, PERSIST }, fetch = LAZY, mappedBy = "parentFolder")
+		private List<Folder> subFolders;
+		
 		@OneToMany(cascade = { REMOVE, PERSIST }, fetch = LAZY, mappedBy = "folder", orphanRemoval = true)
 	    private List<Rule> rules;
 
@@ -102,10 +105,19 @@ public class Folder {
 				rule.setFolder(this);
 			}
 		}
+		
+		public List<Folder> getSubFolders() {
+			return subFolders;
+		}
+
+		public void setSubFolders(List<Folder> subFolders) {
+			this.subFolders = subFolders;
+		}
 
 		@Override
 		public String toString() {
-			return "Folder [id=" + id + ", name=" + name + ", account=" + account
+			return "Folder [id=" + id + ", name=" + name + ", account=" + account + ", subFolders=" + subFolders
 					 + ", rules=" + rules + "]";
 		}
+		
 }
