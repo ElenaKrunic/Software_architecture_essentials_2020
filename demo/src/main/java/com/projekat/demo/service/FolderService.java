@@ -15,14 +15,20 @@ public class FolderService implements FolderServiceInterface {
 	@Autowired
 	private FolderRepository folderRepository;
 	
-	public Folder findInbox(Account account) {
-		return folderRepository.findInboxByAccount("Inbox", account);
-	}
+	//public Folder findInbox(Account account) {
+		//return folderRepository.findInboxByAccount("Inbox", account);
+	//}
 	
-	@Override
-	public Folder findOne(Integer id, Account account) {
-		return folderRepository.findByIdAndAccount(id, account);
-	}
+	//@Override
+	//public Folder findInbox(String name, Account account) {
+		//// TODO Auto-generated method stub
+		//return folderRepository.findInboxByAccount(name, account);
+//	}
+	
+	//@Override
+	//public Folder findOne(Integer id, Account account) {
+		//return folderRepository.findByIdAndAccount(id, account);
+	//}
 
 	@Override
 	public Folder findDraft(Account account) {
@@ -53,4 +59,9 @@ public class FolderService implements FolderServiceInterface {
 	public List<Folder> findRootFolders(Account account) {
 		return folderRepository.findAllByAccountAndParentFolderIsNull(account);
 	}
+
+
+
+	
+
 }

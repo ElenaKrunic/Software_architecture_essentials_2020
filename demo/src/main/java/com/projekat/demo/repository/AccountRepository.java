@@ -6,6 +6,6 @@ import com.projekat.demo.entity.Account;
 
 public interface AccountRepository extends JpaRepository<Account, Integer> {
 
-	Account findOne(Integer accountId);
+	//Account findOne(Integer accountId);
 
 }

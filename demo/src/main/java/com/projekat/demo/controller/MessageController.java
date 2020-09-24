@@ -23,6 +23,8 @@ import com.projekat.demo.service.UserService;
 @RestController
 @RequestMapping("account/{index}/messages")
 public class MessageController {
+	
+	/*
 
 	@Autowired
 	private Send_Pull_Mails_API mailApi;
@@ -60,5 +62,5 @@ public class MessageController {
 			}
 			return new ResponseEntity<List<MMessageDTO>>(messagesForAnAccount,HttpStatus.OK);
 		}
-	}
+	} */
 }

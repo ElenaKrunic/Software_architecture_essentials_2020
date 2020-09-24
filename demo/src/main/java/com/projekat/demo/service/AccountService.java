@@ -12,9 +12,9 @@ public class AccountService implements AccountServiceInterface {
 	@Autowired
 	AccountRepository accountRepository;
 	
-	@Override
-	public Account findOne(Integer accountId) {
-		return accountRepository.findOne(accountId);
-	}
+	//@Override
+	//public Account findOne(Integer accountId) {
+		//return accountRepository.findOne(accountId);
+	//}
 
 }

@@ -10,7 +10,7 @@ import com.projekat.demo.entity.Folder;
 public interface FolderRepository extends JpaRepository<Folder, Integer> {
 	
 
-	Folder findInboxByAccount(String name, Account account);
+	//public Folder findInboxByAccount(String name, Account account);
 	
 	public List<Folder> findAllByAccountAndParentFolderIsNull(Account account);
 	

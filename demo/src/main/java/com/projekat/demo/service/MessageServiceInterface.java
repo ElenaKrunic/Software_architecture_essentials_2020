@@ -7,5 +7,5 @@ import com.projekat.demo.entity.MMessage;
 
 public interface MessageServiceInterface {
 	
-	List<MMessage> findAllMessagesByAccount(Account account);
+	//List<MMessage> findAllMessagesByAccount(Account account);
 }

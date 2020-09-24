@@ -1,0 +1,43 @@
+
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="js/contacts.js"></script>
+</head>
+<body>
+	<div id="ContactListPanel">
+		<table id="contact" border="1">
+		</table>
+		<div>
+			<button type="button" id="addContactBtn">Dodaj kontakt</button>
+		</div>
+	</div>
+	
+	<div id="ShowContactDetailsPanel">
+		<form role="form">
+			<input id="contactID" type="hidden"/>
+			<div>
+				<label for="contactFirstName"> Ime: </label>
+				<div>
+					<input id="contactFirstName" type="text" placeholder="ime" required>
+				</div>
+			</div>
+			
+			<div>
+				<label for="contactLastName">Prezime:</label>
+				<div>
+					<input id="contactLastName" type="text" placeholder="prezime" required>
+				</div>
+			</div>
+			
+			<div id="dugmici">
+				<button type="button" id="nazadNaKontakte"> Nazad na kontakte </button>
+				<button type="button" id="sacuvajIzmjene"> Sacuvaj izmjene </button>
+				<button type="button" id="obrisiKontakt"> Obrisi kontakt </button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>
+

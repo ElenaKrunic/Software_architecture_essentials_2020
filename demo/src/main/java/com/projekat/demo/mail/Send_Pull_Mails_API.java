@@ -37,7 +37,7 @@ import com.sun.mail.util.BASE64DecoderStream;
 
 @Component
 public class Send_Pull_Mails_API {
-
+/*
 	@Autowired
 	private FolderService folderService; 
 	
@@ -279,4 +279,5 @@ public List<MMessage> loadMessages(Account account) {
 		}
 		return parts;
 	}
+	*/
 }

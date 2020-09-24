@@ -15,6 +15,6 @@ public interface MMessageRepository extends JpaRepository<MMessage, Integer> {
 
 	//List<MMessage> findAllMessagesByAccount(Account account);
 
-	List<MMessage> findAllMessagesByAccount(Account account, Folder folder);
+	//List<MMessage> findAllMessagesByAccount(Account account, Folder folder);
 
 }

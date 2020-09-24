@@ -1,5 +1,29 @@
 package com.projekat.demo.service;
 
-public class ContactService {
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.projekat.demo.entity.Contact;
+import com.projekat.demo.repository.ContactRepository;
+
+@Service
+public class ContactService implements ContactServiceInterface {
+
+	@Autowired
+	private ContactRepository contactRepository;
+
+	@Override
+	public List<Contact> findAll() {
+		return contactRepository.findAll();
+	}
+
+	@Override
+	public Contact saveContact(Contact contact) {
+		return contactRepository.save(contact);
+	}
+	
+	
+	
 }

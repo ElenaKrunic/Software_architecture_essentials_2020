@@ -12,7 +12,7 @@ import com.projekat.demo.repository.MMessageRepository;
 
 @Service
 public class MessageService implements MessageServiceInterface {
-	
+	/*
 	@Autowired
 	MMessageRepository messageRepository;
 	
@@ -26,5 +26,5 @@ public class MessageService implements MessageServiceInterface {
 		
 		return messageRepository.findAllMessagesByAccount(account,folder);
 	}
-
+*/
 }
