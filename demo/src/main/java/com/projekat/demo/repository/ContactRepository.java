@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import com.projekat.demo.entity.Contact;
 
-@Repository
 public interface ContactRepository extends JpaRepository<Contact, Integer> {
 
 }

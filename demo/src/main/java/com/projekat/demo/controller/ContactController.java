@@ -19,7 +19,6 @@ import com.projekat.demo.dto.ContactDTO;
 import com.projekat.demo.entity.Contact;
 import com.projekat.demo.service.ContactServiceInterface;
 
-import javassist.expr.NewArray;
 
 /**
  * Kontroler u kome su napisane metode za : 1- zadobijanje svih kontakta iz baze 
@@ -42,6 +41,7 @@ public class ContactController {
 	public ResponseEntity<List<ContactDTO>> getContacts() {
 		List<Contact> contacts = contactService.findAll(); 
 		
+		//System.out.println("Kontakti su " + contacts);
 		//konvertovanje u beanove dto 
 		List<ContactDTO> dtoContacts = new ArrayList<ContactDTO>(); 
 		
@@ -51,7 +51,6 @@ public class ContactController {
 		return new ResponseEntity<List<ContactDTO>>(dtoContacts, HttpStatus.OK); 
 	}
 	
-	/*
 	//pronalak kontakta po ID 
 	@GetMapping(value="/{id}")
 	public ResponseEntity<ContactDTO> getContact(@PathVariable("id") Integer id) {
@@ -62,7 +61,7 @@ public class ContactController {
 		}
 		
 		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.OK);
-	} */
+	} 
 	
 	//cuvanje kontakta u bazu 
 	@PostMapping(consumes="application/json")
@@ -78,7 +77,7 @@ public class ContactController {
 		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.CREATED);
 	}
  
-	/*
+	
 	//update contact 
 	@PutMapping(value="/{id}", consumes="application/json")
 	public ResponseEntity<ContactDTO> updateContact(@RequestBody ContactDTO contactDTO, @PathVariable("id") Integer id) {
@@ -98,7 +97,7 @@ public class ContactController {
 	
 	}
 	
-	/*
+	
 	@DeleteMapping(value="/{id}")
 	public ResponseEntity<Void> deleteContact(@PathVariable("id") Integer id) {
 		Contact contact = contactService.findOne(id);
@@ -110,6 +109,6 @@ public class ContactController {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND); 
 		}
 	
-	} */
+	} 
 	
 }

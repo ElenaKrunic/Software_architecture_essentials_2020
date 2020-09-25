@@ -8,7 +8,10 @@ public interface ContactServiceInterface {
 
 	List<Contact> findAll(); 
 	
+	Contact findOne(Integer contactId);
 	
 	Contact saveContact(Contact contact); 
+	
+	void removeContact(Integer id);
 
 }
