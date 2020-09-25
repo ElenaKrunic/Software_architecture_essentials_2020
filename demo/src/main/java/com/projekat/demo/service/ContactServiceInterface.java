@@ -10,7 +10,7 @@ public interface ContactServiceInterface {
 	
 	Contact findOne(Integer contactId);
 	
-	Contact saveContact(Contact contact); 
+	Contact save(Contact contact); 
 	
 	void removeContact(Integer id);
 

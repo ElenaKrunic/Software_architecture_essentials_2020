@@ -1,22 +1,19 @@
-/*
 // ucitava listu kontakata 
 var ContactManager = {
 	//vraca url 
 		basePath: function() { return 'http://localhost:8080/api'; }, 
 		
-		showContactsList: function() {
+	showContactsList: function() {
 			$.ajax({
 				url : this.basePath() + '/contacts', 
 				cache : false, 
 				dataType : 'json', 
-				headers: {
-		                'Access-Control-Allow-Origin':  'http://localhost:3333/api' },
 				success: function(list) {	
 					console.log(list);
 					$('#contact').empty();
 					$('#contact').append('<tr><th>Ime</th><th>Prezime</th><th>Odaberi</th></tr>');
 					$.each(list,function(index,contact){
-						$('#contact tr:last').after('<tr><td>' + contact.firstname + '</td><td>' + contact.lastname + '</td><td><a href=\'javascript:ContactManager.showContactDetails("' + contact.id + '")\'>O kontaktu</a></td></tr>');
+						$('#contact tr:last').after('<tr><td>' + contact.firstName + '</td><td>' + contact.lastName + '</td><td><a href=\'javascript:ContactManager.showContactDetails("' + contact.id + '")\'>O kontaktu</a></td></tr>');
 					});
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
@@ -37,9 +34,12 @@ var ContactManager = {
 			success: function(contact) {
 				$('#ShowContactDetailsPanel').show();
 				$('#contactID').val(contact.id);
-				$('#contactFirstName').val(contact.firstname);
-				$('#contactLastName').val(contact.lastname);
+				$('#contactFirstName').val(contact.firstName);
+				$('#contactLastName').val(contact.lastName);
 				$('#contactFirstName').focus();
+				$("#contactDisplayName").val(contact.displayName); 
+				$("#contactEmail").val(contact.email);
+				$("#contactNote").val(contact.note);
 			},
 			error: function (jqXHR, textStatus, errorThrown) {  
 				alert('greska kod show contact details');
@@ -54,6 +54,9 @@ var ContactManager = {
 		$("#contactID").attr('value',null); 
 		$("#contactFirstName").attr('value', 'Dodaj kontakt').focus().select();
 		$("#contactLastName").attr('value',null);
+		$("#contactDisplayName").attr('value', null); 
+		$("#contactEmail").attr('value',null);
+		$("#contactNote").attr('value',null);
 	},
 	
 	povratak: function() {
@@ -70,8 +73,11 @@ var ContactManager = {
 	pokupiPodatke: function() {
 		return JSON.stringify({
 			"id" : $("#contactID").val(),
-			"firstname": $("#contactFirstName").val() , 
-			"lastname" :$("#contactLastName").val()
+			"firstName": $("#contactFirstName").val() , 
+			"lastName" :$("#contactLastName").val(),
+			"displayName" : $("#contactDisplayName").val(), 
+			"email" : $("#contactEmail").val(),
+			"note" : $("#contactNote").val()
 		});
 	}, 
 	
@@ -92,13 +98,13 @@ var ContactManager = {
 			url: this.createContactUrl(requestType), 
 			dataType : 'json', 
 			type: requestType, 
-			contentType: "application/json", 
+			contentType: "application/json",
 			data : this.pokupiPodatke(), 
 			success: function(result) {
 				ContactManager.refreshContactList(); 
 			}, 
 			error: function(error) {
-				alert(error);
+				alert('Greska pri kreiranju novog kontakta');
 			}
 		});
 	}, 
@@ -146,4 +152,3 @@ $(document).ready(function(){
 	});
 	
 }); 
-*/

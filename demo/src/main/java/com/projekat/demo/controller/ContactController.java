@@ -19,7 +19,6 @@ import com.projekat.demo.dto.ContactDTO;
 import com.projekat.demo.entity.Contact;
 import com.projekat.demo.service.ContactServiceInterface;
 
-
 /**
  * Kontroler u kome su napisane metode za : 1- zadobijanje svih kontakta iz baze 
  * 2- za pronalazenje pojedinacnog kontakta iz baze na osnovu njegovog ID-a 
@@ -70,9 +69,13 @@ public class ContactController {
 		Contact contact = new Contact();
 		contact.setFirstName(contactDTO.getFirstName());
 		contact.setLastName(contactDTO.getLastName());
+		contact.setDisplayName(contactDTO.getDisplayName());
+		contact.setEmail(contactDTO.getEmail());
+		contact.setNote(contactDTO.getNote());
+		
 		//za pocetak samo first name i last name 
 		
-		contact = contactService.saveContact(contact); 
+		contact = contactService.save(contact); 
 		
 		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.CREATED);
 	}
@@ -90,8 +93,12 @@ public class ContactController {
 		
 		contact.setFirstName(contactDTO.getFirstName());
 		contact.setLastName(contactDTO.getLastName());
+		contact.setDisplayName(contactDTO.getDisplayName());
+		contact.setEmail(contactDTO.getEmail());
+		contact.setNote(contactDTO.getNote());
+		//dodati za fotografije 
 		
-		contact = contactService.saveContact(contact);
+		contact = contactService.save(contact);
 		
 		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.OK);
 	

@@ -16,13 +16,10 @@ public class ContactService implements ContactServiceInterface {
 
 	@Override
 	public List<Contact> findAll() {
-		//return contactRepository.findAll();
-		//return contactRepository.findAll();
 		return contactRepository.findAll();
 	}
 
-	@Override
-	public Contact saveContact(Contact contact) {
+	public Contact save(Contact contact) {
 		return contactRepository.save(contact);
 	}
 

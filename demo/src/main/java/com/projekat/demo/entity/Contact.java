@@ -38,17 +38,17 @@ public class Contact implements Serializable {
 	@Column(name = "last_name", columnDefinition = "VARCHAR(100)", nullable = false)
 	private String lastName;
 
-	@Column(name = "display_name", columnDefinition = "VARCHAR(100)", nullable = false)
+	@Column(name = "display_name", columnDefinition = "VARCHAR(100)", nullable = true)
 	private String displayName;
 
-	@Column(name = "email", columnDefinition = "VARCHAR(100)", nullable = false)
+	@Column(name = "email", columnDefinition = "VARCHAR(100)", nullable = true)
 	private String email;
 
-	@Column(name = "note", columnDefinition = "TEXT", nullable = false)
+	@Column(name = "note", columnDefinition = "TEXT", nullable = true)
 	private String note;
 
 	@ManyToOne
-	@JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "user", referencedColumnName = "id", nullable = true)
 	private User user;
 
 	@OneToMany(cascade = { ALL }, fetch = LAZY, mappedBy = "contact")

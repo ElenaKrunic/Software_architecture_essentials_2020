@@ -16,6 +16,7 @@ public class ContactDTO {
 	private String note; 
 	private List<PhotoDTO> photos = new ArrayList<PhotoDTO>();
 	
+	
 	public ContactDTO(Contact contact) {
 		this.id = contact.getId();
 		this.firstName=contact.getFirstName(); 
@@ -24,11 +25,42 @@ public class ContactDTO {
 		this.email = contact.getEmail(); 
 		this.note = contact.getNote(); 
 		
-		for(Photo photo : contact.getPhotos()) {
+		//for(Photo photo : contact.getPhotos()) {
 			//this.photos.add(new PhotoDTO(photo));
-			photos.add(new PhotoDTO(photo));
-		}
+			//photos.add(new PhotoDTO(photo));
+		//}
+	} 
+	
+	public ContactDTO(Integer id, String firstname, String lastname, String displayname, String email, String note,
+			byte[] image) {
+		super();
+		this.id = id;
+		this.firstName = firstname;
+		this.lastName = lastname;
+		this.displayName = displayname;
+		this.email = email;
+		this.note = note;
+	} 
+	
+	public ContactDTO() {
+		
 	}
+	
+	
+	/*
+	public ContactDTO(Integer id, String firstname, String lastname, String displayname, String email, String note,
+			List<Photo> photos) {
+		super();
+		this.id = id;
+		this.firstName = firstname;
+		this.lastName = lastname;
+		this.displayName = displayname;
+		this.email = email;
+		this.note = note;
+		this.photos = photos;
+	} */
+	
+	
 	
 	public Integer getId() {
 		return id;
