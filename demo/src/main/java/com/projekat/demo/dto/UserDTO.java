@@ -10,6 +10,10 @@ public class UserDTO {
 	private String firstName; 
 	private String lastName;
 	
+	public UserDTO() {
+		
+	}
+	
 	public UserDTO(User user) {
 		this.id = user.getId(); 
 		this.username = user.getUsername(); 

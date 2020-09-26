@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projekat.demo.dto.ContactDTO;
 import com.projekat.demo.dto.UserDTO;
 import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.Contact;
@@ -60,4 +64,18 @@ public class UserController {
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.CREATED);
 
 	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<?> ulogujKorisnika(@RequestBody UserDTO userDTO) {
+		
+	User existsUser = userService.findByUsernameAndPassword(userDTO.getUsername(), userDTO.getPassword());
+	
+	if(existsUser != null) {
+		return new ResponseEntity<UserDTO>(HttpStatus.OK);
+	} else {
+		System.out.println("Ne postoji korisnik sa datim imenom i sifrom!"); 
+	}
+	return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
+}
+	
 }
