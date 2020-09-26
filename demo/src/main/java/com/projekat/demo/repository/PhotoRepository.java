@@ -12,4 +12,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Integer> {
 	public List<Photo> findAll();
 
 	public List<Photo> findByContact(Contact contact);
+	
+	public List<Photo> findAllByContact(Contact contact);
 }
