@@ -32,6 +32,8 @@ public class MMessageDTO {
 		this.id = message.getId(); 
 		this.from = new EmailDTO(message.getFrom());
 		
+		StringTokenizer separator;
+		
 		if(message.getTo() != null) {
 			separator = new StringTokenizer(message.getTo(), ",");
 			while(separator.hasMoreElements()) {
@@ -146,7 +148,7 @@ public class MMessageDTO {
 	}
 
 	public static String recipientsToString(List<EmailDTO> recipients) {
-		//kontra tokenizeru 
+		//kontra separatoru 
 		StringBuilder builder = new StringBuilder();
 		for(EmailDTO recipient : recipients) {
 			builder.append(recipient.getEmail() + ", "); 
