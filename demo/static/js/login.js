@@ -30,9 +30,12 @@ function login() {
 			type: "POST", 
 			contentType: "application/json", 
 			data: JSON.stringify(data),
-			success:function() {
+			success:function(ajdi) {
 				alert("Uspjesan login"); 
 				location.assign("chooseAccount.html");
+				//ovde da dodijelim neki parametar u localStorage 
+				localStorage.setItem("ajdi", ajdi);
+				//localStorage['ajdi'] = ajdi;
 			}, 
 			error: function() {
 				alert("Ne postoji korisnik sa datim kredencijalima!"); 
