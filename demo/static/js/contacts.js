@@ -151,4 +151,7 @@ $(document).ready(function(){
 		ContactManager.dodajKontakt();
 	});
 	
+	$("#accounts").show(); 
+	$("#poruke").show();
+	
 }); 

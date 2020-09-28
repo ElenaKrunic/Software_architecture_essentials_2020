@@ -15,28 +15,18 @@ function login() {
 	
 	prijaviSeDugme.click(function(){
 		
-		alert('klik na dugme');
-		
 		var data = {
 				"username" : username.val(), 
 				"password" : password.val()
 		}
-		
-		console.log(username); 
-		
-		
+				
 		$.ajax({
 			url : link + '/login', 
 			type: "POST", 
 			contentType: "application/json", 
 			data: JSON.stringify(data),
-			success:function(ajdi) {
-				alert("Uspjesan login"); 
-				//ovde da dodijelim neki parametar u localStorage 
-				//localStorage.setItem("ajdi", ajdi);
-				//localStorage['ajdi'] = ajdi;
+			success:function() {
 				location.assign("chooseAccount.html");
-				localStorage.setItem("ajdi", ajdi.token);
 			}, 
 			error: function() {
 				alert("Ne postoji korisnik sa datim kredencijalima!"); 

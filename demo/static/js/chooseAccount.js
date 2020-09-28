@@ -2,6 +2,7 @@ var AccountManager = {
 	basePath: function() {return 'http://localhost:7070/api';},
 	
 	showAccountsList: function() {
+
 		$.ajax({
 			url : this.basePath() + '/accounts', 
 			cache : false, 
@@ -131,6 +132,8 @@ var AccountManager = {
 $(document).ready(function(){
 	AccountManager.showAccountsList();
 	AccountManager.showAccountDetails();
+	$('#kontakti').show();
+	$('#poruke').show();
 	$("#AccountsListPanel").show();
 	$("#ShowAccountsDetailsPanel").hide();
 	
@@ -153,37 +156,5 @@ $(document).ready(function(){
 		e.preventDefault(); 
 		AccountManager.dodajNalog();
 	});
-	//AccountManager.showAccounts();
-	//$("#ShowAccountsPanel").show();
+	
 });
-
-/*
-var link = "http://localhost:7070/account";
-var brojac = 0; 
-
-$(document).ready(function(){
-	
-	var odaberiNalogDiv = $("#odaberiNalogDiv"); 
-	
-	odaberiNalogDiv.on("click", ".account", function(){
-		alert("klik na div"); 
-		
-		//whe wh in
-		localStorage.setItem("account", $(this).data("index")); 
-		
-		window.location.assign("inbox.html");
-	});
-	
-	$.ajax({
-		url : link, 
-		type: "GET", 
-		headers: localStorage.getItem("ajdi"),
-		success: function(accounts) {
-			for(account of accounts) {
-				odaberiNalogDiv.append("<button class='account' data-index='" + brojac + "'>" + account.displayName + "</button>");
-				brojac++;
-			}
-		}
-	});
-	
-}); */

@@ -3,6 +3,9 @@ var account = localStorage.getItem("account");
 
 $document.ready(function(){
 	
+	$("#kontakti").show(); 
+	$("#accounts").show();
+	
 	//sve poruke
 	var messages = $("#messages"); 
 	//osvjezi kad ucitavas 
