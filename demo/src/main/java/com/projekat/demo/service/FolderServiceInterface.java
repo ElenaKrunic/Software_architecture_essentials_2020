@@ -7,7 +7,7 @@ import com.projekat.demo.entity.Folder;
 
 public interface FolderServiceInterface {
 	
-	//public Folder findInbox(String name, Account account);
+	public Folder findInbox(Account account);
 	
 	//public Folder findOne(Integer id, Account account);
 	
@@ -20,4 +20,6 @@ public interface FolderServiceInterface {
 	public Folder save(Folder folder);
 	
 	public void remove(Integer id);
+
+
 }

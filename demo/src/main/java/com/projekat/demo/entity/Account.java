@@ -1,5 +1,6 @@
 package com.projekat.demo.entity;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -53,6 +54,9 @@ public class Account {
 	@ManyToOne
 	@JoinColumn(name = "user", referencedColumnName = "id", nullable = true)
 	private User user;
+	
+	@Column(name = "last_sync_time", columnDefinition = "TIMESTAMP", nullable = true)
+	private Timestamp lastSyncTime;
 
 	public Integer getId() {
 		return id;
@@ -146,5 +150,15 @@ public class Account {
 	public String toString() {
 		return "Account [username=" + username + ", password=" + password + ", displayName=" + displayName + "]";
 	}
+
+	public Timestamp getLastSyncTime() {
+		return lastSyncTime;
+	}
+
+	public void setLastSyncTime(Timestamp lastSyncTime) {
+		this.lastSyncTime = lastSyncTime;
+	}
+
+	
 }
 

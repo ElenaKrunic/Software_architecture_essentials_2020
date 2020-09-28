@@ -60,6 +60,13 @@ public class FolderService implements FolderServiceInterface {
 		return folderRepository.findAllByAccountAndParentFolderIsNull(account);
 	}
 
+	@Override
+	public Folder findInbox(Account account) {
+		return folderRepository.findByNameAndAccount("Inbox", account);
+	}
+
+
+
 
 
 	

@@ -62,6 +62,11 @@ public class ContactDTO {
 	
 	
 	
+	public ContactDTO(String email) {
+		super();
+		this.email= email;
+	}
+
 	public Integer getId() {
 		return id;
 	}

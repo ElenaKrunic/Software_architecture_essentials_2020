@@ -147,6 +147,8 @@ public class MMessageDTO {
 		this.tags = tags;
 	}
 
+	
+	
 	public static String recipientsToString(List<EmailDTO> recipients) {
 		//kontra separatoru 
 		StringBuilder builder = new StringBuilder();
