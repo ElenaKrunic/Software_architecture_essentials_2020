@@ -1,4 +1,4 @@
-var link = "http://localhost:8080/users";
+var link = "http://localhost:7070/users";
 var prijaviSeDugme; 
 var username; 
 var password;
@@ -32,10 +32,11 @@ function login() {
 			data: JSON.stringify(data),
 			success:function(ajdi) {
 				alert("Uspjesan login"); 
-				location.assign("chooseAccount.html");
 				//ovde da dodijelim neki parametar u localStorage 
-				localStorage.setItem("ajdi", ajdi);
+				//localStorage.setItem("ajdi", ajdi);
 				//localStorage['ajdi'] = ajdi;
+				location.assign("chooseAccount.html");
+				localStorage.setItem("ajdi", ajdi.token);
 			}, 
 			error: function() {
 				alert("Ne postoji korisnik sa datim kredencijalima!"); 

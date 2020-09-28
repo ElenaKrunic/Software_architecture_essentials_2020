@@ -1,7 +1,8 @@
 package com.projekat.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.projekat.demo.entity.Account;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountDTO {
 
 	private Integer id; 

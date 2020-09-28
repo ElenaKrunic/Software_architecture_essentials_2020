@@ -3,11 +3,74 @@
 		<title>Odabir naloga</title>
 		<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
 		<script type="text/javascript" src="js/chooseAccount.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/account.css">
 	</head>
 	<body>
-	<div id="odaberiNalogDiv">
-		<h1>Biranje naloga</h1>
-		<p>Izaberite nalog iz liste</p>
+	<div id="AccountsListPanel">
+		<table id="account" border="1">
+			
+		</table>
 	</div>
-	</body>
+	<div>
+		<button type="button" id="addAccountBtn"> Dodaj nalog </button>
+	</div>
+	<div id="ShowAccountsDetailsPanel">
+		<form>
+		<input id="accountID" type="hidden"/>
+		<div>
+			<label for="accountSmtpAddress"> Smtp address </label>
+			<div>
+				<input id="accountSmtpAddress" type="text"></input>
+			</div>
+		</div>
+		<div>
+			<label for="accountSmtpPort"> Smtp port </label>
+			<div>
+				<input id="accountSmtpPort" type="text"></input>
+			</div>
+		</div>
+		<div>
+			<label for="inServerType"> Server Type </label>
+			<div>
+			<input id="inServerType" type="text"></input>
+			</div>
+		</div>
+		<div>
+			<label for="inServerAddress"> Server address </label>
+			<div>
+			<input id="inServerAddress" type="text"></input>
+			</div>
+		</div>
+		<div>
+			<label for="inServerPort"> Server port </label>
+			<div>
+			<input id="inServerPort" type="text"></input>
+			</div>
+		</div>
+		<div>
+			<label for="accountUsername"> Username </label>
+			<div>
+			<input id="accountUsername" type="text"></input>
+			</div>
+		</div>
+		<div>
+			<label for="accountPassword"> Password </label>
+			<div>
+			<input id="accountPassword" type="text"></input>
+			</div>
+		</div>
+		<div>
+			<label for="accountDisplayName"> Display name</label>
+			<div>
+			<input id="accountDisplayName" type="text"></input>
+			</div>
+		</div>
+		<div id="dugmici">
+				<button type="button" id="nazadNaAccounte"> Nazad na naloge </button>
+				<button type="button" id="sacuvajIzmjeneNaloga"> Sacuvaj izmjene </button>
+				<button type="button" id="obrisiNalog"> Obrisi nalog </button>
+			</div>
+	</form>
+</div>
+</body>
 </html>

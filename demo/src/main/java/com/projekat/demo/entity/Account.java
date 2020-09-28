@@ -23,19 +23,19 @@ public class Account {
 	@Column(name = "id", columnDefinition = "BIGINT", unique = true, nullable = false)
 	private Integer id;
 
-	@Column(name = "smtp_address", columnDefinition = "VARCHAR(250)", nullable = false)
+	@Column(name = "smtp_address", columnDefinition = "VARCHAR(250)", nullable = true)
 	private String smtpAddress;
 
-	@Column(name = "smtp_port", columnDefinition = "INT", nullable = false)
+	@Column(name = "smtp_port", columnDefinition = "INT", nullable = true)
 	private int smtpPort;
 
-	@Column(name = "in_server_type", columnDefinition = "TINYINT", nullable = false)
+	@Column(name = "in_server_type", columnDefinition = "TINYINT", nullable = true)
 	private int inServerType;
 
-	@Column(name = "in_server_address", columnDefinition = "VARCHAR(250)", nullable = false)
+	@Column(name = "in_server_address", columnDefinition = "VARCHAR(250)", nullable = true)
 	private String inServerAddress;
 
-	@Column(name = "in_server_port", columnDefinition = "INT", nullable = false)
+	@Column(name = "in_server_port", columnDefinition = "INT", nullable = true)
 	private int inServerPort;
 
 	@Column(name = "username", columnDefinition = "VARCHAR(50)", unique = true, nullable = true)
@@ -44,14 +44,14 @@ public class Account {
 	@Column(name = "password", columnDefinition = "VARCHAR(50)", nullable = true)
 	private String password;
 
-	@Column(name = "display_name", columnDefinition = "VARCHAR(100)", nullable = false)
+	@Column(name = "display_name", columnDefinition = "VARCHAR(100)", nullable = true)
 	private String displayName;
 
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "account")
 	private List<Folder> folders;
 
 	@ManyToOne
-	@JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "user", referencedColumnName = "id", nullable = true)
 	private User user;
 
 	public Integer getId() {
