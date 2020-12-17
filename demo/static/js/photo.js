@@ -1,4 +1,4 @@
-var photoURL = "http://localhost:7070/api/contacts";
+var photoURL = "http://localhost:8081/api/contacts";
 var upload_photo; 
 var dodajFotografijuBtn;
 $(document).ready(function(){

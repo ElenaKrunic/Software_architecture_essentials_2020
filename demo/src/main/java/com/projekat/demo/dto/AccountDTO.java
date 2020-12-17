@@ -20,6 +20,7 @@ public class AccountDTO {
 		this.smtpAddress = account.getSmtpAddress(); 
 		this.smtpPort=account.getSmtpPort(); 
 		this.inServerType=account.getInServerType(); 
+		this.inServerAddress = account.getInServerAddress();
 		this.inServerPort=account.getInServerPort();
 		this.username=account.getUsername();
 		this.password=account.getPassword();

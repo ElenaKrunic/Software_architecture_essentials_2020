@@ -1,5 +1,5 @@
 var AccountManager = {
-	basePath: function() {return 'http://localhost:7070/api';},
+	basePath: function() {return 'http://localhost:8081/api';},
 	
 	showAccountsList: function() {
 

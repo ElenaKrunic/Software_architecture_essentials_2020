@@ -1,7 +1,7 @@
 INSERT INTO users (first_name, last_name, username, password) VALUES ('elena', 'krunic', 'lele', 'sifra');
 
 INSERT INTO accounts (smtp_address, smtp_port, in_server_type, in_server_address, in_server_port, username, password, display_name, user) VALUES ('smtp.gmail.com', 465, 1, 'imap.gmail.com', 993, 'lelekrunic', 'rarasosa3!', 'Elena', 1);
-INSERT INTO accounts (smtp_address, smtp_port, in_server_type, in_server_address, in_server_port, username, password, display_name, user) VALUES ('smtp.gmail.com', 465, 1, 'imap.gmail.com', 993, 'nanana', 'ninini!', 'Elena', 1);
+INSERT INTO accounts (smtp_address, smtp_port, in_server_type, in_server_address, in_server_port, username, password, display_name, user) VALUES ('smtp.gmail.com', 465, 1, 'imap.gmail.com', 993, 'nanana', 'ninini!', 'Lele', 1);
 
 
 INSERT INTO folders (name, parent_folder, account) VALUES ('Inbox', null, 1);
@@ -13,9 +13,9 @@ INSERT INTO folders (name, parent_folder, account) VALUES ('Spam', 1, 1);
 INSERT INTO rules (rule_condition, rule_operation, value, folder) VALUES (1, 0, 'lelekrunic@gmail.com', 4);
 
 INSERT INTO contacts (display_name, email, first_name, last_name, note, user) VALUES ('Elena', 'lelekrunic1@gmail.com', 'Elena', 'Krunic', 'note', 1);
-insert into contacts (display_name,email,first_name,last_name,note,user) values ('Dule','dulekovac@gmail.com','Dusan','Kovacevic','njemacki penzioner',1); 
-insert into contacts (display_name,email,first_name,last_name,note,user) values ('Lele','elenapicto@gmail.com','Elena','Krunic','note',1); 
-insert into contacts (display_name,email,first_name,last_name,note,user) values ('Dule','dulekovac@gmail.com','Dusan','Kovacevic','njemacki penzioner',1); 
+insert into contacts (display_name,email,first_name,last_name,note,user) values ('Dule','dulekovac@gmail.com','Dusan','Kovacevic','duletova biljeskica',1); 
+insert into contacts (display_name,email,first_name,last_name,note,user) values ('Mitar','mitarmitar@gmail.com','Mitar','Petrovic','mitrovaBiljeskica',1); 
+insert into contacts (display_name,email,first_name,last_name,note,user) values ('Simona','simonamosi@gmail.com','Simona','Jelic','simoninabiljeskica',1); 
 
 INSERT INTO photos (path, contact) VALUES ('image3.jpg', 1);
 
