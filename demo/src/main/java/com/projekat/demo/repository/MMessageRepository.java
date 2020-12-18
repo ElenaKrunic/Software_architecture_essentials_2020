@@ -15,6 +15,8 @@ import com.projekat.demo.entity.MMessage;
 
 
 public interface MMessageRepository extends JpaRepository<MMessage, Integer> {
+	
+	public List<MMessage> findAll();
 
 	public MMessage findByIdAndAccount(Integer id, Account account);
 	
@@ -28,5 +30,7 @@ public interface MMessageRepository extends JpaRepository<MMessage, Integer> {
 	public Date findLastDate(@Param("accountId") int accountId);
 	
 	public List<MMessage> findByFromContaining(String userEmail);
+	
+
 
 }

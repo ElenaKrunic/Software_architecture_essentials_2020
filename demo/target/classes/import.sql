@@ -1,7 +1,8 @@
 INSERT INTO users (first_name, last_name, username, password) VALUES ('elena', 'krunic', 'lele', 'sifra');
+INSERT INTO users (first_name, last_name, username, password) VALUES ('melema', 'pantic', 'mele', 'sifra');
 
 INSERT INTO accounts (smtp_address, smtp_port, in_server_type, in_server_address, in_server_port, username, password, display_name, user) VALUES ('smtp.gmail.com', 465, 1, 'imap.gmail.com', 993, 'lelekrunic', 'rarasosa3!', 'Elena', 1);
-INSERT INTO accounts (smtp_address, smtp_port, in_server_type, in_server_address, in_server_port, username, password, display_name, user) VALUES ('smtp.gmail.com', 465, 1, 'imap.gmail.com', 993, 'nanana', 'ninini!', 'Lele', 1);
+INSERT INTO accounts (smtp_address, smtp_port, in_server_type, in_server_address, in_server_port, username, password, display_name, user) VALUES ('smtp.gmail.com', 465, 1, 'imap.gmail.com', 993, 'nanana', 'ninini!', 'Lele', 2);
 
 
 INSERT INTO folders (name, parent_folder, account) VALUES ('Inbox', null, 1);
@@ -21,7 +22,8 @@ INSERT INTO photos (path, contact) VALUES ('image3.jpg', 1);
 
 INSERT INTO tags (name, user) VALUES ('tag1', 1);
 
-INSERT INTO messages (message_from, message_to, bcc, cc, subject, content, account, unread, folder) VALUES ('lelekrunic@gmail.com', 'elenakrunic@gmail.com', 'bcc', '', 'Poruka 1', 'Sadrzaj poruke', 1, true, 1);
+INSERT INTO messages (message_from, message_to, bcc, cc, subject, content, account, unread, folder) VALUES ('lelekrunic1@gmail.com', 'elenakrunic@gmail.com', 'bcc', '', 'Poruka 1', 'Sadrzaj poruke', 1, true, 1);
+INSERT INTO messages (message_from, message_to, bcc, cc, subject, content, account, unread, folder) VALUES ('lelekrunic1@gmail.com', 'elenakrunic@gmail.com', 'bcc', '', 'Poruka 2', 'Sadrzaj druge poruke', 1, true, 2);
 
 INSERT INTO attachments (data, mime_type, name, message) VALUES ('data', 'application/pdf', 'simple1', 1);
 

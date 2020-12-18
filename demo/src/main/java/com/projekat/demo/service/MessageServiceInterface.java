@@ -11,7 +11,9 @@ public interface MessageServiceInterface {
 	
 	public MMessage findOne(Integer id, Account acconut);
 
-	public List<MMessage> findAll(Account account);
+	//public List<MMessage> findAll(Account account);
+	//pronaci sve poruke,nezavisno od naloga 
+	public List<MMessage> findAll();
 	
 	public List<MMessage> getMessages(Account account);
 	
@@ -24,5 +26,7 @@ public interface MessageServiceInterface {
 	public List<MMessage> findByFrom(String userEmail);
 
 	public List<MMessage> findAllUnread(Account account);
+	
+
 	
 }

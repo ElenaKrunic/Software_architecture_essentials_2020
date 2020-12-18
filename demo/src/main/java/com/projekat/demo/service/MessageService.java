@@ -25,11 +25,13 @@ public class MessageService implements MessageServiceInterface {
 		return messageRepository.findByIdAndAccount(id, acconut);
 	}
 
+	/*
 	@Override
 	public List<MMessage> findAll(Account account) {
 		return messageRepository.findAllByAccount(account);
-	}
-
+	}*/
+	
+	
 	@Override
 	public List<MMessage> getMessages(Account account) {
 		Folder folder = folderService.findInbox(account);
@@ -61,4 +63,9 @@ public class MessageService implements MessageServiceInterface {
 		return messageRepository.findAllByUnreadIsTrue();
 	}
 
+	@Override
+	public List<MMessage> findAll() {
+		return messageRepository.findAll();
+	}
+	
 }

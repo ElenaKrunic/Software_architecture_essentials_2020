@@ -15,6 +15,10 @@ public class FolderService implements FolderServiceInterface {
 	@Autowired
 	private FolderRepository folderRepository;
 	
+	public Folder findOne(Integer id) {
+		return folderRepository.getOne(id);
+	}
+	
 	//public Folder findInbox(Account account) {
 		//return folderRepository.findInboxByAccount("Inbox", account);
 	//}
@@ -40,10 +44,11 @@ public class FolderService implements FolderServiceInterface {
 		return folderRepository.findByNameAndAccount("Outbox", account);
 	}
 
+	/*
 	@Override
 	public List<Folder> findAll(Account account) {
 		return folderRepository.findAllByAccount(account);
-	}
+	}*/
 
 	@Override
 	public Folder save(Folder folder) {
@@ -63,6 +68,11 @@ public class FolderService implements FolderServiceInterface {
 	@Override
 	public Folder findInbox(Account account) {
 		return folderRepository.findByNameAndAccount("Inbox", account);
+	}
+
+	@Override
+	public List<Folder> findAll() {
+		return	folderRepository.findAll();
 	}
 
 

@@ -1,7 +1,10 @@
 package com.projekat.demo.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.mail.Message;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,49 +21,33 @@ import com.projekat.demo.mail.Send_Pull_Mails_API;
 import com.projekat.demo.service.AccountService;
 import com.projekat.demo.service.FolderService;
 import com.projekat.demo.service.MessageService;
+import com.projekat.demo.service.MessageServiceInterface;
 import com.projekat.demo.service.UserService;
 
+/**
+ * Problem: ne ucitava mi se account kao json objekat u porukama 
+ * @author lenovo
+ *
+ */
 @RestController
-@RequestMapping("account/{index}/messages")
+@RequestMapping("api/messages")
 public class MessageController {
 	
-	/*
-
 	@Autowired
-	private Send_Pull_Mails_API mailApi;
-	
-	@Autowired
-	private MessageService messageService; 
-	
-	@Autowired
-	private UserService userService; 
-	
-	@Autowired
-	private FolderService folderService; 
-	
-	@Autowired
-	private AccountService accountService; 
-	
+	private MessageServiceInterface messageService; 
 	
 	@GetMapping
-	public ResponseEntity<List<MMessageDTO>> getAllMessages(@PathVariable("id") Integer accountId) {
+	public ResponseEntity<List<MMessageDTO>> getMessages() {
 		
-		//pronalazim nalog po id-u
-		Account account = accountService.findOne(accountId);
+		List<MMessage> messages = messageService.findAll(); 
 		
-		if(account == null) {
-			return new ResponseEntity<List<MMessageDTO>>(HttpStatus.BAD_REQUEST);
-		} else {
-			//na osnovu naloga pronalazim listu poruka za taj nalog 
-			List<MMessage> messageEntities = messageService.findAllMessagesByAccount(account);
-			
-			List<MMessageDTO> messagesForAnAccount = new ArrayList<MMessageDTO>(); 
-			
-			for(MMessage message: messageEntities) {
-				MMessageDTO dto = new MMessageDTO(message);
-				messagesForAnAccount.add(dto);
-			}
-			return new ResponseEntity<List<MMessageDTO>>(messagesForAnAccount,HttpStatus.OK);
+		List<MMessageDTO> dtoMessages = new ArrayList<MMessageDTO>();
+		
+		for(MMessage message : messages) {
+			dtoMessages.add(new MMessageDTO(message));
 		}
-	} */
+		
+		return new ResponseEntity<List<MMessageDTO>>(dtoMessages, HttpStatus.OK);
+	}
+
 }

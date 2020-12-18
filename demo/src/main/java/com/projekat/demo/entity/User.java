@@ -37,8 +37,11 @@ public class User {
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Contact> contacts;
 
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "user")
-	private List<Account> accounts;
+	//@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "user")
+	//private List<Account> accounts;
+	
+	@OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy="user")
+	private List<Account> accounts; 
 
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Tag> tags;

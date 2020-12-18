@@ -52,7 +52,7 @@ public class Account {
 	private List<Folder> folders;
 
 	@ManyToOne
-	@JoinColumn(name = "user", referencedColumnName = "id", nullable = true)
+	@JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
 	private User user;
 	
 	@Column(name = "last_sync_time", columnDefinition = "TIMESTAMP", nullable = true)

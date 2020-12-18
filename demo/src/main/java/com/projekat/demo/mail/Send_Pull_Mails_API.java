@@ -65,9 +65,6 @@ public class Send_Pull_Mails_API {
         String username = account.getUsername();
         String password = account.getPassword();
         
-//        username = "sf512015r@gmail.com";
-//        password = "admin2015";
-
         // Parametri za mail server
         Properties properties = new Properties();
         properties.put("mail.smtp.socketFactory.port", account.getSmtpPort());
@@ -80,7 +77,7 @@ public class Send_Pull_Mails_API {
  
         Session session = Session.getInstance(properties, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("mrakita1993@gmail.com", "Malizekakasni93");
+                return new PasswordAuthentication("lelekrunic1@gmail.com", "pereCvetka!8");
             }
         });
  
@@ -137,9 +134,6 @@ public class Send_Pull_Mails_API {
 	
 		Store store = null;
 		javax.mail.Folder APIinbox = null;
-		
-		
-		
 		
         try {
             Properties properties = new Properties();
@@ -245,7 +239,7 @@ public class Send_Pull_Mails_API {
 		                Attachment attachment = new Attachment();
 		                attachment.setName(bodyPart.getFileName());
 		                attachment.setData(Base64.encodeBase64String(bytes));
-		                // TODO: Srediti ovaj MimeType.
+		                
 		                attachment.setMimeType("image/*");
 		                attachment.setMessage(message);
 		                

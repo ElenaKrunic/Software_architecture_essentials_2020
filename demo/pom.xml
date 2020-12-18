@@ -66,8 +66,13 @@
         <dependency>
    			<groupId>org.springframework.boot</groupId>
   			 <artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>		
-	</dependencies>
+		</dependency>	
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        </dependencies>	
 
 	<build>
 		<plugins>

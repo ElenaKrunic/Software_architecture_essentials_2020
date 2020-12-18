@@ -1,5 +1,9 @@
 package com.projekat.demo.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.User;
 
 public class UserDTO {
@@ -9,7 +13,8 @@ public class UserDTO {
 	private String password; 
 	private String firstName; 
 	private String lastName;
-	
+	private List<AccountDTO> accounts = new ArrayList<AccountDTO>();
+		
 	public UserDTO() {
 		
 	}
@@ -20,8 +25,20 @@ public class UserDTO {
 		this.password = user.getPassword(); 
 		this.firstName = user.getFirstName(); 
 		this.lastName = user.getLastName();
+		
+		for(Account account : user.getAccounts()) {
+			accounts.add(new AccountDTO(account));
+		}
 	}
 	
+	public List<AccountDTO> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(List<AccountDTO> accounts) {
+		this.accounts = accounts;
+	}
+
 	public Integer getId() {
 		return id;
 	}

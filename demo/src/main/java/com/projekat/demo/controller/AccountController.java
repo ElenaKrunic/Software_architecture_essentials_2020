@@ -47,7 +47,7 @@ public class AccountController {
 	public ResponseEntity<AccountDTO> getAccount(@PathVariable("id") Integer id) {
 		
 		Account account = accountService.findOne(id); 
-		
+	
 		if(account == null) {
 			return new ResponseEntity<AccountDTO>(HttpStatus.NOT_FOUND);
 		}

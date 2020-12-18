@@ -7,15 +7,18 @@ import com.projekat.demo.entity.Folder;
 
 public interface FolderServiceInterface {
 	
+	//folder po id 
+	public Folder findOne(Integer id); 
+	
 	public Folder findInbox(Account account);
-	
-	//public Folder findOne(Integer id, Account account);
-	
+		
 	public Folder findDraft(Account account);
 	
 	public Folder findOutbox(Account account);
 	
-	public List<Folder> findAll(Account account);
+	//public List<Folder> findAll(Account account);
+	//pronaci sve foldere 
+	public List<Folder> findAll();
 	
 	public Folder save(Folder folder);
 	

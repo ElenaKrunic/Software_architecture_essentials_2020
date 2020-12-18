@@ -1,7 +1,11 @@
 package com.projekat.demo.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.projekat.demo.entity.Account;
+import com.projekat.demo.entity.User;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountDTO {
 
@@ -14,6 +18,8 @@ public class AccountDTO {
 	private String username; 
 	private String password; 
 	private String displayName;
+	private UserDTO user; 
+	
 	
 	public AccountDTO(Account account) {
 		this.id = account.getId();
@@ -25,8 +31,28 @@ public class AccountDTO {
 		this.username=account.getUsername();
 		this.password=account.getPassword();
 		this.displayName=account.getDisplayName();
+		this.user = new UserDTO(); 
+		this.user.setId(account.getUser().getId());
+		this.user.setUsername(account.getUser().getUsername());
+		this.user.setPassword(account.getUser().getPassword());
+		this.user.setFirstName(account.getUser().getFirstName());
+		this.user.setLastName(account.getUser().getLastName());
 	}
 	
+	
+
+	public UserDTO getUser() {
+		return user;
+	}
+
+
+
+	public void setUser(UserDTO user) {
+		this.user = user;
+	}
+
+
+
 	public AccountDTO() {
 		super();
 	}

@@ -1,5 +1,7 @@
 package com.projekat.demo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,4 +25,15 @@ public class UserService implements UserServiceInterface {
 	public User findByUsernameAndPassword(String username, String password) {
 		return userRepository.findByUsernameAndPassword(username,password);
 	}
+
+	@Override
+	public List<User> findAll() {
+		return userRepository.findAll();
+	}
+
+	public User findOne(Integer id) {
+		return userRepository.getOne(id);
+	}
+	
+	
 }

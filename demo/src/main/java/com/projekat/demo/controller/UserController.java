@@ -1,6 +1,7 @@
 package com.projekat.demo.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,15 +21,42 @@ import com.projekat.demo.entity.Contact;
 import com.projekat.demo.entity.Tag;
 import com.projekat.demo.entity.User;
 import com.projekat.demo.service.UserService;
+import com.projekat.demo.service.UserServiceInterface;
 
 import javassist.expr.NewArray;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("api/users")
 public class UserController {
 
+	//get all users 
+	//get users 
+	
 	@Autowired
 	private UserService userService; 
+	
+	@GetMapping
+	public ResponseEntity<List<UserDTO>> getUsers() {
+		List<User> users = userService.findAll(); 
+		
+		List<UserDTO> dtoUsers = new ArrayList<UserDTO>();
+		
+		for(User user : users) {
+			dtoUsers.add(new UserDTO(user)); 
+		}
+		return new ResponseEntity<List<UserDTO>>(dtoUsers, HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/{id}")
+	public ResponseEntity<UserDTO> getUser(@PathVariable("id") Integer id) {
+		User user = userService.findOne(id); 
+		
+		if(user == null) {
+			return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND); 
+		}
+		
+		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK); 
+	}
 	
 	@PostMapping("/registration")
 	public ResponseEntity<?> sacuvajUbazu(@RequestBody UserDTO userDTO) {
