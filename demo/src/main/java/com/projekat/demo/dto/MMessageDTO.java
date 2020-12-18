@@ -24,6 +24,8 @@ public class MMessageDTO {
 	private Boolean unread; 
 	
 	private FolderDTO folder; 
+	private AccountDTO account; 
+	private UserDTO user;
 	private List<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
 	private List<TagDTO> tags = new ArrayList<TagDTO>();
 	
@@ -64,6 +66,17 @@ public class MMessageDTO {
 		this.folder.setId(message.getFolder().getId()); 
 		this.folder.setName(message.getFolder().getName());
 		
+		this.account = new AccountDTO(); 
+		this.account.setId(message.getAccount().getId());
+		this.account.setDisplayName(message.getAccount().getDisplayName());
+		this.account.setSmtpAddress(message.getAccount().getSmtpAddress());
+		this.account.setSmtpPort(message.getAccount().getSmtpPort());
+		this.account.setInServerType(message.getAccount().getInServerType());
+		this.account.setInServerAddress(message.getAccount().getInServerAddress()); 
+		this.account.setInServerPort(message.getAccount().getInServerPort());
+		this.account.setUsername(message.getAccount().getUsername());
+		this.account.setPassword(message.getAccount().getPassword());
+				
 		for(Attachment attachment : message.getAttachments()) {
 			attachments.add(new AttachmentDTO(attachment));
 		}
@@ -74,6 +87,16 @@ public class MMessageDTO {
 	}
 	
 	
+	public AccountDTO getAccount() {
+		return account;
+	}
+
+
+	public void setAccount(AccountDTO account) {
+		this.account = account;
+	}
+
+
 	public Integer getId() {
 		return id;
 	}

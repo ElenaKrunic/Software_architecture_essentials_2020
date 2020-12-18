@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projekat.demo.dto.AccountDTO;
+import com.projekat.demo.dto.MMessageDTO;
 import com.projekat.demo.entity.Account;
+import com.projekat.demo.entity.MMessage;
 import com.projekat.demo.service.AccountService;
 import com.projekat.demo.service.AccountServiceInterface;
+import com.projekat.demo.service.MessageService;
 
 @RestController
 @RequestMapping(value="api/accounts")
@@ -29,6 +32,30 @@ public class AccountController {
 
 	@Autowired
 	private AccountService accountService; 
+	
+	@Autowired
+	private MessageService messageService; 
+	
+	
+	@GetMapping(value="/{id}/messages")
+	public ResponseEntity<List<MMessageDTO>> getMessageByAccount(@PathVariable("id") Integer id) {
+		Account account = accountService.findOne(id);
+		
+		if(account == null ) {
+			return new ResponseEntity<List<MMessageDTO>>(HttpStatus.BAD_REQUEST);
+		} else {
+			List<MMessage> messageEntites = messageService.findAllByAccount(account);
+			List<MMessageDTO> dtoMessages = new ArrayList<MMessageDTO>();
+			
+			for(MMessage message : messageEntites) {
+				MMessageDTO dto = new MMessageDTO(message); 
+				dtoMessages.add(dto);
+			}
+			
+			return new ResponseEntity<List<MMessageDTO>>(dtoMessages, HttpStatus.OK);
+		}
+	}
+	
 	
 	@GetMapping
 	public ResponseEntity<List<AccountDTO>> getAccounts() {
@@ -41,20 +68,7 @@ public class AccountController {
 		}
 		return new ResponseEntity<List<AccountDTO>>(dtoAccounts, HttpStatus.OK);  
 	}
-	
-	
-	@GetMapping(value="/{id}")
-	public ResponseEntity<AccountDTO> getAccount(@PathVariable("id") Integer id) {
 		
-		Account account = accountService.findOne(id); 
-	
-		if(account == null) {
-			return new ResponseEntity<AccountDTO>(HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<AccountDTO>(new AccountDTO(account), HttpStatus.OK); 
-	}
-	
-	
 	@PostMapping(consumes="application/json")
 	public ResponseEntity<?> saveAccount(@RequestBody AccountDTO accountDTO) {
 		

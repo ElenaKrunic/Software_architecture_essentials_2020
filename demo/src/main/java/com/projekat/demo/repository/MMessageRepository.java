@@ -31,6 +31,9 @@ public interface MMessageRepository extends JpaRepository<MMessage, Integer> {
 	
 	public List<MMessage> findByFromContaining(String userEmail);
 	
+	//radjeno 18.12 
+	List<MMessage> findByAccount(Account account);
+	
 
 
 }

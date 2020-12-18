@@ -67,5 +67,11 @@ public class MessageService implements MessageServiceInterface {
 	public List<MMessage> findAll() {
 		return messageRepository.findAll();
 	}
+
+	@Override
+	public List<MMessage> findAllByAccount(Account account) {
+		
+		return messageRepository.findAllByAccount(account);
+	}
 	
 }

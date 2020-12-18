@@ -38,21 +38,15 @@ public class AccountDTO {
 		this.user.setFirstName(account.getUser().getFirstName());
 		this.user.setLastName(account.getUser().getLastName());
 	}
-	
-	
 
 	public UserDTO getUser() {
 		return user;
 	}
 
-
-
 	public void setUser(UserDTO user) {
 		this.user = user;
 	}
-
-
-
+	
 	public AccountDTO() {
 		super();
 	}

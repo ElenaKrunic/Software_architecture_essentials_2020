@@ -27,6 +27,8 @@ public interface MessageServiceInterface {
 
 	public List<MMessage> findAllUnread(Account account);
 	
+	List<MMessage> findAllByAccount(Account account);
+	
 
 	
 }
