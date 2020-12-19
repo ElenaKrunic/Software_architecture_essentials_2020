@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.projekat.demo.entity.Account;
+import com.projekat.demo.entity.Folder;
+import com.projekat.demo.entity.MMessage;
 import com.projekat.demo.entity.User;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountDTO {
@@ -19,7 +21,8 @@ public class AccountDTO {
 	private String password; 
 	private String displayName;
 	private UserDTO user; 
-	
+	private List<FolderDTO> folders = new ArrayList<FolderDTO>();
+	private List<MMessageDTO> messages = new ArrayList<MMessageDTO>();
 	
 	public AccountDTO(Account account) {
 		this.id = account.getId();
@@ -37,6 +40,14 @@ public class AccountDTO {
 		this.user.setPassword(account.getUser().getPassword());
 		this.user.setFirstName(account.getUser().getFirstName());
 		this.user.setLastName(account.getUser().getLastName());
+		
+		for(Folder folder : account.getFolders()) {
+			folders.add(new FolderDTO(folder));
+		}
+		
+		for(MMessage message : account.getMessages()) {
+			messages.add(new MMessageDTO(message));
+		}
 	}
 
 	public UserDTO getUser() {

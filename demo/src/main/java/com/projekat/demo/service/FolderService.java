@@ -70,10 +70,18 @@ public class FolderService implements FolderServiceInterface {
 		return folderRepository.findByNameAndAccount("Inbox", account);
 	}
 
+	public List<Folder> findAllByAccount(Account account) {
+		return folderRepository.findAllByAccount(account);
+	}
+
 	@Override
 	public List<Folder> findAll() {
-		return	folderRepository.findAll();
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+
+
 
 
 

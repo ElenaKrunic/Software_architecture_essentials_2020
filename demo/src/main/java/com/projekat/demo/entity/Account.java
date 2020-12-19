@@ -48,8 +48,19 @@ public class Account {
 	@Column(name = "display_name", columnDefinition = "VARCHAR(100)", nullable = true)
 	private String displayName;
 
+	public List<MMessage> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<MMessage> messages) {
+		this.messages = messages;
+	}
+
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "account")
 	private List<Folder> folders;
+	
+	@OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, mappedBy = "account")
+	private List<MMessage> messages; 
 
 	@ManyToOne
 	@JoinColumn(name = "user", referencedColumnName = "id", nullable = false)

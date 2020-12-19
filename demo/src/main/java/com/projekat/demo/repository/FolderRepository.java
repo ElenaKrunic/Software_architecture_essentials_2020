@@ -19,5 +19,6 @@ public interface FolderRepository extends JpaRepository<Folder, Integer> {
 	public List<Folder> findAllByAccount(Account account);
 	
 	public Folder findByIdAndAccount(Integer id, Account account);
+	
 
 }

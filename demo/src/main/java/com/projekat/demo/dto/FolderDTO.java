@@ -15,7 +15,7 @@ public class FolderDTO {
 	private List<FolderDTO> subFolders = new ArrayList<FolderDTO>();
     private List<RuleDTO> rules = new ArrayList<RuleDTO>();
     private List<MMessageDTO> messages = new ArrayList<MMessageDTO>();
-	
+	private AccountDTO account; 
 
 	public FolderDTO(Folder folder) {
 		super();
@@ -39,6 +39,17 @@ public class FolderDTO {
     		subFolderDTO.setSubFolders(new ArrayList<FolderDTO>());
     		subFolders.add(subFolderDTO);
     	}
+    	
+    	this.account = new AccountDTO(); 
+    	this.account.setId(folder.getAccount().getId());
+    	this.account.setDisplayName(folder.getAccount().getDisplayName());
+		this.account.setSmtpAddress(folder.getAccount().getSmtpAddress());
+		this.account.setSmtpPort(folder.getAccount().getSmtpPort());
+		this.account.setInServerType(folder.getAccount().getInServerType());
+		this.account.setInServerAddress(folder.getAccount().getInServerAddress()); 
+		this.account.setInServerPort(folder.getAccount().getInServerPort());
+		this.account.setUsername(folder.getAccount().getUsername());
+		this.account.setPassword(folder.getAccount().getPassword());
     	
     	for (Rule rule : folder.getRules()) {
     		rules.add(new RuleDTO(rule));

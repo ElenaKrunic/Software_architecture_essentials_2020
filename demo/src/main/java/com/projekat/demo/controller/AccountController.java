@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projekat.demo.dto.AccountDTO;
+import com.projekat.demo.dto.FolderDTO;
 import com.projekat.demo.dto.MMessageDTO;
 import com.projekat.demo.entity.Account;
+import com.projekat.demo.entity.Folder;
 import com.projekat.demo.entity.MMessage;
 import com.projekat.demo.service.AccountService;
 import com.projekat.demo.service.AccountServiceInterface;
+import com.projekat.demo.service.FolderService;
 import com.projekat.demo.service.MessageService;
 
 @RestController
@@ -35,6 +38,9 @@ public class AccountController {
 	
 	@Autowired
 	private MessageService messageService; 
+	
+	@Autowired
+	private FolderService folderService; 
 	
 	
 	@GetMapping(value="/{id}/messages")
@@ -56,6 +62,24 @@ public class AccountController {
 		}
 	}
 	
+	@GetMapping(value="/{id}/folders")
+	public ResponseEntity<List<FolderDTO>> getFoldersByAccount(@PathVariable("id") Integer id) {
+		Account account = accountService.findOne(id); 
+		
+		if(account == null) {
+			return new ResponseEntity<List<FolderDTO>>(HttpStatus.BAD_REQUEST);
+		} else {
+			List<Folder> folderEntites = folderService.findAllByAccount(account);
+			List<FolderDTO> dtoFolders = new ArrayList<FolderDTO>();
+			
+			for(Folder folder : folderEntites) {
+				FolderDTO dto = new FolderDTO(folder); 
+				dtoFolders.add(dto);
+			}
+			
+			return new ResponseEntity<List<FolderDTO>>(dtoFolders, HttpStatus.OK);
+		}
+	}
 	
 	@GetMapping
 	public ResponseEntity<List<AccountDTO>> getAccounts() {
