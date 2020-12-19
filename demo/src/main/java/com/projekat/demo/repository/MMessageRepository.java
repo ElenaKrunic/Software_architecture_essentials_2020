@@ -17,6 +17,8 @@ import com.projekat.demo.entity.MMessage;
 public interface MMessageRepository extends JpaRepository<MMessage, Integer> {
 	
 	public List<MMessage> findAll();
+	
+	public MMessage findOne(Integer id);
 
 	public MMessage findByIdAndAccount(Integer id, Account account);
 	

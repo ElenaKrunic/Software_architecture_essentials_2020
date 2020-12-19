@@ -17,6 +17,14 @@ public class FolderDTO {
     private List<MMessageDTO> messages = new ArrayList<MMessageDTO>();
 	private AccountDTO account; 
 
+	public AccountDTO getAccount() {
+		return account;
+	}
+
+	public void setAccount(AccountDTO account) {
+		this.account = account;
+	}
+
 	public FolderDTO(Folder folder) {
 		super();
 		this.id = folder.getId();

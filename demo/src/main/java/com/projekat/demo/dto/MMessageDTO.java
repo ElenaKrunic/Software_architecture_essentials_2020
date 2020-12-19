@@ -25,9 +25,12 @@ public class MMessageDTO {
 	
 	private FolderDTO folder; 
 	private AccountDTO account; 
-	private UserDTO user;
 	private List<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
 	private List<TagDTO> tags = new ArrayList<TagDTO>();
+	
+	public MMessageDTO() {
+		
+	}
 	
 	//za pravljenje dto 
 	public MMessageDTO(MMessage message) {

@@ -7,13 +7,17 @@ public class AttachmentDTO {
 	private Integer id; 
 	private String data; 
 	private String mimeType; 
-	private String name;
+	private String name; 
+	
+	private MMessageDTO message;
 	
 	public AttachmentDTO(Attachment attachment) {
 		this.id=attachment.getId();
 		this.data=attachment.getData();
 		this.mimeType=attachment.getMimeType();
 		this.name=attachment.getName();
+		
+		this.message = new MMessageDTO();		
 	}
 	
 	public Integer getId() {

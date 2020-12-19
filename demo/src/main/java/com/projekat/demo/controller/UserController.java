@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -96,14 +98,57 @@ public class UserController {
 	@PostMapping("/login")
 	public ResponseEntity<?> ulogujKorisnika(@RequestBody UserDTO userDTO) {
 		
-	User existsUser = userService.findByUsernameAndPassword(userDTO.getUsername(), userDTO.getPassword());
+		User existsUser = userService.findByUsernameAndPassword(userDTO.getUsername(), userDTO.getPassword());
 	
-	if(existsUser != null) {
-		return new ResponseEntity<UserDTO>(HttpStatus.OK);
-	} else {
-		System.out.println("Ne postoji korisnik sa datim imenom i sifrom!"); 
+		if(existsUser != null) {
+			return new ResponseEntity<UserDTO>(HttpStatus.OK);
+		} else {
+			System.out.println("Ne postoji korisnik sa datim imenom i sifrom!"); 
+		}
+		return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
 	}
-	return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
-}
 	
+	@PostMapping(consumes="application/json")
+	public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDTO) {
+		User user = new User(); 
+		user.setFirstName(userDTO.getFirstName());
+		user.setLastName(userDTO.getLastName());
+		user.setPassword(userDTO.getPassword());
+		user.setUsername(userDTO.getUsername());
+		
+		userService.save(user); 
+		
+		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.CREATED); 
+	}
+	
+	@PutMapping(value="/{id}", consumes="application/json")
+	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO, @PathVariable("id") Integer id) {
+		User user = userService.findOne(id); 
+		
+		if(user == null) {
+			return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+		}
+		
+		user.setFirstName(userDTO.getFirstName());
+		user.setLastName(userDTO.getLastName());
+		user.setPassword(userDTO.getPassword());
+		user.setUsername(userDTO.getUsername());
+		
+		userService.save(user); 
+		
+		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK); 
+		
+	}
+	
+	@DeleteMapping(value="/{id}")
+	public ResponseEntity<Void> deleteUser(@PathVariable("id") Integer id) {
+		User user = userService.findOne(id); 
+		
+		if(user==null) {
+			userService.remove(id); 
+			return new ResponseEntity<Void>(HttpStatus.OK); 
+		}
+		
+		return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+	}
 }

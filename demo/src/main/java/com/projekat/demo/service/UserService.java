@@ -34,6 +34,10 @@ public class UserService implements UserServiceInterface {
 	public User findOne(Integer id) {
 		return userRepository.getOne(id);
 	}
+
+	public void remove(Integer id) {
+		 userRepository.deleteById(id);
+	}
 	
 	
 }
