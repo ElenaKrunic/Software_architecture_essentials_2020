@@ -20,6 +20,7 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -42,10 +43,15 @@ import com.projekat.demo.service.FolderService;
 import com.sun.mail.util.BASE64DecoderStream;
 import com.sun.mail.util.MailSSLSocketFactory;
 
+import java.util.Properties;
 
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Session;
+import javax.mail.Store;
 
 @Component
-public class Send_Pull_Mails_API {
+public class MailAPI {
 	private final String TMP_PATH = Objects.requireNonNull(getClass()
             .getClassLoader()
             .getResource(""))
@@ -54,6 +60,44 @@ public class Send_Pull_Mails_API {
 	
 	@Autowired
 	private FolderService folderService;
+	
+	/**
+	 * 
+	 * @param account povezuje nalog i korisnika 
+	 * @return
+	 */
+	public boolean connectAccountToUser(Account account) {
+		
+		String protocol = ""; 
+		
+		if(account.getInServerType() == 0) {
+			protocol = "imap"; 
+		} else if(account.getInServerType() == 1) {
+			protocol = "pop3"; 
+		}
+		
+	try {
+	        Properties properties = new Properties();
+	    	properties.put("mail.store.protocol", protocol);
+	        properties.put("mail.imap.host", account.getInServerAddress());
+	        properties.put("mail.imap.port", account.getInServerPort());
+	        properties.put("mail.imap.starttls.enable", "true");
+	    	Session session = Session.getDefaultInstance(properties);
+	    	Store store = session.getStore(protocol + "s");
+
+	        store.connect(account.getInServerAddress(), account.getUsername(), account.getPassword());
+	        return true;
+        
+		} catch (NoSuchProviderException ex) {
+			System.out.println("No provider for protocol: " + protocol);
+			ex.printStackTrace();
+			return false;
+		} catch (MessagingException ex) {
+			System.out.println("Could not connect to the message store");
+			ex.printStackTrace();
+			return false;
+		}
+	}
 	
 	public boolean sendMessage(MMessage message) {
         String EMAIL_TO = message.getTo();

@@ -1,8 +1,11 @@
 package com.projekat.demo.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.swing.text.html.parser.Entity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +25,8 @@ import com.projekat.demo.dto.MMessageDTO;
 import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.Folder;
 import com.projekat.demo.entity.MMessage;
+import com.projekat.demo.entity.User;
+import com.projekat.demo.mail.MailAPI;
 import com.projekat.demo.service.AccountService;
 import com.projekat.demo.service.AccountServiceInterface;
 import com.projekat.demo.service.FolderService;
@@ -171,11 +176,13 @@ public class AccountController {
 	 * @param accountDTO
 	 * @return
 	 */
-	@PostMapping(consumes="application/json")
-	public ResponseEntity<?> saveAccount(@RequestBody AccountDTO accountDTO) {
+	@PostMapping("/saveAccount/{username}")
+	public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO accountDTO, @PathVariable("username") String username) {
 		
+		//--------------------------- VALIDACIJA ----------------------------------------------
+		/*
 		if (accountDTO.getSmtpAddress().isEmpty())
-			return new ResponseEntity<String>("Smtp Address can't be empty!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<AccountDTO>("Smtp Address can't be empty!", HttpStatus.BAD_REQUEST);
 		else if (accountDTO.getSmtpPort() == 0)
 			return new ResponseEntity<String>("Smtp Port can't be empty!", HttpStatus.BAD_REQUEST);
 		else if (accountDTO.getInServerType() == 0)
@@ -189,21 +196,70 @@ public class AccountController {
 		else if (accountDTO.getPassword().isEmpty())
 			return new ResponseEntity<String>("Password can't be empty!", HttpStatus.BAD_REQUEST);
 		else if (accountDTO.getDisplayName().isEmpty())
-			return new ResponseEntity<String>("Display Name can't be empty!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Display Name can't be empty!", HttpStatus.BAD_REQUEST); */
 		
+		User user = this.userService.findByUsername(username); 
+		Account userAccount = this.accountService.findByAccountIdAndUsername(user.getId(), username);
+		
+		if(user == null || userAccount != null) {
+			return new ResponseEntity<AccountDTO>(HttpStatus.BAD_REQUEST); 
+		}
+	
 		Account account = new Account(); 
+		account.setUsername(accountDTO.getUsername());
+		account.setPassword(accountDTO.getPassword());
+		account.setDisplayName(accountDTO.getDisplayName());
 		account.setSmtpAddress(accountDTO.getSmtpAddress());
 		account.setSmtpPort(accountDTO.getSmtpPort()); 
 		account.setInServerType(accountDTO.getInServerType());
 		account.setInServerAddress(accountDTO.getInServerAddress());
 		account.setInServerPort(accountDTO.getInServerPort());
-		account.setUsername(accountDTO.getUsername());
-		account.setPassword(accountDTO.getPassword());
-		account.setDisplayName(accountDTO.getDisplayName());
+		account.setUser(user);
 		
-		account = accountService.save(account);
+		List<Folder> defaultFolders = new ArrayList<Folder>(); 
 		
-		return new ResponseEntity<AccountDTO>(new AccountDTO(account), HttpStatus.CREATED);
+		Folder inbox = new Folder(); 
+		inbox.setName("Inbox");
+		inbox.setAccount(account);
+		inbox.setParentFolder(null);
+		inbox.setSubFolders(null);
+		
+		Folder outbox = new Folder(); 
+		outbox.setName("Outbox");
+		outbox.setAccount(account);
+		outbox.setParentFolder(null);
+		outbox.setSubFolders(null);
+		
+		Folder drafts = new Folder(); 
+		drafts.setName("Drafts");
+		drafts.setAccount(account);
+		drafts.setParentFolder(null);
+		drafts.setSubFolders(null);
+		
+		Folder primary = new Folder(); 
+		primary.setName("Primary");
+		primary.setAccount(account);
+		primary.setParentFolder(null);
+		primary.setSubFolders(null);
+				
+		defaultFolders.add(primary);
+		defaultFolders.add(outbox);
+		defaultFolders.add(drafts);
+		defaultFolders.add(inbox); 
+
+		account.setFolders(defaultFolders);
+		
+		MailAPI mailApi = new MailAPI();
+		
+		boolean connectAccountToUser = mailApi.connectAccountToUser(account);
+		
+		if(connectAccountToUser) {
+			Account connectedAccount = this.accountService.save(account);
+			return new ResponseEntity<AccountDTO>(new AccountDTO(connectedAccount), HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<AccountDTO>(HttpStatus.BAD_REQUEST);
+		}
+				
 	}
 	
 	/**

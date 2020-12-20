@@ -6,6 +6,7 @@ INSERT INTO accounts (smtp_address, smtp_port, in_server_type, in_server_address
 INSERT INTO accounts (smtp_address, smtp_port, in_server_type, in_server_address, in_server_port, username, password, display_name, user) VALUES ('smtp.gmail.com', 465, 1, 'imap.gmail.com', 993, 'korisnicko3', 'hesovana3', 'TreciDisplayName', 1);
 
 
+
 INSERT INTO folders (name, parent_folder, account) VALUES ('Inbox', null, 1);
 INSERT INTO folders (name, parent_folder, account) VALUES ('Outbox', null, 1);
 INSERT INTO folders (name, parent_folder, account) VALUES ('Drafts', null, 1);

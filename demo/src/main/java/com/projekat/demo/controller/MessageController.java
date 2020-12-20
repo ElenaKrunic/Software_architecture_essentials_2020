@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.projekat.demo.dto.MMessageDTO;
 import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.MMessage;
-import com.projekat.demo.mail.Send_Pull_Mails_API;
+import com.projekat.demo.mail.MailAPI;
 import com.projekat.demo.service.AccountService;
 import com.projekat.demo.service.FolderService;
 import com.projekat.demo.service.MessageService;

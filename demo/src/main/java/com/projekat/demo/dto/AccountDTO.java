@@ -44,13 +44,14 @@ public class AccountDTO {
 		this.user.setFirstName(account.getUser().getFirstName());
 		this.user.setLastName(account.getUser().getLastName());
 		
+		/*
 		for(Folder folder : account.getFolders()) {
 			folders.add(new FolderDTO(folder));
 		}
 		
 		for(MMessage message : account.getMessages()) {
 			messages.add(new MMessageDTO(message));
-		}
+		} */
 	}
 
 	public UserDTO getUser() {
