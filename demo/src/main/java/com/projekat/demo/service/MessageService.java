@@ -19,18 +19,6 @@ public class MessageService implements MessageServiceInterface {
 	
 	@Autowired
 	private FolderService folderService;
-
-	@Override
-	public MMessage findOne(Integer id, Account acconut) {
-		return messageRepository.findByIdAndAccount(id, acconut);
-	}
-
-	/*
-	@Override
-	public List<MMessage> findAll(Account account) {
-		return messageRepository.findAllByAccount(account);
-	}*/
-	
 	
 	@Override
 	public List<MMessage> getMessages(Account account) {
@@ -70,8 +58,13 @@ public class MessageService implements MessageServiceInterface {
 
 	@Override
 	public List<MMessage> findAllByAccount(Account account) {
-		
 		return messageRepository.findAllByAccount(account);
 	}
+
+	@Override
+	public MMessage findOne(Integer id) {
+		return messageRepository.getOne(id);
+	}
+
 	
 }

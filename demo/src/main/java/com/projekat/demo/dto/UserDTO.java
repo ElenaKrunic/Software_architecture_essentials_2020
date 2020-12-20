@@ -13,8 +13,28 @@ public class UserDTO {
 	private String password; 
 	private String firstName; 
 	private String lastName;
+	
+	//veze izmedju beanova
 	private List<AccountDTO> accounts = new ArrayList<AccountDTO>();
+	private List<ContactDTO> contacts = new ArrayList<ContactDTO>();
+	private List<TagDTO> tags = new ArrayList<TagDTO>();
 		
+	public List<TagDTO> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<TagDTO> tags) {
+		this.tags = tags;
+	}
+
+	public List<ContactDTO> getContacts() {
+		return contacts;
+	}
+
+	public void setContacts(List<ContactDTO> contacts) {
+		this.contacts = contacts;
+	}
+
 	public UserDTO() {
 		
 	}

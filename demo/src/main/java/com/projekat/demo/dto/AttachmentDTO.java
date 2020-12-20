@@ -9,6 +9,7 @@ public class AttachmentDTO {
 	private String mimeType; 
 	private String name; 
 	
+	//veze izmedju beanova 
 	private MMessageDTO message;
 	
 	public AttachmentDTO(Attachment attachment) {
@@ -20,6 +21,14 @@ public class AttachmentDTO {
 		this.message = new MMessageDTO();		
 	}
 	
+	public MMessageDTO getMessage() {
+		return message;
+	}
+
+	public void setMessage(MMessageDTO message) {
+		this.message = message;
+	}
+
 	public Integer getId() {
 		return id;
 	}

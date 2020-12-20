@@ -7,6 +7,17 @@ public class PhotoDTO {
 	private Integer id;
 	private String path;
 	
+	//veze izmedju beanova 
+	private ContactDTO contact; 
+	
+	public ContactDTO getContact() {
+		return contact;
+	}
+
+	public void setContact(ContactDTO contact) {
+		this.contact = contact;
+	}
+
 	public PhotoDTO(Photo photo) {
 		this.id= photo.getId();
 	}

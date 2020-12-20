@@ -20,6 +20,8 @@ public class AccountDTO {
 	private String username; 
 	private String password; 
 	private String displayName;
+	
+	//veze izmedju beanova
 	private UserDTO user; 
 	private List<FolderDTO> folders = new ArrayList<FolderDTO>();
 	private List<MMessageDTO> messages = new ArrayList<MMessageDTO>();
@@ -34,6 +36,7 @@ public class AccountDTO {
 		this.username=account.getUsername();
 		this.password=account.getPassword();
 		this.displayName=account.getDisplayName();
+		
 		this.user = new UserDTO(); 
 		this.user.setId(account.getUser().getId());
 		this.user.setUsername(account.getUser().getUsername());

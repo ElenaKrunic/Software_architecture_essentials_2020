@@ -23,6 +23,7 @@ public class MMessageDTO {
 	private String content; 
 	private Boolean unread; 
 	
+	//veze izmedju beanova
 	private FolderDTO folder; 
 	private AccountDTO account; 
 	private List<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();

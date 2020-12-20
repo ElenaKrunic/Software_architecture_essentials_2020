@@ -11,6 +11,8 @@ public class FolderDTO {
 	
 	private Integer id; 
 	private String name;
+	
+	//veze izmedju beanova 
 	private FolderDTO parentFolder;
 	private List<FolderDTO> subFolders = new ArrayList<FolderDTO>();
     private List<RuleDTO> rules = new ArrayList<RuleDTO>();

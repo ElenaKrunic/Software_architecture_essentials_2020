@@ -1,5 +1,6 @@
 package com.projekat.demo.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.projekat.demo.entity.Tag;
@@ -9,6 +10,15 @@ public class TagDTO {
 	private Integer id; 
 	private String name; 
 	
+	//veze izmedju beanova 
+	private List<MMessageDTO> messages = new ArrayList<MMessageDTO>();
+	
+	public List<MMessageDTO> getMessages() {
+		return messages;
+	}
+	public void setMessages(List<MMessageDTO> messages) {
+		this.messages = messages;
+	}
 	public Integer getId() {
 		return id;
 	}

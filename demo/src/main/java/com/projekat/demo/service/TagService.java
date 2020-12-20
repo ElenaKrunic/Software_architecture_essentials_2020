@@ -3,13 +3,14 @@ package com.projekat.demo.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.projekat.demo.entity.Tag;
 import com.projekat.demo.entity.User;
 import com.projekat.demo.repository.TagRepository;
 
 
-
+@Service
 public class TagService implements TagServiceInterface {
 	
 	@Autowired

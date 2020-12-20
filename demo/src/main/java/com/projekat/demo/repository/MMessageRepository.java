@@ -18,8 +18,6 @@ public interface MMessageRepository extends JpaRepository<MMessage, Integer> {
 	
 	public List<MMessage> findAll();
 	
-	public MMessage findOne(Integer id);
-
 	public MMessage findByIdAndAccount(Integer id, Account account);
 	
 	public List<MMessage> findAllByUnreadIsTrue();
@@ -36,6 +34,4 @@ public interface MMessageRepository extends JpaRepository<MMessage, Integer> {
 	//radjeno 18.12 
 	List<MMessage> findByAccount(Account account);
 	
-
-
 }

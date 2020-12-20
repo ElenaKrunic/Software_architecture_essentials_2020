@@ -14,9 +14,19 @@ public class ContactDTO {
 	private String displayName; 	
 	private String email; 
 	private String note; 
+	
+	//veze izmedju beanova 
 	private List<PhotoDTO> photos = new ArrayList<PhotoDTO>();
+	private UserDTO user;
 	
-	
+	public UserDTO getUser() {
+		return user;
+	}
+
+	public void setUser(UserDTO user) {
+		this.user = user;
+	}
+
 	public ContactDTO(Contact contact) {
 		this.id = contact.getId();
 		this.firstName=contact.getFirstName(); 
