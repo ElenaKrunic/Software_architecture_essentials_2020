@@ -13,6 +13,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="users")
 public class User {
@@ -26,6 +28,7 @@ public class User {
 	private String username;
 
 	@Column(name = "password", nullable = false)
+	@JsonIgnore
 	private String password;
 
 	@Column(name = "first_name", nullable = false)
@@ -40,10 +43,10 @@ public class User {
 	//@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "user")
 	//private List<Account> accounts;
 	
-	@OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy="user")
+	@OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, mappedBy="user")
 	private List<Account> accounts; 
 
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Tag> tags;
 
 	public Integer getId() {

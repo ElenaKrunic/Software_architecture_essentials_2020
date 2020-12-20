@@ -97,6 +97,22 @@ public class AccountDTO {
 		this.inServerType = inServerType;
 	}
 
+	public List<FolderDTO> getFolders() {
+		return folders;
+	}
+
+	public void setFolders(List<FolderDTO> folders) {
+		this.folders = folders;
+	}
+
+	public List<MMessageDTO> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<MMessageDTO> messages) {
+		this.messages = messages;
+	}
+
 	public String getInServerAddress() {
 		return inServerAddress;
 	}

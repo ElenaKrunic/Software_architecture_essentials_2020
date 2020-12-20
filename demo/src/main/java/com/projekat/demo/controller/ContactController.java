@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.projekat.demo.dto.ContactDTO;
 import com.projekat.demo.entity.Contact;
+import com.projekat.demo.entity.Photo;
+import com.projekat.demo.entity.User;
 import com.projekat.demo.service.ContactServiceInterface;
+import com.projekat.demo.service.UserServiceInterface;
 
 @RestController
 @RequestMapping(value="api/contacts")
@@ -25,6 +28,8 @@ public class ContactController {
 	
 	@Autowired
 	private ContactServiceInterface contactService; 
+	
+	@Autowired UserServiceInterface userService; 
 	
 	@GetMapping
 	public ResponseEntity<List<ContactDTO>> getContacts() {
@@ -52,12 +57,16 @@ public class ContactController {
 	@PostMapping(consumes="application/json")
 	public ResponseEntity<ContactDTO> saveContact(@RequestBody ContactDTO contactDTO) {
 		
+		
+		
 		Contact contact = new Contact();
 		contact.setFirstName(contactDTO.getFirstName());
 		contact.setLastName(contactDTO.getLastName());
 		contact.setDisplayName(contactDTO.getDisplayName());
 		contact.setEmail(contactDTO.getEmail());
 		contact.setNote(contactDTO.getNote());
+		contact.setPhotos(new ArrayList<Photo>());
+		//contact.setUser(user);
 		
 		contact = contactService.save(contact); 
 		
@@ -78,7 +87,6 @@ public class ContactController {
 		contact.setDisplayName(contactDTO.getDisplayName());
 		contact.setEmail(contactDTO.getEmail());
 		contact.setNote(contactDTO.getNote());
-		//dodati za fotografije 
 		
 		contact = contactService.save(contact);
 		

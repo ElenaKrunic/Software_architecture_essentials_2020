@@ -1,6 +1,7 @@
 package com.projekat.demo.service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.projekat.demo.entity.Account;
 
@@ -14,5 +15,5 @@ public interface AccountServiceInterface {
 	
 	void removeAccount(Integer id); 
 	
-	//Account findOne(Integer accountId);
+	List<Account> findAllByUserId(Integer id);
 }

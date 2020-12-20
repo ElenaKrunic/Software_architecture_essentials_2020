@@ -2,6 +2,7 @@ package com.projekat.demo.service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,9 +50,6 @@ public class AccountService implements AccountServiceInterface {
 		
 	}
 
-	/*
-	 * 
-	 */
 	public Account findByAccountId(int accountId, String username) {
 		
 		User user = userService.findByUsername(username);
@@ -71,7 +69,13 @@ public class AccountService implements AccountServiceInterface {
 		
 	}
 
-	
-	
+	@Override
+	public List<Account> findAllByUserId(Integer id) {
+		List<Account> accounts = accountRepository.findByUserId(id);
+		return accounts;
+	}
 
+	public Account findByAccountIdAndUsername(Integer id, String username) {
+		return accountRepository.findByUserIdAndUsername(id,username);
+	}
 }

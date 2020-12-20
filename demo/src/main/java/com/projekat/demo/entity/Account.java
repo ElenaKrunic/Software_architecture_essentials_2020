@@ -68,6 +68,8 @@ public class Account {
 	
 	@Column(name = "last_sync_time", columnDefinition = "TIMESTAMP", nullable = true)
 	private Timestamp lastSyncTime;
+	
+	
 
 	public Integer getId() {
 		return id;
@@ -76,6 +78,7 @@ public class Account {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 
 	public String getSmtpAddress() {
 		return smtpAddress;

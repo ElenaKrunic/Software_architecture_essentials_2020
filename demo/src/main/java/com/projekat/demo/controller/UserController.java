@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,13 +31,19 @@ import javassist.expr.NewArray;
 @RestController
 @RequestMapping("api/users")
 public class UserController {
-
-	//get all users 
-	//get users 
 	
 	@Autowired
 	private UserService userService; 
 	
+	//interfejs za  enkodiranje lozinke 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	
+	/**
+	 * Metoda koja vraca listu svih korisnika iz baze 
+	 * @return listu korisnika 
+	 */
 	@GetMapping
 	public ResponseEntity<List<UserDTO>> getUsers() {
 		List<User> users = userService.findAll(); 
@@ -46,9 +53,15 @@ public class UserController {
 		for(User user : users) {
 			dtoUsers.add(new UserDTO(user)); 
 		}
+		
 		return new ResponseEntity<List<UserDTO>>(dtoUsers, HttpStatus.OK);
 	}
 	
+	/**
+	 * 
+	 * @param id korisnika kog zelim da izvucem iz baze 
+	 * @return korisnik 
+	 */
 	@GetMapping(value="/{id}")
 	public ResponseEntity<UserDTO> getUser(@PathVariable("id") Integer id) {
 		User user = userService.findOne(id); 
@@ -60,6 +73,11 @@ public class UserController {
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK); 
 	}
 	
+	/**
+	 * 
+	 * @param userDTO unosim sve potrebne parametre koji mi trebaju za dodavanje korisnika u bazu 
+	 * @return 
+	 */
 	@PostMapping("/registration")
 	public ResponseEntity<?> sacuvajUbazu(@RequestBody UserDTO userDTO) {
 		//validacija 
@@ -94,7 +112,12 @@ public class UserController {
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.CREATED);
 
 	}
-	
+
+	/**
+	 * 
+	 * @param userDTO unosim sve potrebne parametre korisnika iz baze za login 
+	 * @return 
+	 */
 	@PostMapping("/login")
 	public ResponseEntity<?> ulogujKorisnika(@RequestBody UserDTO userDTO) {
 		
@@ -107,7 +130,12 @@ public class UserController {
 		}
 		return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
 	}
-	
+
+	/**
+	 * Dodavanje novog korisnika u bazu 
+	 * @param userDTO
+	 * @return
+	 */
 	@PostMapping(consumes="application/json")
 	public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDTO) {
 		User user = new User(); 
@@ -119,8 +147,14 @@ public class UserController {
 		userService.save(user); 
 		
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.CREATED); 
-	}
+	}	
 	
+	/**
+	 * Izmjena vec postojeceg korisnika 
+	 * @param userDTO
+	 * @param id
+	 * @return
+	 */
 	@PutMapping(value="/{id}", consumes="application/json")
 	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO, @PathVariable("id") Integer id) {
 		User user = userService.findOne(id); 
@@ -131,16 +165,24 @@ public class UserController {
 		
 		user.setFirstName(userDTO.getFirstName());
 		user.setLastName(userDTO.getLastName());
-		user.setPassword(userDTO.getPassword());
 		user.setUsername(userDTO.getUsername());
 		
-		userService.save(user); 
+		if(userDTO.getPassword() != null) {
+			user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+		}
 		
+		userService.save(user); 
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK); 
 		
-	}
-	
+	} 
+		
+	/**
+	 * brisanje korisnika iz baze 
+	 * @param id
+	 * @return
+	 */
 	@DeleteMapping(value="/{id}")
+
 	public ResponseEntity<Void> deleteUser(@PathVariable("id") Integer id) {
 		User user = userService.findOne(id); 
 		
@@ -151,4 +193,9 @@ public class UserController {
 		
 		return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 	}
+	
+
+	
 }
+
+

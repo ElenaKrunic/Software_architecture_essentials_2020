@@ -35,6 +35,13 @@ public class ContactDTO {
 		this.email = contact.getEmail(); 
 		this.note = contact.getNote(); 
 		
+		/*this.user = new UserDTO(); 
+		this.user.setId(contact.getUser().getId());
+		this.user.setUsername(contact.getUser().getUsername());
+		this.user.setPassword(contact.getUser().getPassword());
+		this.user.setFirstName(contact.getUser().getFirstName());
+		this.user.setLastName(contact.getUser().getLastName());
+		*/
 		//for(Photo photo : contact.getPhotos()) {
 			//this.photos.add(new PhotoDTO(photo));
 			//photos.add(new PhotoDTO(photo));
