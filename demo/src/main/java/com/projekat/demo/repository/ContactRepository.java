@@ -14,4 +14,6 @@ public interface ContactRepository extends JpaRepository<Contact, Integer> {
 	
 	public Contact findByIdAndUser(Integer id, User user);
 	
+	public List<Contact> findAllByUserId(Integer id); 
+	
 }

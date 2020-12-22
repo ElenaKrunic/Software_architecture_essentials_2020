@@ -17,13 +17,13 @@ public class AttachmentDTO {
 		this.data=attachment.getData();
 		this.mimeType=attachment.getMimeType();
 		this.name=attachment.getName();
-		
+		/*
 		this.message = new MMessageDTO();
 		this.message.setContent(attachment.getMessage().getContent());
 		this.message.setDateTime(attachment.getMessage().getDateTime());
 		this.message.setSubject(attachment.getMessage().getSubject());
 		this.message.setUnread(attachment.getMessage().getUnread());
-		
+		*/
 	}
 	
 	public MMessageDTO getMessage() {

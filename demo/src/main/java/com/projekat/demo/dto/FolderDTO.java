@@ -32,6 +32,7 @@ public class FolderDTO {
 		this.id = folder.getId();
 		this.name = folder.getName();
 		
+		/*
 		Folder parentFolder = folder.getParentFolder();
     	if (parentFolder != null) {
     		this.parentFolder = new FolderDTO();
@@ -41,7 +42,7 @@ public class FolderDTO {
         	this.parentFolder.setSubFolders(new ArrayList<FolderDTO>());
     	}
     	
-    	/*
+    	
     	for (Folder subFolder : folder.getSubFolders()) {
     		FolderDTO subFolderDTO = new FolderDTO();
     		subFolderDTO.setId(subFolder.getId());
@@ -49,7 +50,7 @@ public class FolderDTO {
     		subFolderDTO.setRules(new ArrayList<RuleDTO>());
     		subFolderDTO.setSubFolders(new ArrayList<FolderDTO>());
     		subFolders.add(subFolderDTO);
-    	} */
+    	} 
     	
     	this.account = new AccountDTO(); 
     	this.account.setId(folder.getAccount().getId());
@@ -64,11 +65,11 @@ public class FolderDTO {
     	/*
     	for (Rule rule : folder.getRules()) {
     		rules.add(new RuleDTO(rule));
-    	} */
+    	} 
     	
     	for (MMessage message : folder.getMessages()) {
     		messages.add(new MMessageDTO(message));
-    	}
+    	}*/
 	}
 	
 	public FolderDTO() {

@@ -1,84 +1,60 @@
 package com.projekat.demo.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.projekat.demo.entity.Contact;
 import com.projekat.demo.entity.Photo;
+import com.projekat.demo.entity.User;
 
-public class ContactDTO {
+public class ContactDTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//atributi se isto zovu u Contact i u DTO 
-	private Integer id; 
+	private int id; 
 	private String firstName; 
 	private String lastName; 
 	private String displayName; 	
 	private String email; 
 	private String note; 
 	
-	//veze izmedju beanova 
-	private List<PhotoDTO> photos = new ArrayList<PhotoDTO>();
-	private UserDTO user;
+	private Photo photo;
+	private User user;
 	
-	public UserDTO getUser() {
-		return user;
-	}
-
-	public void setUser(UserDTO user) {
-		this.user = user;
-	}
-
-	public ContactDTO(Contact contact) {
-		this.id = contact.getId();
-		this.firstName=contact.getFirstName(); 
-		this.lastName = contact.getLastName(); 
-		this.displayName = contact.getDisplayName(); 
-		this.email = contact.getEmail(); 
-		this.note = contact.getNote(); 
-		
-		/*this.user = new UserDTO(); 
-		this.user.setId(contact.getUser().getId());
-		this.user.setUsername(contact.getUser().getUsername());
-		this.user.setPassword(contact.getUser().getPassword());
-		this.user.setFirstName(contact.getUser().getFirstName());
-		this.user.setLastName(contact.getUser().getLastName());
-		*/
-		//for(Photo photo : contact.getPhotos()) {
-			//this.photos.add(new PhotoDTO(photo));
-			//photos.add(new PhotoDTO(photo));
-		//}
-	} 
-	
-	public ContactDTO(Integer id, String firstname, String lastname, String displayname, String email, String note,
-			byte[] image) {
+	public ContactDTO(int id, String firstName, String lastName, String displayName, String email, String note,
+			Photo photo, User user) {
 		super();
 		this.id = id;
-		this.firstName = firstname;
-		this.lastName = lastname;
-		this.displayName = displayname;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.displayName = displayName;
 		this.email = email;
 		this.note = note;
-	} 
+		this.photo = photo;
+		this.user = user;
+	}
 	
+	public ContactDTO(Contact contact) {
+		this(contact.getId(), contact.getFirstName(), contact.getLastName(), contact.getDisplayName(), contact.getEmail(), contact.getNote(), contact.getPhoto(), contact.getUser());
+	}
+
+
 	public ContactDTO() {
 		
 	}
 	
-	
-	/*
-	public ContactDTO(Integer id, String firstname, String lastname, String displayname, String email, String note,
-			List<Photo> photos) {
-		super();
-		this.id = id;
-		this.firstName = firstname;
-		this.lastName = lastname;
-		this.displayName = displayname;
-		this.email = email;
-		this.note = note;
-		this.photos = photos;
-	} */
-	
-	
-	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public ContactDTO(String email) {
 		super();
 		this.email= email;
@@ -120,13 +96,13 @@ public class ContactDTO {
 	public void setNote(String note) {
 		this.note = note;
 	}
-	public List<PhotoDTO> getPhotos() {
-		return photos;
+
+	public Photo getPhoto() {
+		return photo;
 	}
-	public void setPhotos(List<PhotoDTO> photos) {
-		this.photos = photos;
+
+	public void setPhoto(Photo photo) {
+		this.photo = photo;
 	}
-	
-	
 	
 }

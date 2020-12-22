@@ -176,8 +176,8 @@ public class AccountController {
 	 * @param accountDTO
 	 * @return
 	 */
-	@PostMapping("/saveAccount/{username}")
-	public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO accountDTO, @PathVariable("username") String username) {
+	@PostMapping("/saveAccount/{userUsername}")
+	public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO accountDTO, @PathVariable("userUsername") String username) {
 		
 		//--------------------------- VALIDACIJA ----------------------------------------------
 		/*
@@ -268,23 +268,35 @@ public class AccountController {
 	 * @param id
 	 * @return
 	 */
-	@PutMapping(value="/{id}", consumes="application/json")
-	public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO accountDTO, @PathVariable("id") Integer id) {
+	@PutMapping(value="updateAccount/{accountId}", consumes="application/json")
+	public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO accountDTO, @PathVariable("accountId") Integer id) {
 		
 		Account account = accountService.findOne(id); 
 		
+		if(account == null) {
+			return new ResponseEntity<AccountDTO>(HttpStatus.BAD_REQUEST);
+		}
+		
+		account.setUsername(accountDTO.getUsername());
+		account.setDisplayName(accountDTO.getDisplayName());
+		if(accountDTO.getPassword() != null) {
+			account.setPassword(accountDTO.getPassword());
+		}
 		account.setSmtpAddress(accountDTO.getSmtpAddress());
 		account.setSmtpPort(accountDTO.getSmtpPort()); 
 		account.setInServerType(accountDTO.getInServerType());
 		account.setInServerAddress(accountDTO.getInServerAddress());
 		account.setInServerPort(accountDTO.getInServerPort());
-		account.setUsername(accountDTO.getUsername());
-		account.setPassword(accountDTO.getPassword());
-		account.setDisplayName(accountDTO.getDisplayName());
 		
-		account = accountService.save(account); 
+		MailAPI mailApi = new MailAPI();
+		boolean connectAccountToUser = mailApi.connectAccountToUser(account);
 		
-		return new ResponseEntity<AccountDTO>(new AccountDTO(account), HttpStatus.OK);
+		if(connectAccountToUser) {
+			Account connectedAccount = this.accountService.save(account);
+			return new ResponseEntity<AccountDTO>(new AccountDTO(connectedAccount), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<AccountDTO>(HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	/**
@@ -292,8 +304,8 @@ public class AccountController {
 	 * @param id
 	 * @return
 	 */
-	@DeleteMapping(value="/{id}")
-	public ResponseEntity<Void> deleteAccount(@PathVariable("id") Integer id) {
+	@DeleteMapping(value="deleteAccount/{accountId}")
+	public ResponseEntity<Void> deleteAccount(@PathVariable("accountId") Integer id) {
 		Account account = accountService.findOne(id); 
 		
 		if(account != null) {

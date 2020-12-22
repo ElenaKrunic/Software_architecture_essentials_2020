@@ -66,6 +66,7 @@ public class MMessageDTO {
 		this.content = message.getContent();
 		this.unread = message.getUnread(); 
 		
+		/*
 		this.folder = new FolderDTO();
 		this.folder.setId(message.getFolder().getId()); 
 		this.folder.setName(message.getFolder().getName());
@@ -87,7 +88,7 @@ public class MMessageDTO {
 		
 		for(Tag tag: message.getTags()) {
 			tags.add(new TagDTO(tag));
-		}
+		} */
 	}
 	
 	

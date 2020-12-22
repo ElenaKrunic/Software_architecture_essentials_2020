@@ -1,20 +1,33 @@
 package com.projekat.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.projekat.demo.entity.Contact;
 import com.projekat.demo.entity.Photo;
 
 public class PhotoDTO {
 	
 	private Integer id;
 	private String path;
+	//veze izmedju beanova
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	private Contact contact; 
 	
-	//veze izmedju beanova 
-	private ContactDTO contact; 
+	public PhotoDTO(Integer id, String path, Contact contact) {
+		super();
+		this.id = id;
+		this.path = path;
+		this.contact = contact; 
+	} 
 	
-	public ContactDTO getContact() {
+	public PhotoDTO() {
+		
+	}
+	
+	public Contact getContact() {
 		return contact;
 	}
 
-	public void setContact(ContactDTO contact) {
+	public void setContact(Contact contact) {
 		this.contact = contact;
 	}
 
@@ -33,14 +46,5 @@ public class PhotoDTO {
 	}
 	public void setPath(String path) {
 		this.path = path;
-	}
-	public PhotoDTO(Integer id, String path) {
-		super();
-		this.id = id;
-		this.path = path;
-	} 
-	
-	public PhotoDTO() {
-		
 	}
 }

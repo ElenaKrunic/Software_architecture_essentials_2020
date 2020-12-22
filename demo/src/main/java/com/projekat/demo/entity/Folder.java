@@ -19,6 +19,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="folders")
 public class Folder {
@@ -32,17 +34,21 @@ public class Folder {
 		private String name;
 		
 		@ManyToOne
+		@JsonIgnore
 		@JoinColumn(name = "account", referencedColumnName = "id", nullable = false)
 		private Account account;
 		
 		@ManyToOne
+		@JsonIgnore
 		@JoinColumn(name = "parent_folder", referencedColumnName = "id", nullable = true)
 		private Folder parentFolder;
 		
 		@OneToMany(cascade = { REMOVE, PERSIST }, fetch = LAZY, mappedBy = "parentFolder")
+		@JsonIgnore
 		private List<Folder> subFolders;
 		
 		@OneToMany(cascade = { REMOVE, PERSIST }, fetch = LAZY, mappedBy = "folder", orphanRemoval = true)
+		@JsonIgnore
 	    private List<Rule> rules;
 
 	    @OneToMany(cascade = { REMOVE }, fetch = FetchType.EAGER, mappedBy = "folder")

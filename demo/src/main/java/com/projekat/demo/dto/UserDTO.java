@@ -46,9 +46,10 @@ public class UserDTO {
 		this.firstName = user.getFirstName(); 
 		this.lastName = user.getLastName();
 		
+		/*
 		for(Account account : user.getAccounts()) {
 			accounts.add(new AccountDTO(account));
-		}
+		} */
 	}
 	
 	public List<AccountDTO> getAccounts() {
