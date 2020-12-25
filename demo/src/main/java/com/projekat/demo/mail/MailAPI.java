@@ -98,7 +98,7 @@ public class MailAPI {
 			return false;
 		}
 	}
-	
+	/*
 	public boolean sendMessage(MMessage message) {
         String EMAIL_TO = message.getTo();
         String EMAIL_CC = message.getCc();
@@ -171,7 +171,7 @@ public class MailAPI {
 	 * @param Account that is going to be synchronized.
 	 * @return List of new e-mails.
 	 */
-	
+	/*
 	public List<MMessage> loadMessages(Account account) {
 		
 		ArrayList<MMessage> messages = new ArrayList<MMessage>();
@@ -317,6 +317,8 @@ public class MailAPI {
 	/**
 	 * @deprecated Initially used to transfer data from API mail to our entity.
 	 */
+	
+	/*
 	@SuppressWarnings("unused")
 	@Deprecated
 	private void setMessageContent(javax.mail.Message APImessage, MMessage message) {
@@ -365,6 +367,8 @@ public class MailAPI {
 		}
 	}
 	
+	*/
+	
 	// Pomocna metoda za izvlacenje attachmenta iz API-jeve poruke
 	private ArrayList<BodyPart> extractParts(MimeMultipart multipart) {
 		ArrayList<BodyPart> parts = new ArrayList<BodyPart>();
@@ -388,4 +392,5 @@ public class MailAPI {
 
 		return parts;
 	}
+	
 }

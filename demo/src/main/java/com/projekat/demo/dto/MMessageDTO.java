@@ -1,214 +1,161 @@
 package com.projekat.demo.dto;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.Attachment;
+import com.projekat.demo.entity.Folder;
 import com.projekat.demo.entity.MMessage;
 import com.projekat.demo.entity.Tag;
-import com.projekat.demo.service.ContactService;
 
 public class MMessageDTO {
 	
-	StringTokenizer separator; 
-	
 	private Integer id; 
-	private EmailDTO from; 
-	private List<EmailDTO> to = new ArrayList<EmailDTO>();
-	private List<EmailDTO> cc = new ArrayList<EmailDTO>();
-	private List<EmailDTO> bcc = new ArrayList<EmailDTO>();
-	private Timestamp dateTime; 
+	private String from; 
+	private Set<String> to; 
+	private Set<String> cc; 
+	private Set<String> bcc; 
+	private Date dateTime; 
 	private String subject; 
 	private String content; 
-	private Boolean unread; 
+	private boolean unread; 
+	private Set<Attachment> attachments = new HashSet<Attachment>(); 
+	private Account account; 
+	private Set<Tag> tags = new HashSet<Tag>(); 
+	private Folder folder;
 	
-	//veze izmedju beanova
-	private FolderDTO folder; 
-	private AccountDTO account; 
-	private List<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
-	private List<TagDTO> tags = new ArrayList<TagDTO>();
-	
-	public MMessageDTO() {
-		
-	}
-	
-/*
-	public MessageDTO(MMessage message, ContactService contactService) {
-		this(message.getId(), message.getFrom(), message.getTo(), message.getCc(), message.getBcc(), message.getDateTime().toString(), 
-				message.getSubject(), message.getContent(), message.isUnread());
-		
-		for (Tag tag : message.getTags()) {
-			this.tags.add(new TagDTO(tag));
-		}
-		
-		List<Contact> contacts = contactService.findByUser(message.getAccount().getUser());
-		for (Contact contact : contacts) {
-			if (message.getFrom().contains(contact.getEmail()) || message.getTo().contains(contact.getEmail())) {
-				this.contactDisplayName = contact.getDisplayName();
-				if (contact.getPhotoPath() != null && !contact.getPhotoPath().isEmpty()) {
-					byte[] photoData = FilesUtil.readBytes(contact.getPhotoPath());
-					if (photoData != null)
-						this.encodedContactPhoto = Base64.encodeToString(photoData);
-				}
-				break;
-			}
-		}
-	}
-	*/
-	//za pravljenje dto 
-	public MMessageDTO(MMessage message) {
-		this.id = message.getId(); 
-		this.from = new EmailDTO(message.getFrom());
-		
-		StringTokenizer separator;
-		
-		if(message.getTo() != null) {
-			separator = new StringTokenizer(message.getTo(), ",");
-			while(separator.hasMoreElements()) {
-				to.add(new EmailDTO(separator.nextToken()));
-			}
-		}
-		
-		if(message.getCc() !=null) {
-			separator = new StringTokenizer(message.getCc(), ","); 
-			while(separator.hasMoreElements()) {
-				cc.add(new EmailDTO(separator.nextToken())); 
-			}
-		}
-		
-		if(message.getBcc() != null) {
-			separator = new StringTokenizer(message.getBcc(), ","); 
-			while(separator.hasMoreElements()) {
-				bcc.add(new EmailDTO(separator.nextToken()));
-			}
-		}
-		
-		this.dateTime = message.getDateTime(); 
-		this.subject = message.getSubject(); 
-		this.content = message.getContent();
-		this.unread = message.getUnread(); 
-		
-		/*
-		this.folder = new FolderDTO();
-		this.folder.setId(message.getFolder().getId()); 
-		this.folder.setName(message.getFolder().getName());
-		
-		this.account = new AccountDTO(); 
-		this.account.setId(message.getAccount().getId());
-		this.account.setDisplayName(message.getAccount().getDisplayName());
-		this.account.setSmtpAddress(message.getAccount().getSmtpAddress());
-		this.account.setSmtpPort(message.getAccount().getSmtpPort());
-		this.account.setInServerType(message.getAccount().getInServerType());
-		this.account.setInServerAddress(message.getAccount().getInServerAddress()); 
-		this.account.setInServerPort(message.getAccount().getInServerPort());
-		this.account.setUsername(message.getAccount().getUsername());
-		this.account.setPassword(message.getAccount().getPassword());
-				
-		for(Attachment attachment : message.getAttachments()) {
-			attachments.add(new AttachmentDTO(attachment));
-		}
-		
-		for(Tag tag: message.getTags()) {
-			tags.add(new TagDTO(tag));
-		} */
-	}
-	
-	
-	public AccountDTO getAccount() {
-		return account;
-	}
-
-
-	public void setAccount(AccountDTO account) {
+	public MMessageDTO(Integer id, String from, Set<String> to, Set<String> cc, Set<String> bcc, Date dateTime,
+			String subject, String content, boolean unread, Set<Attachment> attachments, Account account, Set<Tag> tags,
+			Folder folder) {
+		super();
+		this.id = id;
+		this.from = from;
+		this.to = to;
+		this.cc = cc;
+		this.bcc = bcc;
+		this.dateTime = dateTime;
+		this.subject = subject;
+		this.content = content;
+		this.unread = unread;
+		this.attachments = attachments;
 		this.account = account;
+		this.tags = tags;
+		this.folder = folder;
 	}
 
-
+	public MMessageDTO(MMessage message) {
+		this(message.getId(), message.getFrom(), message.getTo(), message.getCc(),message.getBcc(), message.getDateTime(), message.getSubject(), message.getContent(), 
+				message.getUnread(), message.getAttachments(), message.getAccount(), message.getTags(), message.getFolder());
+	}
+	
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public EmailDTO getFrom() {
+
+	public String getFrom() {
 		return from;
 	}
-	public void setFrom(EmailDTO from) {
+
+	public void setFrom(String from) {
 		this.from = from;
 	}
-	public List<EmailDTO> getTo() {
+
+	public Set<String> getTo() {
 		return to;
 	}
-	public void setTo(List<EmailDTO> to) {
+
+	public void setTo(Set<String> to) {
 		this.to = to;
 	}
-	public List<EmailDTO> getCc() {
+
+	public Set<String> getCc() {
 		return cc;
 	}
-	public void setCc(List<EmailDTO> cc) {
+
+	public void setCc(Set<String> cc) {
 		this.cc = cc;
 	}
-	public List<EmailDTO> getBcc() {
+
+	public Set<String> getBcc() {
 		return bcc;
 	}
-	public void setBcc(List<EmailDTO> bcc) {
+
+	public void setBcc(Set<String> bcc) {
 		this.bcc = bcc;
 	}
-	public Timestamp getDateTime() {
+
+	public Date getDateTime() {
 		return dateTime;
 	}
-	public void setDateTime(Timestamp dateTime) {
+
+	public void setDateTime(Date dateTime) {
 		this.dateTime = dateTime;
 	}
+
 	public String getSubject() {
 		return subject;
 	}
+
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Boolean getUnread() {
+
+	public boolean isUnread() {
 		return unread;
 	}
-	public void setUnread(Boolean unread) {
+
+	public void setUnread(boolean unread) {
 		this.unread = unread;
 	}
-	public FolderDTO getFolder() {
-		return folder;
-	}
-	public void setFolder(FolderDTO folder) {
-		this.folder = folder;
-	}
-	public List<AttachmentDTO> getAttachments() {
+
+	public Set<Attachment> getAttachments() {
 		return attachments;
 	}
-	public void setAttachments(List<AttachmentDTO> attachments) {
+
+	public void setAttachments(Set<Attachment> attachments) {
 		this.attachments = attachments;
 	}
-	public List<TagDTO> getTags() {
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
+	public Set<Tag> getTags() {
 		return tags;
 	}
-	public void setTags(List<TagDTO> tags) {
+
+	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
 	}
 
-	
-	
-	public static String recipientsToString(List<EmailDTO> recipients) {
-		//kontra separatoru 
-		StringBuilder builder = new StringBuilder();
-		for(EmailDTO recipient : recipients) {
-			builder.append(recipient.getEmail() + ", "); 
-		}
-		
-		return (builder.length() > 0) ? builder.toString().substring(0, builder.length()-2) : builder.toString();
+	public Folder getFolder() {
+		return folder;
 	}
+
+	public void setFolder(Folder folder) {
+		this.folder = folder;
+	} 
+	
+
+	
+
 
 }
