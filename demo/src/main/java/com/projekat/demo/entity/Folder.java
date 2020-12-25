@@ -1,6 +1,8 @@
 package com.projekat.demo.entity;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.CascadeType.ALL;
@@ -19,111 +21,115 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Table(name="folders")
 public class Folder {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	private Integer id;
+		
+	@Column(name = "name", nullable = false)
+	private String name;
+		
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "parent_folder", referencedColumnName = "id", nullable = true)
+	private Folder parentFolder;
 
-		@Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		@Column(name = "id", unique = true, nullable = false)
-		private Integer id;
 		
-		@Column(name = "name", nullable = false)
-		private String name;
+	@OneToMany(cascade = { ALL }, fetch = LAZY, mappedBy = "parentFolder")
+	@JsonIgnore
+	private Set<Folder> subFolders = new HashSet<Folder>();
 		
-		@ManyToOne
-		@JsonIgnore
-		@JoinColumn(name = "account", referencedColumnName = "id", nullable = false)
-		private Account account;
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "account", referencedColumnName = "id", nullable = true)
+	private Account account;
 		
-		@ManyToOne
-		@JsonIgnore
-		@JoinColumn(name = "parent_folder", referencedColumnName = "id", nullable = true)
-		private Folder parentFolder;
+	@JsonIgnore
+	@OneToMany(cascade = { ALL }, fetch = FetchType.LAZY, mappedBy = "folder")
+	 private Set<MMessage> messages = new HashSet<MMessage>();
 		
-		@OneToMany(cascade = { REMOVE, PERSIST }, fetch = LAZY, mappedBy = "parentFolder")
-		@JsonIgnore
-		private List<Folder> subFolders;
-		
-		@OneToMany(cascade = { REMOVE, PERSIST }, fetch = LAZY, mappedBy = "folder", orphanRemoval = true)
-		@JsonIgnore
-	    private List<Rule> rules;
+	@JsonIgnore
+	@OneToMany(cascade = { ALL }, fetch = LAZY, mappedBy = "folder", orphanRemoval = true)
+	private Set<Rule> rules = new HashSet<Rule>();
 
-	    @OneToMany(cascade = { REMOVE }, fetch = FetchType.EAGER, mappedBy = "folder")
-		private List<MMessage> messages;
-		
-		public Folder() {
+	public Folder() {
 			
-		}
+	}
 
-		public Integer getId() {
-			return id;
-		}
+	public Integer getId() {
+		return id;
+	}
 
-		public void setId(Integer id) {
-			this.id = id;
-		}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-		public String getName() {
-			return name;
-		}
+	public String getName() {
+		return name;
+	}
 
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public List<Rule> getRules() {
-			return rules;
-		}
-
-		public void setRules(List<Rule> rules) {
-			this.rules = rules;
-		}
+	public void setName(String name) {
+		this.name = name;
+	}
 		
-		public Account getAccount() {
-			return account;
-		}
+	public Account getAccount() {
+		return account;
+	}
 
-		public void setAccount(Account account) {
-			this.account = account;
-		}
+	public void setAccount(Account account) {
+		this.account = account;
+	}
 
-		public Folder getParentFolder() {
-			return parentFolder;
-		}
+	public Set<Rule> getRules() {
+		return rules;
+	}
 
-		public void setParentFolder(Folder parentFolder) {
-			this.parentFolder = parentFolder;
-		}
+	public void setRules(Set<Rule> rules) {
+		this.rules = rules;
+	}
+
+	public Folder getParentFolder() {
+		return parentFolder;
+	}
+
+	public void setParentFolder(Folder parentFolder) {
+		this.parentFolder = parentFolder;
+	}
 		
-		public List<MMessage> getMessages() {
-			return messages;
-		}
+	public Set<MMessage> getMessages() {
+		return messages;
+	}
+	
+	public void setMessages(Set<MMessage> messages) {
+		this.messages = messages;
+	}
 
-		public void setMessages(List<MMessage> messages) {
-			this.messages = messages;
+	public void fixRules() {
+		for (Rule rule : rules) {
+			rule.setFolder(this);
 		}
+	}
 
-		public void fixRules() {
-			for (Rule rule : rules) {
-				rule.setFolder(this);
-			}
-		}
-		
-		public List<Folder> getSubFolders() {
-			return subFolders;
-		}
+	public Set<Folder> getSubFolders() {
+		return subFolders;
+	}
 
-		public void setSubFolders(List<Folder> subFolders) {
-			this.subFolders = subFolders;
-		}
+	public void setSubFolders(Set<Folder> subFolders) {
+		this.subFolders = subFolders;
+	}
 
-		@Override
-		public String toString() {
-			return "Folder [id=" + id + ", name=" + name + ", account=" + account + ", subFolders=" + subFolders
+	@Override
+	public String toString() {
+		return "Folder [id=" + id + ", name=" + name + ", account=" + account + ", subFolders=" + subFolders
 					 + ", rules=" + rules + "]";
-		}
-		
+	}		
 }

@@ -247,7 +247,7 @@ public class AccountController {
 		defaultFolders.add(drafts);
 		defaultFolders.add(inbox); 
 
-		account.setFolders(defaultFolders);
+		//account.setFolders(defaultFolders);
 		
 		MailAPI mailApi = new MailAPI();
 		

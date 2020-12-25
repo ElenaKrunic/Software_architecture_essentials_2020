@@ -11,7 +11,7 @@ public interface MessageServiceInterface {
 	
 	public List<MMessage> findAll();
 	
-	public List<MMessage> getMessages(Account account);
+	//public List<MMessage> getMessages(Account account);
 	
 	public Date findLastDate(Account account);
 

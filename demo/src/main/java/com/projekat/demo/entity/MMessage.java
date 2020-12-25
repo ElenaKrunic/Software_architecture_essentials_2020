@@ -18,6 +18,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="messages")
 public class MMessage {
@@ -53,6 +56,7 @@ public class MMessage {
 	
 	@ManyToOne
 	@JoinColumn(name = "folder", referencedColumnName = "id", nullable = false)
+	@JsonBackReference
 	private Folder folder; 
 
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "message")

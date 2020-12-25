@@ -33,5 +33,7 @@ public interface MMessageRepository extends JpaRepository<MMessage, Integer> {
 	
 	//radjeno 18.12 
 	List<MMessage> findByAccount(Account account);
+
+	public List<MMessage> findByFolder(Folder folder);
 	
 }

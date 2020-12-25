@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 import com.projekat.demo.entity.Attachment;
 import com.projekat.demo.entity.MMessage;
 import com.projekat.demo.entity.Tag;
+import com.projekat.demo.service.ContactService;
 
 public class MMessageDTO {
 	
@@ -33,6 +34,29 @@ public class MMessageDTO {
 		
 	}
 	
+/*
+	public MessageDTO(MMessage message, ContactService contactService) {
+		this(message.getId(), message.getFrom(), message.getTo(), message.getCc(), message.getBcc(), message.getDateTime().toString(), 
+				message.getSubject(), message.getContent(), message.isUnread());
+		
+		for (Tag tag : message.getTags()) {
+			this.tags.add(new TagDTO(tag));
+		}
+		
+		List<Contact> contacts = contactService.findByUser(message.getAccount().getUser());
+		for (Contact contact : contacts) {
+			if (message.getFrom().contains(contact.getEmail()) || message.getTo().contains(contact.getEmail())) {
+				this.contactDisplayName = contact.getDisplayName();
+				if (contact.getPhotoPath() != null && !contact.getPhotoPath().isEmpty()) {
+					byte[] photoData = FilesUtil.readBytes(contact.getPhotoPath());
+					if (photoData != null)
+						this.encodedContactPhoto = Base64.encodeToString(photoData);
+				}
+				break;
+			}
+		}
+	}
+	*/
 	//za pravljenje dto 
 	public MMessageDTO(MMessage message) {
 		this.id = message.getId(); 

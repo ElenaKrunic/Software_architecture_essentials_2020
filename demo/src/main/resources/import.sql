@@ -9,11 +9,13 @@ INSERT INTO accounts (smtp_address, smtp_port, in_server_type, in_server_address
 INSERT INTO folders (name, parent_folder, account) VALUES ('Inbox', null, 1);
 INSERT INTO folders (name, parent_folder, account) VALUES ('Outbox', null, 1);
 INSERT INTO folders (name, parent_folder, account) VALUES ('Drafts', null, 1);
-INSERT INTO folders (name, parent_folder, account) VALUES ('Primary', 1, 1);
-INSERT INTO folders (name, parent_folder, account) VALUES ('Spam', 1, 1);
+INSERT INTO folders (name, parent_folder, account) VALUES ('Primary', 1, 2);
+INSERT INTO folders (name, parent_folder, account) VALUES ('Spam', null, 3);
+INSERT INTO folders (name, parent_folder, account) VALUES ('Moj', 3, 3);
 
---INSERT INTO messages (message_from, message_to, bcc, cc, subject, content, account, unread, folder) VALUES ('lelekrunic1@gmail.com', 'elenakrunic@gmail.com', 'bcc', '', 'Poruka 1', 'Sadrzaj poruke', 1, true, 1);
---INSERT INTO messages (message_from, message_to, bcc, cc, subject, content, account, unread, folder) VALUES ('lelekrunic1@gmail.com', 'elenakrunic@gmail.com', 'bcc', '', 'Poruka 2', 'Sadrzaj druge poruke', 1, true, 2);
+
+INSERT INTO messages (message_from, message_to, bcc, cc, subject, content, account, unread, folder) VALUES ('lelekrunic1@gmail.com', 'elenakrunic@gmail.com', 'bcc', '', 'Poruka 1', 'Sadrzaj poruke', 1, true, 1);
+INSERT INTO messages (message_from, message_to, bcc, cc, subject, content, account, unread, folder) VALUES ('lelekrunic1@gmail.com', 'elenakrunic@gmail.com', 'bcc', '', 'Poruka 2', 'Sadrzaj druge poruke', 1, true, 2);
 
 --INSERT INTO attachments (data, mime_type, name, message) VALUES ('data', 'application/pdf', 'simple1', 1);
 

@@ -34,21 +34,14 @@ public class AccountService implements AccountServiceInterface {
 	return accountRepository.findAll();
 	}
 
-	@Override
-	public Account findOne(Integer accountId) {
-		return accountRepository.getOne(accountId);
-	}
+
 
 	@Override
 	public Account save(Account account) {
 		return accountRepository.save(account);
 	}
 
-	@Override
-	public void removeAccount(Integer id) {
-		accountRepository.deleteById(id);
-		
-	}
+
 
 	public Account findByAccountId(int accountId, String username) {
 		
@@ -77,5 +70,17 @@ public class AccountService implements AccountServiceInterface {
 
 	public Account findByAccountIdAndUsername(Integer id, String username) {
 		return accountRepository.findByUserIdAndUsername(id,username);
+	}
+
+	@Override
+	public Account findOne(Integer accountId) {
+		// TODO Auto-generated method stub
+		return accountRepository.findById(accountId);
+	}
+
+	@Override
+	public void removeAccount(Integer id) {
+		// TODO Auto-generated method stub
+		
 	}
 }

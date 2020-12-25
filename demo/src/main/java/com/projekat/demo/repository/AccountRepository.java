@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.User;
 
-public interface AccountRepository extends JpaRepository<Account, Integer> {
+public interface AccountRepository extends JpaRepository<Account, Long> {
 
 	List<Account> findByUser(User user);
 
@@ -17,4 +17,6 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 	List<Account> findByUserId(Integer id);
 
 	Account findByUserIdAndUsername(Integer id, String username);
+	
+	Account findById(Integer id);
 }

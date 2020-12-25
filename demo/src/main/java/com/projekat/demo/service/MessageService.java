@@ -19,12 +19,12 @@ public class MessageService implements MessageServiceInterface {
 	
 	@Autowired
 	private FolderService folderService;
-	
+	/*
 	@Override
 	public List<MMessage> getMessages(Account account) {
 		Folder folder = folderService.findInbox(account);
 		return messageRepository.findAllByAccountAndFolder(account, folder);
-	}
+	}*/
 
 	@Override
 	public Date findLastDate(Account account) {
@@ -64,6 +64,11 @@ public class MessageService implements MessageServiceInterface {
 	@Override
 	public MMessage findOne(Integer id) {
 		return messageRepository.getOne(id);
+	}
+
+	public List<MMessage> findByFolder(Folder folder) {
+		// TODO Auto-generated method stub
+		return messageRepository.findByFolder(folder);
 	}
 
 	

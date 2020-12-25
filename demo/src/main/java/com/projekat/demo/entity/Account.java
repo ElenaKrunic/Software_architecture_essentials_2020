@@ -1,7 +1,9 @@
 package com.projekat.demo.entity;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,6 +16,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="accounts")
@@ -47,22 +53,17 @@ public class Account {
 
 	@Column(name = "display_name", columnDefinition = "VARCHAR(100)", nullable = true)
 	private String displayName;
-
-	public List<MMessage> getMessages() {
-		return messages;
-	}
-
-	public void setMessages(List<MMessage> messages) {
-		this.messages = messages;
-	}
-
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "account")
-	private List<Folder> folders;
 	
+	@JsonIgnore
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "account")
+	private Set<Folder> folders = new HashSet<Folder>();
+	
+	@JsonIgnore
 	@OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, mappedBy = "account")
-	private List<MMessage> messages; 
+	private Set<MMessage> messages = new HashSet<MMessage>(); 
 
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
 	private User user;
 	
@@ -70,7 +71,6 @@ public class Account {
 	private Timestamp lastSyncTime;
 	
 	
-
 	public Integer getId() {
 		return id;
 	}
@@ -144,20 +144,28 @@ public class Account {
 		this.displayName = displayName;
 	}
 
-	public List<Folder> getFolders() {
-		return folders;
-	}
-
-	public void setFolders(List<Folder> folders) {
-		this.folders = folders;
-	}
-
 	public User getUser() {
 		return user;
 	}
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	public Set<Folder> getFolders() {
+		return folders;
+	}
+
+	public void setFolders(Set<Folder> folders) {
+		this.folders = folders;
+	}
+
+	public Set<MMessage> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(Set<MMessage> messages) {
+		this.messages = messages;
 	}
 
 	@Override
@@ -173,6 +181,15 @@ public class Account {
 		this.lastSyncTime = lastSyncTime;
 	}
 
+	/*
+	public void addFolder(Folder folder) {
+		if(folder.getAccount() != null) {
+			folder.getAccount().removeFolder(folder); 
+			folder.setAccount(this);
+			getFolders().add(folder);
+		}
+	}
+	*/
 	
 }
 
