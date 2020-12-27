@@ -131,5 +131,19 @@ public class Folder {
 	public String toString() {
 		return "Folder [id=" + id + ", name=" + name + ", account=" + account + ", subFolders=" + subFolders
 					 + ", rules=" + rules + "]";
+	}
+
+	public void addMessage(MMessage message) {
+		if(message.getFolder() != null) {
+			message.getFolder().removeMessage(message);
+			message.setFolder(this);
+			getMessages().add(message);
+		}
+		
+	}
+
+	private void removeMessage(MMessage message) {
+		message.setFolder(null);
+		getMessages().remove(message);
 	}		
 }

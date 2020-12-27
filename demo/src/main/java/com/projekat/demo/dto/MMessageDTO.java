@@ -14,9 +14,12 @@ public class MMessageDTO {
 	
 	private Integer id; 
 	private String from; 
-	private Set<String> to; 
-	private Set<String> cc; 
-	private Set<String> bcc; 
+	//private Set<String> to; 
+	//private Set<String> cc; 
+	//private Set<String> bcc; 
+	private String to; 
+	private String cc; 
+	private String bcc; 
 	private Date dateTime; 
 	private String subject; 
 	private String content; 
@@ -26,6 +29,33 @@ public class MMessageDTO {
 	private Set<Tag> tags = new HashSet<Tag>(); 
 	private Folder folder;
 	
+
+	public MMessageDTO(Integer id, String from, String to, String cc, String bcc, Date dateTime, String subject,
+			String content, boolean unread, Set<Attachment> attachments, Account account, Set<Tag> tags,
+			Folder folder) {
+		super();
+		this.id = id;
+		this.from = from;
+		this.to = to;
+		this.cc = cc;
+		this.bcc = bcc;
+		this.dateTime = dateTime;
+		this.subject = subject;
+		this.content = content;
+		this.unread = unread;
+		this.attachments = attachments;
+		this.account = account;
+		this.tags = tags;
+		this.folder = folder;
+	}
+	
+	public MMessageDTO(MMessage message) {
+		this(message.getId(), message.getFrom(), message.getTo(), message.getCc(), message.getBcc(), message.getDateTime(), message.getSubject(),
+				message.getContent(), message.getUnread(), message.getAttachments(), message.getAccount(), message.getTags(), message.getFolder());
+	}
+
+	
+	/*
 	public MMessageDTO(Integer id, String from, Set<String> to, Set<String> cc, Set<String> bcc, Date dateTime,
 			String subject, String content, boolean unread, Set<Attachment> attachments, Account account, Set<Tag> tags,
 			Folder folder) {
@@ -44,11 +74,13 @@ public class MMessageDTO {
 		this.tags = tags;
 		this.folder = folder;
 	}
-
+*/
+	/*
 	public MMessageDTO(MMessage message) {
 		this(message.getId(), message.getFrom(), message.getTo(), message.getCc(),message.getBcc(), message.getDateTime(), message.getSubject(), message.getContent(), 
 				message.getUnread(), message.getAttachments(), message.getAccount(), message.getTags(), message.getFolder());
 	}
+	*/
 	
 	public Integer getId() {
 		return id;
@@ -66,6 +98,7 @@ public class MMessageDTO {
 		this.from = from;
 	}
 
+	/*
 	public Set<String> getTo() {
 		return to;
 	}
@@ -90,8 +123,33 @@ public class MMessageDTO {
 		this.bcc = bcc;
 	}
 
+*/
 	public Date getDateTime() {
 		return dateTime;
+	}
+
+	public String getTo() {
+		return to;
+	}
+
+	public void setTo(String to) {
+		this.to = to;
+	}
+
+	public String getCc() {
+		return cc;
+	}
+
+	public void setCc(String cc) {
+		this.cc = cc;
+	}
+
+	public String getBcc() {
+		return bcc;
+	}
+
+	public void setBcc(String bcc) {
+		this.bcc = bcc;
 	}
 
 	public void setDateTime(Date dateTime) {
@@ -153,9 +211,5 @@ public class MMessageDTO {
 	public void setFolder(Folder folder) {
 		this.folder = folder;
 	} 
-	
-
-	
-
 
 }

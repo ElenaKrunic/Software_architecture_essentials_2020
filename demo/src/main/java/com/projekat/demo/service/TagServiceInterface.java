@@ -2,6 +2,7 @@ package com.projekat.demo.service;
 
 import java.util.List;
 
+import com.projekat.demo.entity.MMessage;
 import com.projekat.demo.entity.Tag;
 import com.projekat.demo.entity.User;
 
@@ -16,4 +17,7 @@ public Tag findOne(Integer id, User user);
 	public Tag save(Tag tag);
 	
 	public void remove(Integer id);
+	
+	public List<Tag> findByMessage(MMessage message);
+
 }

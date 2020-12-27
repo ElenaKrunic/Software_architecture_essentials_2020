@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.projekat.demo.entity.MMessage;
 import com.projekat.demo.entity.Tag;
 import com.projekat.demo.entity.User;
 import com.projekat.demo.repository.TagRepository;
@@ -31,10 +32,14 @@ public class TagService implements TagServiceInterface {
 		return tagRepository.save(tag);
 	}
 
+	public List<Tag> findByMessage(MMessage message) {
+		return tagRepository.findByMessages(message);
+	}
+
 	@Override
 	public void remove(Integer id) {
-		tagRepository.deleteById(id);
-
+		// TODO Auto-generated method stub
+		
 	}
 
 }
