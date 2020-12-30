@@ -1,4 +1,4 @@
-var link = "http://localhost:8081/users";
+var link = "http://localhost:8080";
 var prijaviSeDugme; 
 var username; 
 var password;
