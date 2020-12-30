@@ -1,7 +1,9 @@
 package com.projekat.demo.entity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +17,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="tags")
 public class Tag {
@@ -27,13 +31,17 @@ public class Tag {
 	@Column(name = "name", unique = false, nullable = false)
 	private String name;
 
-	@ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "tags")
-	private List<MMessage> messages;
+	//@ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "tags")
+	@Column(name="message_id")
+	@ManyToMany(mappedBy="tags")
+	@JsonIgnore
+	private Set<MMessage> messages = new HashSet<MMessage>();
 	
-	@ManyToOne
-	@JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JsonIgnore
+	@JoinColumn(name="user",referencedColumnName = "id",nullable = false)
 	private User user;
-
+	
 	public Integer getId() {
 		return id;
 	}
@@ -49,12 +57,12 @@ public class Tag {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public List<MMessage> getMessages() {
+	
+	public Set<MMessage> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(ArrayList<MMessage> messages) {
+	public void setMessages(Set<MMessage> messages) {
 		this.messages = messages;
 	}
 
@@ -65,4 +73,5 @@ public class Tag {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
 }

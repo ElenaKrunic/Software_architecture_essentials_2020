@@ -2,6 +2,7 @@ package com.projekat.demo.entity;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +29,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="messages")
-public class MMessage {
+public class MMessage implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", columnDefinition = "BIGINT", unique = true, nullable = false)
@@ -38,6 +44,7 @@ public class MMessage {
 	@Column(name = "message_from", columnDefinition = "VARCHAR(100)", unique = false, nullable = false)
 	private String from;
 	
+	/*
 	@ElementCollection
 	@CollectionTable(name="message_to", joinColumns = @JoinColumn(name = "message_id"))
 	@Column(name="message_to")
@@ -52,40 +59,52 @@ public class MMessage {
 	@CollectionTable(name="message_bcc", joinColumns = @JoinColumn(name = "message_id"))
 	@Column(name="message_bcc")
 	private Set<String> bcc;
+	*/
+	
+	@Column(name = "message_to", unique = false, nullable = false)
+	private String to;
+	
+	@Column(name = "cc", unique = false, nullable = true)
+	private String cc;
+	
+	@Column(name = "bcc", unique = false, nullable = true)
+	private String bcc;
 
-	@Column(name = "date_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
+	//RADI TESTIRANJA SAM STAVILA DA MI JE NULLABLE TRUE
+	@Column(name = "date_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = true)
 	private Date dateTime;
 
-	@Column(name = "subject", columnDefinition = "VARCHAR(250)", unique = false, nullable = true)
+	@Column(name = "subject", columnDefinition = "VARCHAR(250)", unique = false, nullable = false)
 	private String subject;
 
-	@Column(name = "content", columnDefinition = "TEXT", unique = false, nullable = true)
+	@Column(name = "content", columnDefinition = "TEXT", unique = false, nullable = false)
 	private String content;
 
 	@Column(name = "unread", columnDefinition = "BIT default 1", unique = false, nullable = false)
 	private Boolean unread;
 	
 	@ManyToOne
-	@JoinColumn(name = "folder", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "folder", referencedColumnName = "id", nullable = true)
 	@JsonIgnore
 	private Folder folder; 
+	
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "account", referencedColumnName = "id", nullable = false)
+	private Account account;
 
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "message")
+	@JsonIgnore
 	private Set<Attachment> attachments = new HashSet<Attachment>();
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "message_tags", joinColumns = @JoinColumn(name = "message_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
 	private Set<Tag> tags = new HashSet<Tag>();
-
-	@ManyToOne
-	@JsonIgnore
-	@JoinColumn(name = "account", referencedColumnName = "id", nullable = false)
-	private Account account;
 	
 	public MMessage() {
 		
 	}
-	
+	/*
 	public MMessage(Integer id, String from, Set<String> to, Set<String> cc, Set<String> bcc, Date dateTime,
 			String subject, String content, Boolean unread, Folder folder, Set<Attachment> attachments, Set<Tag> tags,
 			Account account) {
@@ -103,7 +122,7 @@ public class MMessage {
 		this.attachments = attachments;
 		this.tags = tags;
 		this.account = account;
-	}
+	}*/
 
 	public Integer getId() {
 		return id;
@@ -120,7 +139,52 @@ public class MMessage {
 	public void setFrom(String from) {
 		this.from = from;
 	}
+	
+	/*
+	public MMessage(Integer id, String from, String to, String cc, String bcc, Date dateTime, String subject,
+			String content, Boolean unread, Folder folder, Set<Attachment> attachments, Set<Tag> tags,
+			Account account) {
+		super();
+		this.id = id;
+		this.from = from;
+		this.to = to;
+		this.cc = cc;
+		this.bcc = bcc;
+		this.dateTime = dateTime;
+		this.subject = subject;
+		this.content = content;
+		this.unread = unread;
+		this.folder = folder;
+		this.attachments = attachments;
+		this.tags = tags;
+		this.account = account;
+	}*/
 
+	public String getTo() {
+		return to;
+	}
+
+	public void setTo(String to) {
+		this.to = to;
+	}
+
+	public String getCc() {
+		return cc;
+	}
+
+	public void setCc(String cc) {
+		this.cc = cc;
+	}
+
+	public String getBcc() {
+		return bcc;
+	}
+
+	public void setBcc(String bcc) {
+		this.bcc = bcc;
+	}
+
+	/*
 	public Set<String> getTo() {
 		return to;
 	}
@@ -144,6 +208,7 @@ public class MMessage {
 	public void setBcc(Set<String> bcc) {
 		this.bcc = bcc;
 	}
+	*/
 
 	public Date getDateTime() {
 		return dateTime;

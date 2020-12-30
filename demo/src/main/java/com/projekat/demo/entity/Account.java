@@ -1,5 +1,6 @@
 package com.projekat.demo.entity;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
@@ -23,42 +24,46 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="accounts")
-public class Account {
+public class Account implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", columnDefinition = "BIGINT", unique = true, nullable = false)
 	private Integer id;
 
-	@Column(name = "smtp_address", columnDefinition = "VARCHAR(250)", nullable = true)
+	@Column(name = "smtp_address", columnDefinition = "VARCHAR(250)", nullable = false)
 	private String smtpAddress;
 
-	@Column(name = "smtp_port", columnDefinition = "INT", nullable = true)
+	@Column(name = "smtp_port", columnDefinition = "INT", nullable = false)
 	private int smtpPort;
 
-	@Column(name = "in_server_type", columnDefinition = "TINYINT", nullable = true)
+	@Column(name = "in_server_type", columnDefinition = "TINYINT", nullable = false)
 	private int inServerType;
 
-	@Column(name = "in_server_address", columnDefinition = "VARCHAR(250)", nullable = true)
+	@Column(name = "in_server_address", columnDefinition = "VARCHAR(250)", nullable = false)
 	private String inServerAddress;
 
-	@Column(name = "in_server_port", columnDefinition = "INT", nullable = true)
+	@Column(name = "in_server_port", columnDefinition = "INT", nullable = false)
 	private int inServerPort;
 
-	@Column(name = "username", columnDefinition = "VARCHAR(50)", unique = true, nullable = true)
+	@Column(name = "username", columnDefinition = "VARCHAR(50)", unique = true, nullable = false)
 	private String username;
 
-	@Column(name = "password", columnDefinition = "VARCHAR(50)", nullable = true)
+	@Column(name = "password", columnDefinition = "VARCHAR(50)", nullable = false)
 	private String password;
 
-	@Column(name = "display_name", columnDefinition = "VARCHAR(100)", nullable = true)
+	@Column(name = "display_name", columnDefinition = "VARCHAR(100)", nullable = false)
 	private String displayName;
 	
 	@JsonIgnore
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "account")
 	private Set<Folder> folders = new HashSet<Folder>();
 	
-	@JsonIgnore
 	@OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, mappedBy = "account")
 	private Set<MMessage> messages = new HashSet<MMessage>(); 
 
@@ -70,6 +75,21 @@ public class Account {
 	@Column(name = "last_sync_time", columnDefinition = "TIMESTAMP", nullable = true)
 	private Timestamp lastSyncTime;
 	
+	public Account() {
+		
+	}
+	
+	public void addMessage(MMessage message) {
+		if(message.getAccount() != null) 
+			message.getAccount().removeMessage(message);
+		message.setAccount(this);
+		getMessages().add(message);
+	}
+
+	private void removeMessage(MMessage message) {
+		message.setAccount(null);
+		getMessages().remove(message);
+	}
 	
 	public Integer getId() {
 		return id;
@@ -180,6 +200,8 @@ public class Account {
 	public void setLastSyncTime(Timestamp lastSyncTime) {
 		this.lastSyncTime = lastSyncTime;
 	}
+
+	
 
 	/*
 	public void addFolder(Folder folder) {

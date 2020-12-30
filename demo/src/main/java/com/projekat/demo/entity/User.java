@@ -39,14 +39,11 @@ public class User {
 	
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Contact> contacts;
-
-	//@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "user")
-	//private List<Account> accounts;
 	
 	@OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, mappedBy="user")
 	private List<Account> accounts; 
 
-	@OneToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Tag> tags;
 
 	public Integer getId() {
@@ -105,6 +102,7 @@ public class User {
 		this.contacts = contacts;
 	}
 
+
 	public List<Tag> getTags() {
 		return tags;
 	}
@@ -112,4 +110,5 @@ public class User {
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
+	
 }

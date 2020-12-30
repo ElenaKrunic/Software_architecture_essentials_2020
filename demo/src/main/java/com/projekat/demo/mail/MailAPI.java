@@ -1,18 +1,24 @@
 package com.projekat.demo.mail;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.mail.Address;
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
+import javax.mail.Flags;
+import javax.mail.Message;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.PasswordAuthentication;
@@ -21,14 +27,18 @@ import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
+import javax.mail.internet.ContentType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import com.projekat.demo.dto.ContactDTO;
@@ -44,14 +54,26 @@ import com.sun.mail.util.BASE64DecoderStream;
 import com.sun.mail.util.MailSSLSocketFactory;
 
 import java.util.Properties;
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
 
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
 
+/**
+ * Izvori za javaMail Api : 
+ *  https://www.javatpoint.com/java-mail-api-tutorial
+ * 	https://www.codejava.net/* 
+ *  https://www.tutorialspoint.com/javamail_api/index.htm
+ * @author KrunicElena 
+ *
+ */
 @Component
 public class MailAPI {
+	
+	/*
 	private final String TMP_PATH = Objects.requireNonNull(getClass()
             .getClassLoader()
             .getResource(""))
@@ -314,9 +336,56 @@ public class MailAPI {
         return messages;
 	}
 	
+	
+	
 	/**
 	 * @deprecated Initially used to transfer data from API mail to our entity.
 	 */
+
+	public boolean sendMessage(MMessage message)  {
+		JavaMailSenderImpl mailSender = getJavaMailSender(message.getAccount());
+		
+		MimeMessage mimeMessage = mailSender.createMimeMessage();
+		MimeMessageHelper helper;
+		try {
+			helper = new MimeMessageHelper(mimeMessage,true);
+			
+			helper.setFrom(message.getFrom());
+			helper.setSubject(message.getSubject());
+			helper.setText(message.getContent());
+			helper.setCc(message.getCc());
+			helper.setTo(message.getTo());
+			helper.setBcc(message.getBcc());
+			//setovati to,bcc,cc
+			
+			mailSender.send(mimeMessage);
+			
+			return true;
+			
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	private static JavaMailSenderImpl getJavaMailSender(Account account) {
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		mailSender.setHost(account.getSmtpAddress());
+		mailSender.setPort(account.getSmtpPort());
+		
+		mailSender.setUsername(account.getUsername());
+		mailSender.setPassword(account.getPassword());
+		
+		Properties props = mailSender.getJavaMailProperties();
+		props.put("mail.transport.protocol", "smtp");
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.debug", "true");
+		
+		return mailSender;
+	}
+	
 	
 	/*
 	@SuppressWarnings("unused")
@@ -369,6 +438,229 @@ public class MailAPI {
 	
 	*/
 	
+	/*
+	
+	private List<MMessage> downloadFromEmail(String protocol, String host, String port, String username,
+			String password, MMessage lastMessage, Account account, Folder folder) throws IOException {
+		List<MMessage> messages = new ArrayList<MMessage>();
+		
+		try {
+			  Properties properties = new Properties();
+	        	properties.put("mail.store.protocol", protocol);
+	            properties.put("mail.imap.host", host);
+	            properties.put("mail.imap.port", port);
+	            properties.put("mail.imap.starttls.enable", "true");
+	        	Session session = Session.getDefaultInstance(properties);
+	        	Store store = session.getStore(protocol + "s");
+
+	            store.connect(host, username, password);
+			
+	            // opens the inbox folder
+	            javax.mail.Folder folderInbox = store.getFolder("INBOX");
+	            folderInbox.open(javax.mail.Folder.READ_ONLY);
+	            
+	            // fetches new messages from server
+	            
+	            int n=folderInbox.getMessageCount();
+	            //SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GT, yourDate);
+	            
+	            Message[] messagesFromInbox = folderInbox.getMessages();
+	            
+	            if(lastMessage != null) {
+	            	System.out.println("ucitava samo nove poruke koje nisu u bazi");
+	            	//ima poruka u bazi za ovaj account, ucitaj nove i sacuvaj nove u bazu
+	            	List<Message> newMessages = new ArrayList<Message>();
+	                for (Message message : messagesFromInbox) {
+	                    if (message.getSentDate().after(lastMessage.getDateTime()) && message.getSentDate().before(new Date()))
+	                       {
+	                    		System.out.println("poruka sa servera vrijeme: " + message.getSentDate() + " " + "poruka iz baze zadnja vrijeme: " + lastMessage.getDateTime());
+	                          System.out.println("Subject poruke koja je nakon datuma poslednje poruke iz baze: " + message.getSubject());
+	                          newMessages.add(message);
+	                          
+	                       } 
+	                }
+	                messages = setMessages(newMessages, account, folder, protocol);
+	            	
+	            }else {
+	            	System.out.println("cita sve, nema poruka u bazi za ovaj account");
+	            	//nema ni jedna poruka u bazi za ovaj account, ucitaj sve i sacuvaj ih u bazu
+	            	List<Message> lastMessagesAll = new ArrayList<Message>();
+	                for (Message message : messagesFromInbox) {
+	                	lastMessagesAll.add(message);
+	                }
+	                //System.out.println(messages.length);
+	                //System.out.println(lastMessagesAll.size());
+	                messages = setMessages(lastMessagesAll, account, folder, protocol);
+	            }
+	 
+	            // disconnect
+	            folderInbox.close(false);
+	            store.close();
+	        } catch (NoSuchProviderException ex) {
+	            System.out.println("No provider for protocol: " + protocol);
+	            ex.printStackTrace();
+	        } catch (MessagingException ex) {
+	            System.out.println("Could not connect to the message store");
+	            ex.printStackTrace();
+	            return null;
+	        }
+		
+		return messages;
+	}
+	
+	
+	private List<MMessage> setMessages(List<Message> newMessages, Account account, Folder folder, String protocol) throws MessagingException, IOException {
+		List<MMessage> messages = new ArrayList<MMessage>(); 
+		
+		 for (int i = 0; i < newMessages.size(); i++) {
+	            Message msg = newMessages.get(i);
+	            if(protocol.equalsIgnoreCase("imap")) {
+	            	if(msg.getFrom() == null || msg.getSentDate() == null) {
+	                	continue;
+	                }
+	            }
+	            MMessage message = new MMessage();
+	            Address[] froms = msg.getFrom();
+	            String from = froms == null ? null : ((InternetAddress) froms[0]).getAddress();
+	            //System.out.println(fromAddress);
+	            //String from = fromAddress[0].toString();
+	            //System.out.println(from);
+	            String subject = msg.getSubject();
+	            Set<String> toList = parseAddresses(msg
+	                    .getRecipients(RecipientType.TO));
+	            Set<String> ccList = parseAddresses(msg
+	                    .getRecipients(RecipientType.CC));
+	            Set<String> bccList = parseAddresses(msg.getRecipients(RecipientType.BCC));
+
+	            //String contentType = msg.getContentType();
+	            //System.out.println(contentType);
+
+	           
+	            
+	            message.setId(-1);
+	            if(protocol.equalsIgnoreCase("imap")) {
+	            	 message.setUnread(!msg.isSet(Flags.Flag.SEEN));
+	                 //System.out.println("imap procitana: " + !msg.isSet(Flags.Flag.SEEN));
+	            }else if(protocol.equalsIgnoreCase("pop3")) {
+	            	message.setUnread(true);
+	                //System.out.println("pop3 procitana: " + msg.isSet(Flags.Flag.SEEN));
+	            }
+	           
+	            message.setFrom(from);
+	            message.setTo(toList);
+	            message.setCc(ccList);
+	            message.setBcc(bccList);
+	            message.setDateTime(msg.getSentDate());
+	            //System.out.println(msg.getSentDate());
+	            message.setSubject(subject);
+	            //System.out.println(MailHelper.getTextFromMessage(msg).trim());
+	            message.setContent(getTextFromMessage(msg).trim());
+	            //System.out.println(message.getContent());
+	            Set<Attachment> attachments = extractAttachments(msg);
+	            for(Attachment attachment : attachments) {
+	            	attachment.setMessage(message);
+	            	//System.out.println(attachment.getMimeType());
+	            }
+	            message.setAttachments(attachments);
+	            message.setAccount(account);
+	            message.setFolder(folder);
+	            
+	            messages.add(message);
+	        }
+		
+		
+		return messages;
+	}
+
+	private Set<Attachment> extractAttachments(Message msg) throws IOException, MessagingException {
+	    Set<Attachment> attachments = new HashSet<Attachment>();
+        String contentType = msg.getContentType();
+        if(!(contentType.contains("multipart"))) {
+        	//no attachments
+        	return attachments;
+        }
+        
+        Multipart mp = (Multipart) msg.getContent();
+        
+        for(int i = 0; i<mp.getCount(); i++) {
+        	BodyPart bp = mp.getBodyPart(i);
+        	if(!Part.ATTACHMENT.equalsIgnoreCase(bp.getDisposition()) && StringUtils.isEmpty(bp.getFileName())) {
+        		continue;
+        	}
+        	
+        	//System.out.println("Attachment: " + bp.getFileName());
+        	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        	
+        	int bytesRead;
+        	byte[] buff = new byte[65536];
+        	InputStream is = bp.getInputStream();
+        	while((bytesRead = is.read(buff, 0, buff.length)) != -1) {
+        		baos.write(buff, 0, bytesRead);
+        	}
+        	
+        	byte[] data = baos.toByteArray();
+        	baos.close();
+        	System.out.println("Velicina fajla: " + data.length);
+        
+        	Attachment attachment = new Attachment();
+        	String decodedFilename = MimeUtility.decodeText(bp.getFileName());
+        	attachment.setName(decodedFilename);
+        	String[] lista = bp.getContentType().split(";");
+        	String mimeType = lista[0];
+        	attachment.setMimeType(mimeType.toLowerCase() + ";");
+        	attachment.setData(java.util.Base64.getEncoder().encodeToString(data));
+        	attachments.add(attachment);
+
+        }
+        
+        return attachments;
+	}
+
+	private String getTextFromMessage(Message msg) throws MessagingException, IOException {
+
+    	String s = "";
+        if (msg.isMimeType("text/plain")) {
+            s = msg.getContent().toString();
+        }else if(msg.isMimeType("multipart/*")){
+        		MimeMultipart mp = (MimeMultipart) msg.getContent();
+        		s = getTextFromMimeMultipart(mp);
+        	
+        }
+      
+        return s;
+	}
+
+	private static String getTextFromMimeMultipart(MimeMultipart mp) throws MessagingException, IOException {
+		int count = mp.getCount();
+    	if(count == 0) {
+    		throw new MessagingException("Meultipart with no body parts not supported");
+    	}
+    	boolean mpAlternative = new ContentType(mp.getContentType()).match("multipart/alternative");
+    	if(mpAlternative) {
+    		return getTextFromBodyPart(mp.getBodyPart(count - 1));
+    	}
+    	String s = "";
+    	for(int i = 0; i < count; i++) {
+    		BodyPart bp = mp.getBodyPart(i);
+    		s+= getTextFromBodyPart(bp);
+    	}
+    	return s;
+	}
+	  private static String getTextFromBodyPart(BodyPart bp) throws MessagingException, IOException{
+	    	String s = "";
+	    	if(bp.isMimeType("text/plain")) {
+	    		s = (String) bp.getContent();
+	    	}else if(bp.isMimeType("text/html")) {
+	    		String html = (String) bp.getContent();
+	    		s = Jsoup.parse(html).wholeText();
+	    	}else if(bp.getContent() instanceof MimeMultipart){
+	    		s = getTextFromMimeMultipart((MimeMultipart) bp.getContent());
+	    	}
+	    	return s;
+	    }
+
+
+
 	// Pomocna metoda za izvlacenje attachmenta iz API-jeve poruke
 	private ArrayList<BodyPart> extractParts(MimeMultipart multipart) {
 		ArrayList<BodyPart> parts = new ArrayList<BodyPart>();
@@ -392,5 +684,25 @@ public class MailAPI {
 
 		return parts;
 	}
+
+	public List<MMessage> main(Account account, Folder folder, MMessage lastMessage) throws IOException {
+		String protocol = ""; 
+		
+		if(account.getInServerType() == 0) {
+			protocol = "imap"; 
+		} else {
+			protocol = "pop3";
+		}
+		
+		String host = account.getInServerAddress(); 
+		//String port = account.getInServerPort();
+		String port = String.valueOf(account.getInServerPort());
+		String username = account.getUsername(); 
+		String password = account.getPassword(); 
+		
+		List<MMessage> messages  = downloadFromEmail(protocol,host,port,username,password,lastMessage,account,folder);
+		return messages; 
+	}	
 	
+	*/
 }
