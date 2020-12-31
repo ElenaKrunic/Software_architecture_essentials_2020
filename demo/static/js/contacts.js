@@ -1,7 +1,7 @@
 // ucitava listu kontakata 
 var ContactManager = {
 	//vraca url 
-		basePath: function() { return 'http://localhost:8081/api'; }, 
+		basePath: function() { return 'http://localhost:8080/api'; }, 
 		
 	showContactsList: function() {
 			$.ajax({

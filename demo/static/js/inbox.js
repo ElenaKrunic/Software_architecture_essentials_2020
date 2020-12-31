@@ -1,4 +1,4 @@
-var url = "http://localhost:8081/account"; 
+var url = "http://localhost:8080/account"; 
 var account = localStorage.getItem("account");
 
 $document.ready(function(){

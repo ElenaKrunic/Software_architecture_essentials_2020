@@ -21,7 +21,7 @@ function login() {
 		}
 				
 		$.ajax({
-			url : link + '/login', 
+			url : link + '/api/users/login', 
 			type: "POST", 
 			contentType: "application/json", 
 			data: JSON.stringify(data),
