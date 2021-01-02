@@ -111,4 +111,27 @@ public class User {
 		this.tags = tags;
 	}
 	
+	public void addTag(Tag tag) {
+		if(tag.getUser() != null) 
+			tag.getUser().removeTag(tag);
+		tag.setUser(this);
+		getTags().add(tag);
+	}
+	
+	public void removeTag(Tag tag) {
+		tag.setUser(null);
+		getTags().remove(tag);
+	}
+	
+	public void addContact(Contact contact) {
+		if(contact.getUser() != null) 
+			contact.getUser().removeContact(contact);
+		contact.setUser(this);
+		getContacts().add(contact);
+	}
+	
+	public void removeContact(Contact contact) {
+		contact.setUser(null);
+		getContacts().add(contact);
+	}
 }

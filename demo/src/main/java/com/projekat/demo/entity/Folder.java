@@ -145,5 +145,17 @@ public class Folder {
 	private void removeMessage(MMessage message) {
 		message.setFolder(null);
 		getMessages().remove(message);
+	}	
+	
+	public void addRule(Rule rule) {
+		if(rule.getFolder()!= null) 
+			rule.getFolder().removeRule(rule);
+		rule.setFolder(this);
+		getRules().add(rule);
 	}		
+	
+	public void removeRule(Rule rule) {
+		rule.setFolder(null);
+		getRules().add(rule);
+	}
 }

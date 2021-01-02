@@ -12,12 +12,16 @@ public interface TagServiceInterface {
 
 public Tag findOne(Integer id, User user);
 	
-	public List<Tag> findAll();
-	
-	public Tag save(Tag tag);
-	
-	public void remove(Integer id);
-	
-	public List<Tag> findByMessage(MMessage message);
+public List<Tag> findAll();
+
+public Tag save(Tag tag);
+
+public void remove(Long id);
+
+public List<Tag> findByMessage(MMessage message);
+
+Tag findOne(Long tagId);
+
+List<Tag> findByUser(User user);
 
 }

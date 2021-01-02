@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projekat.demo.dto.RuleDTO;
+import com.projekat.demo.entity.Folder;
 import com.projekat.demo.entity.Rule;
+import com.projekat.demo.service.FolderService;
 import com.projekat.demo.service.RuleServiceIntefrace;
 
 @RestController
@@ -25,6 +27,9 @@ public class RuleController {
 
 	@Autowired
 	private RuleServiceIntefrace ruleService; 
+	
+	@Autowired
+	private FolderService folderService; 
 	
 	@GetMapping
 	public ResponseEntity<List<RuleDTO>> getRules() {
@@ -50,19 +55,25 @@ public class RuleController {
 		return new ResponseEntity<RuleDTO>(new RuleDTO(rule), HttpStatus.OK); 
 	}
 	
-	@PostMapping(consumes="application/json")
-	public ResponseEntity<RuleDTO> saveRule(@RequestBody RuleDTO ruleDTO) {
+		@PostMapping(value="/{folderId}", consumes="application/json")
+	public ResponseEntity<RuleDTO> saveRule(@RequestBody RuleDTO ruleDTO, @PathVariable("folderId") Integer folderId) {
+		Folder folder = folderService.findById(folderId); 
+		
+		if(folder == null) {
+			return new ResponseEntity<RuleDTO>(HttpStatus.NOT_FOUND); 
+		}
+		
 		Rule rule = new Rule(); 
-		
-		rule.setCondition(ruleDTO.getCondition());
-		//getuj folder --- opet ona prica sa objektom 
-		rule.setOperation(ruleDTO.getOperation());
 		rule.setValue(ruleDTO.getValue());
+		rule.setCondition(ruleDTO.getCondition());
+		rule.setOperation(ruleDTO.getOperation());
 		
-		ruleService.save(rule); 
+		folder.addRule(rule);
 		
-		return new ResponseEntity<RuleDTO>(new RuleDTO(rule), HttpStatus.CREATED); 
+		rule = ruleService.save(rule); 
+		return new ResponseEntity<RuleDTO>(new RuleDTO(rule), HttpStatus.CREATED);
 	}
+	
 	
 	@PutMapping(value="/{id}", consumes="application/json")
 	public ResponseEntity<RuleDTO> updateRule(@RequestBody RuleDTO ruleDTO, @PathVariable("id") Integer id) {
@@ -92,4 +103,5 @@ public class RuleController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
+
 }

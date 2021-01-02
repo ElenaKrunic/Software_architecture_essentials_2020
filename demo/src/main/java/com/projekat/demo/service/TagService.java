@@ -36,10 +36,24 @@ public class TagService implements TagServiceInterface {
 		return tagRepository.findByMessages(message);
 	}
 
+
 	@Override
-	public void remove(Integer id) {
-		// TODO Auto-generated method stub
-		
+	public Tag findOne(Long tagId) {
+		return tagRepository.getOne(tagId); 
+	}
+
+	@Override
+	public List<Tag> findByUser(User user) {
+		return tagRepository.findByUser(user);
+	}
+
+	@Override
+	public void remove(Long tagId) {
+		tagRepository.deleteById(tagId);
+	}
+
+	public Tag findById(Integer id) {
+		return tagRepository.findById(id);
 	}
 
 }

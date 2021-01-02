@@ -12,11 +12,12 @@ import org.springframework.data.repository.query.Param;
 import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.Folder;
 import com.projekat.demo.entity.MMessage;
+import com.projekat.demo.entity.Tag;
 
 
 public interface MMessageRepository extends JpaRepository<MMessage, Integer> {
 	
-	public List<MMessage> findAll();
+public List<MMessage> findAll();
 	
 	public MMessage findByIdAndAccount(Integer id, Account account);
 	
@@ -35,5 +36,9 @@ public interface MMessageRepository extends JpaRepository<MMessage, Integer> {
 	List<MMessage> findByAccount(Account account);
 
 	public List<MMessage> findByFolder(Folder folder);
+
+	public List<MMessage> findAllByAccountIdAndFolderId(Integer accountId, Integer folderId);
+
+	public List<MMessage> findByAccountAndTags(Account account, Tag tag);
 	
 }

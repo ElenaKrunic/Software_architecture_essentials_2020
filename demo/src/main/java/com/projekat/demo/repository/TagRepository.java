@@ -12,7 +12,11 @@ import com.projekat.demo.entity.User;
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
+	List<Tag> findByUser(User user);
+
 	public Tag findByIdAndUser(Integer id, User user);
 
 	public List<Tag> findByMessages(MMessage message);
+	
+	Tag findById(Integer id);
 }

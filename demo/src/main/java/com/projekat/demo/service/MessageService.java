@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.Folder;
 import com.projekat.demo.entity.MMessage;
+import com.projekat.demo.entity.Tag;
 import com.projekat.demo.repository.MMessageRepository;
 
 @Service
@@ -70,6 +71,11 @@ public class MessageService implements MessageServiceInterface {
 		// TODO Auto-generated method stub
 		return messageRepository.findByFolder(folder);
 	}
+	
+	public List<MMessage> findByAccountAndTag(Account account, Tag tag) {
+		return messageRepository.findByAccountAndTags(account,tag);
+	}
+
 
 	
 }
