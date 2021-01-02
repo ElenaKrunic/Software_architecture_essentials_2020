@@ -33,6 +33,8 @@ import com.projekat.demo.service.FolderService;
 import com.projekat.demo.service.MessageService;
 import com.projekat.demo.service.UserService;
 
+
+
 @RestController
 @RequestMapping(value="api/accounts")
 public class AccountController {
@@ -70,6 +72,17 @@ public class AccountController {
 			dtoAccounts.add(dto);
 		}
 		return new ResponseEntity<List<AccountDTO>>(dtoAccounts, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping(value="/{id}")
+	public ResponseEntity<AccountDTO> getAccount(@PathVariable("id") Integer id){
+		Account account = accountService.findOne(id);
+		if(account == null){
+			return new ResponseEntity<AccountDTO>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<AccountDTO>(new AccountDTO(account), HttpStatus.OK);
 	}
 	
 	/**
