@@ -2,15 +2,20 @@ package com.projekat.demo.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.projekat.demo.dto.TagDTO;
 import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.Folder;
 import com.projekat.demo.entity.MMessage;
 import com.projekat.demo.entity.Tag;
 import com.projekat.demo.repository.MMessageRepository;
+
 
 @Service
 public class MessageService implements MessageServiceInterface {
@@ -76,6 +81,12 @@ public class MessageService implements MessageServiceInterface {
 		return messageRepository.findByAccountAndTags(account,tag);
 	}
 
-
+	
+	@Override
+	public MMessage addTagToMessage(MMessage message, Integer tagId) {
+	
+		return null;
+	//throw new NotImplementedException();	
+	}
 	
 }

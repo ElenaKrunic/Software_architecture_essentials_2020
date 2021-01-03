@@ -9,6 +9,8 @@ import com.projekat.demo.entity.MMessage;
 
 public interface MessageServiceInterface {
 	
+	MMessage addTagToMessage(MMessage message, Integer tagId);
+
 	public List<MMessage> findAll();
 	
 	//public List<MMessage> getMessages(Account account);

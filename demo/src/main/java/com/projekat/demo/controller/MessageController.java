@@ -7,12 +7,14 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.mail.Message;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,7 +57,10 @@ import com.projekat.demo.util.FilesUtil;
 public class MessageController {
 	
 	@Autowired
-	private MessageServiceInterface messageService; 
+	private MessageServiceInterface messageServiceInt; 
+	
+	@Autowired
+	private MessageService messageService; 
 	
 	@Autowired
 	private TagService tagService; 
@@ -78,6 +83,9 @@ public class MessageController {
 	@Autowired
 	private FolderService folderService; 
 	
+	@Autowired
+	private UserService userService; 
+	
 	
 	/**
 	 * 
@@ -87,7 +95,7 @@ public class MessageController {
 
 	public ResponseEntity<List<MMessageDTO>> getMessages() {
 		
-		List<MMessage> messages = messageService.findAll(); 
+		List<MMessage> messages = messageServiceInt.findAll(); 
 		
 		List<MMessageDTO> dtoMessages = new ArrayList<MMessageDTO>();
 		
@@ -105,7 +113,7 @@ public class MessageController {
 	
 	@GetMapping(value="/{id}")
 	public ResponseEntity<MMessageDTO> getMessage(@PathVariable("id") Integer id) {
-		MMessage message = messageService.findOne(id);
+		MMessage message = messageServiceInt.findOne(id);
 		
 		if(message == null) {
 			return new ResponseEntity<MMessageDTO>(HttpStatus.NOT_FOUND); 
@@ -123,7 +131,7 @@ public class MessageController {
 	@GetMapping(value="/{id}/tags")
 	public ResponseEntity<List<TagDTO>> getMessageTags(@PathVariable("id") Integer id) {
 		
-		MMessage message = messageService.findOne(id); 
+		MMessage message = messageServiceInt.findOne(id); 
 		
 		if(message == null) { return new ResponseEntity<List<TagDTO>>(HttpStatus.NOT_FOUND);}
 		
@@ -144,7 +152,7 @@ public class MessageController {
 	@GetMapping(value="/{id}/attachments")
 	public ResponseEntity<List<AttachmentDTO>> getAttachments(@PathVariable("id") Integer id) {
 		
-		MMessage message = messageService.findOne(id); 
+		MMessage message = messageServiceInt.findOne(id); 
 		
 		if(message == null) { return new ResponseEntity<List<AttachmentDTO>>(HttpStatus.NOT_FOUND);}
 		
@@ -210,13 +218,13 @@ public class MessageController {
 			
 		}
 		
-		message = messageService.save(message);
+		message = messageServiceInt.save(message);
 		
 		boolean sent = mailApi.sendMessage(message); 
 		//System.out.println("Ovo je sadrzaj sent poruke koja odlazi na API" +sent );
 		
 		if(sent) {
-			message = messageService.save(message);
+			message = messageServiceInt.save(message);
 			System.out.println("Ovo je poruka koja se vratila kao true ili false sa mail api-ja" + message);
 			
 			return new ResponseEntity<MMessageDTO>(new MMessageDTO(message), HttpStatus.CREATED);
@@ -242,9 +250,7 @@ public class MessageController {
 	
 	//NEURADJENO: 
 	// 1.metoda za filtriranje poruka naloga -> PostMapping
-	// 2.metoda za update messageTag-ova -> PutMapping 
-	
-	// 2.metoda za oznacavanje procitanjeporuke -> PutMapping
+
 	/**
 	 * metoda pomocu koje neprocitana poruka postaje procitana 
 	 * @param id poruke 
@@ -252,18 +258,17 @@ public class MessageController {
 	 */
 	@PutMapping(value = "/{id}/markAsRead")
 	public ResponseEntity<Boolean> markAsRead(@PathVariable("id") Integer id){
-		MMessage message = messageService.findOne(id);
+		MMessage message = messageServiceInt.findOne(id);
 		
 		if(message== null) {
 			return new ResponseEntity<Boolean>(HttpStatus.NOT_FOUND);
 		}
 		
 		message.setUnread(false);
-		message = messageService.save(message); 
+		message = messageServiceInt.save(message); 
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 	
-	//4.metoda za pomjeranje poruke -> PutMapping  
 	/**
 	 * 
 	 * @param id poruke 
@@ -272,7 +277,7 @@ public class MessageController {
 	 */
 	@PutMapping(value="/{id}/moveTo/{folderId}")
 	public ResponseEntity<MMessageDTO> moveMessage(@PathVariable("id")Integer id, @PathVariable("folderId") Integer folderId) {
-		MMessage message = messageService.findOne(id); 
+		MMessage message = messageServiceInt.findOne(id); 
 		
 		if(message == null) {
 			return new ResponseEntity<MMessageDTO>(HttpStatus.NOT_FOUND);
@@ -284,116 +289,113 @@ public class MessageController {
 		}
 		
 		folder.addMessage(message);
-		message = messageService.save(message); 
+		message = messageServiceInt.save(message); 
 		
 		return new ResponseEntity<MMessageDTO>(new MMessageDTO(message), HttpStatus.OK);
 	}
 	
-	//5.metoda za brisanje poruke -> DeleteMapping 
 
 	@DeleteMapping(value="/{id}")
 	public ResponseEntity<Void> deleteMessage(@PathVariable("id") Integer id) {
-		MMessage message = messageService.findOne(id); 
+		MMessage message = messageServiceInt.findOne(id); 
 		
 		if(message != null) {
-			//message.getAccount().removeMessage(message);
-			//message.getFolder().removeMessage(message);
-			
-			//for(Tag tag : message.getTags()) {
-				//message.removeTag(tag);
-			//}
-			messageService.remove(id);
+			messageServiceInt.remove(id);
 			return new ResponseEntity<Void>(HttpStatus.OK); 
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
 	}
 
-	//=================================  metoda za filtriranje poruka naloga ==========================================================
-	
-	/*
-	
-	@PutMapping(value="/{id}", consumes = "application/json")
-	public ResponseEntity<MMessageDTO> updateMessage(@RequestBody MMessageDTO messageDTO, @PathVariable("id") Integer id) {
-		MMessage message = messageService.findOne(id); 
+/**
+ * 	
+ * @param messageDTO tijelo poruke koja ce da primi novi tag ili odradi update postojeceg 
+ * @param id poruke 
+ * @return poruka sa izmijenjenim tagom 
+ */
+	@PutMapping(value= "/addTag/{id}", consumes="application/json")
+	public ResponseEntity<MMessageDTO> addTagToMessage(@RequestBody MMessageDTO messageDTO, @PathVariable("id") Integer id) {
 		
+		MMessage message = messageService.findOne(id);
 		if(message == null) {
-			return new ResponseEntity<MMessageDTO>(HttpStatus.BAD_REQUEST); 
+			return new ResponseEntity<MMessageDTO>(HttpStatus.NOT_FOUND);
 		}
 		
-		message.setContent(messageDTO.getContent());
-		message.setSubject(messageDTO.getSubject());
-		message.setDateTime(messageDTO.getDateTime());
+		User user = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 		
-		messageService.save(message); 
+		//set tagova koji vec postoje 
+		Set<Tag> postojeciTagovi = message.getTags(); 
+		//set tagova koje cemo da kreiramo 
+		Set<Tag> updatedTags = new HashSet<Tag>();
+		Set<Tag> tagoviZaBrisanje = new HashSet<Tag>();
+		Set<Tag> tagoviZaDodavanje = new HashSet<Tag>();
+		boolean shouldDelete = false; 
+		boolean shouldAdd = true; 
 		
-		return new ResponseEntity<MMessageDTO>(new MMessageDTO(message), HttpStatus.OK); 
+		Tag tagToWork;
+	
+		for(TagDTO tagDTO : messageDTO.getTags()) {
+			//ako ne postoji id taga 
+			if(tagDTO.getId() == null) {
+				//inicijalizujemo novi
+				tagToWork = new Tag();
+				//postavljamo mu ime 
+				tagToWork.setName(tagDTO.getName());
+				//dodajemo ga korisniku 
+				user.addTag(tagToWork);
+				//cuvamo preko servisne metode 
+				tagToWork = tagService.save(tagToWork);
+			} else {
+				//u suprotnom,pronalazimo ga po proslijednom id-u 
+				tagToWork = tagService.findById(id);
+			}
+			
+			if(tagToWork != null) {
+				updatedTags.add(tagToWork);
+			}
+		}
+		
+		for(Tag postojeciTag : postojeciTagovi) {
+			for(Tag updatedTag : updatedTags) {
+				if(postojeciTag.getId() == updatedTag.getId()) {
+					shouldDelete = false; 
+					break; 
+				}
+			}
+			
+			if(shouldDelete) {
+				tagoviZaBrisanje.add(postojeciTag);
+			}
+		}
+		
+		for(Tag updatedTag : updatedTags) {
+			for(Tag postojeciTag : postojeciTagovi) {
+				if(updatedTag.getId() == postojeciTag.getId()) {
+					shouldAdd= false; 
+					break; 
+				}
+			}
+			
+			if(shouldAdd) {
+				tagoviZaDodavanje.add(updatedTag);
+			}
+		}
+		
+		for(Tag tag : tagoviZaBrisanje) 
+			message.removeTag(tag);
+		
+		for(Tag tag : tagoviZaDodavanje) 
+			message.addTag(tag);
+		
+		message = messageService.save(message);
+		return new ResponseEntity<MMessageDTO>(new MMessageDTO(message), HttpStatus.CREATED);
+		
 	}
 	
-	@PostMapping(value="/filterMessages/{accountId}")
-	public ResponseEntity<List<MMessageDTO>> filterMessagesForAccount(@RequestBody FilterDTO filter, @PathVariable("accountId") Integer id){
-		Account account = accountService.findOne(id); 
-		
-		if(account == null) {
-			return new ResponseEntity<List<MMessageDTO>>(HttpStatus.NOT_FOUND); 
-		}
-		
-		List<MMessage> messages = messageService.findAllByAccount(account);
-		Set<MMessage> filtering = new HashSet<MMessage>();
-		
-		if(filter.getTags().size() > 0) {
-			for(MMessage message : messages) {
-				tagLoop : for(Tag tag : message.getTags()) {
-					for(TagDTO tagDTO : filter.getTags()) {
-						if(tag.getId() == tagDTO.getId()) {
-							filtering.add(message);
-							break tagLoop;
-						}
-					}
-				}
-			}
-		}
-		
-		if(filter.getSearchText().isEmpty()) {
-			for(MMessage message : messages) {
-				if(message.getFrom().toLowerCase().contains(filter.getSearchText().toLowerCase())) {
-					filtering.add(message);
-					continue;
-				}
-				if(message.getCc().toLowerCase().contains(filter.getSearchText().toLowerCase())) {
-					filtering.add(message);
-					continue;
-				}
-				if(message.getBcc().toLowerCase().contains(filter.getSearchText().toLowerCase())) {
-					filtering.add(message);
-					continue;
-				}
-				if(message.getSubject().toLowerCase().contains(filter.getSearchText().toLowerCase())) {
-					filtering.add(message);
-					continue;
-				}
-				if(message.getContent().toLowerCase().contains(filter.getSearchText().toLowerCase())) {
-					filtering.add(message);
-					continue;
-				}
-			}
-		
-		}
-		
-		List<MMessage> filteredMessages = new ArrayList<MMessage>(); 
-		filteredMessages.addAll(filtering);
-		
-		List<MMessageDTO> accountMessages = new ArrayList<MMessageDTO>();
-		for (int i = 0; i < 50; i ++) {
-			if ( i == filteredMessages.size())
-				break;
-			accountMessages.add(new MMessageDTO(filteredMessages.get(i)));
-		}
-		
-		return new ResponseEntity<List<MMessageDTO>>(accountMessages, HttpStatus.OK);
-	}
-		
-	}
-	*/
+
+	
+	// ============================================ METODA ZA FILTRIRANJE  ===========================================
+	
+	
 }
 
