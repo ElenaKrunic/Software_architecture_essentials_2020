@@ -1,6 +1,8 @@
 package com.projekat.demo.dto;
 
 import com.projekat.demo.entity.Attachment;
+import com.projekat.demo.util.Base64;
+import com.projekat.demo.util.FilesUtil;
 
 public class AttachmentDTO {
 	
@@ -9,31 +11,23 @@ public class AttachmentDTO {
 	private String mimeType; 
 	private String name; 
 	
-	//veze izmedju beanova 
-	private MMessageDTO message;
+	public AttachmentDTO(Integer id, String data, String mimeType, String name) {
+		this.id=id;
+		this.data=data;
+		this.mimeType=mimeType;
+		this.name=name;
+	}
 	
 	public AttachmentDTO(Attachment attachment) {
-		this.id=attachment.getId();
-		this.data=attachment.getData();
-		this.mimeType=attachment.getMimeType();
-		this.name=attachment.getName();
-		/*
-		this.message = new MMessageDTO();
-		this.message.setContent(attachment.getMessage().getContent());
-		this.message.setDateTime(attachment.getMessage().getDateTime());
-		this.message.setSubject(attachment.getMessage().getSubject());
-		this.message.setUnread(attachment.getMessage().getUnread());
-		*/
+		this(attachment.getId(), attachment.getData() ,attachment.getMimeType(), attachment.getName());
+		
+		if (attachment.getData() != null && !attachment.getData().isEmpty()) {
+			byte[] attachmentData = FilesUtil.readBytes(attachment.getData());
+			if (attachmentData != null)
+				this.data = Base64.encodeToString(attachmentData);
+		}
 	}
 	
-	public MMessageDTO getMessage() {
-		return message;
-	}
-
-	public void setMessage(MMessageDTO message) {
-		this.message = message;
-	}
-
 	public Integer getId() {
 		return id;
 	}
@@ -62,13 +56,7 @@ public class AttachmentDTO {
 	public String toString() {
 		return "AttachmentDTO [id=" + id + ", data=" + data + ", mimeType=" + mimeType + ", name=" + name + "]";
 	}
-	public AttachmentDTO(Integer id, String data, String mimeType, String name) {
-		super();
-		this.id = id;
-		this.data = data;
-		this.mimeType = mimeType;
-		this.name = name;
-	}
+
 	public AttachmentDTO() {
 		super();
 	} 

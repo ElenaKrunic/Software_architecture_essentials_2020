@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -44,23 +45,6 @@ public class MMessage implements Serializable {
 	@Column(name = "message_from", columnDefinition = "VARCHAR(100)", unique = false, nullable = false)
 	private String from;
 	
-	/*
-	@ElementCollection
-	@CollectionTable(name="message_to", joinColumns = @JoinColumn(name = "message_id"))
-	@Column(name="message_to")
-	private Set<String> to;
-	
-	@ElementCollection
-	@CollectionTable(name="message_cc", joinColumns = @JoinColumn(name = "message_id"))
-	@Column(name="message_cc")
-	private Set<String> cc; 
-	
-	@ElementCollection
-	@CollectionTable(name="message_bcc", joinColumns = @JoinColumn(name = "message_id"))
-	@Column(name="message_bcc")
-	private Set<String> bcc;
-	*/
-	
 	@Column(name = "message_to", unique = false, nullable = false)
 	private String to;
 	
@@ -72,7 +56,7 @@ public class MMessage implements Serializable {
 
 	//RADI TESTIRANJA SAM STAVILA DA MI JE NULLABLE TRUE
 	@Column(name = "date_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = true)
-	private Date dateTime;
+	private LocalDateTime dateTime;
 
 	@Column(name = "subject", columnDefinition = "VARCHAR(250)", unique = false, nullable = false)
 	private String subject;
@@ -104,25 +88,27 @@ public class MMessage implements Serializable {
 	public MMessage() {
 		
 	}
-	/*
-	public MMessage(Integer id, String from, Set<String> to, Set<String> cc, Set<String> bcc, Date dateTime,
-			String subject, String content, Boolean unread, Folder folder, Set<Attachment> attachments, Set<Tag> tags,
-			Account account) {
-		super();
-		this.id = id;
-		this.from = from;
-		this.to = to;
-		this.cc = cc;
-		this.bcc = bcc;
-		this.dateTime = dateTime;
-		this.subject = subject;
-		this.content = content;
-		this.unread = unread;
-		this.folder = folder;
-		this.attachments = attachments;
-		this.tags = tags;
-		this.account = account;
-	}*/
+	
+	public void addAttachment(Attachment attachment) {
+		if(attachment.getMessage()!=null) 
+			attachment.getMessage().removeAttachment(attachment);
+		attachment.setMessage(this);
+		getAttachments().add(attachment);
+	}
+	private void removeAttachment(Attachment attachment) {
+		attachment.setMessage(null);
+		getAttachments().remove(attachment);
+	}
+	
+	public void addTag(Tag tag) {
+		tag.getMessages().add(this); 
+		getTags().add(tag);
+	}
+
+	public void removeTag(Tag tag) {
+		tag.getMessages().remove(this);
+		getTags().remove(tag);
+	}
 
 	public Integer getId() {
 		return id;
@@ -140,26 +126,6 @@ public class MMessage implements Serializable {
 		this.from = from;
 	}
 	
-	/*
-	public MMessage(Integer id, String from, String to, String cc, String bcc, Date dateTime, String subject,
-			String content, Boolean unread, Folder folder, Set<Attachment> attachments, Set<Tag> tags,
-			Account account) {
-		super();
-		this.id = id;
-		this.from = from;
-		this.to = to;
-		this.cc = cc;
-		this.bcc = bcc;
-		this.dateTime = dateTime;
-		this.subject = subject;
-		this.content = content;
-		this.unread = unread;
-		this.folder = folder;
-		this.attachments = attachments;
-		this.tags = tags;
-		this.account = account;
-	}*/
-
 	public String getTo() {
 		return to;
 	}
@@ -184,37 +150,11 @@ public class MMessage implements Serializable {
 		this.bcc = bcc;
 	}
 
-	/*
-	public Set<String> getTo() {
-		return to;
-	}
-
-	public void setTo(Set<String> to) {
-		this.to = to;
-	}
-
-	public Set<String> getCc() {
-		return cc;
-	}
-
-	public void setCc(Set<String> cc) {
-		this.cc = cc;
-	}
-
-	public Set<String> getBcc() {
-		return bcc;
-	}
-
-	public void setBcc(Set<String> bcc) {
-		this.bcc = bcc;
-	}
-	*/
-
-	public Date getDateTime() {
+	public LocalDateTime getDateTime() {
 		return dateTime;
 	}
 
-	public void setDateTime(Date dateTime) {
+	public void setDateTime(LocalDateTime dateTime) {
 		this.dateTime = dateTime;
 	}
 
@@ -273,4 +213,24 @@ public class MMessage implements Serializable {
 	public void setAccount(Account account) {
 		this.account = account;
 	}
+
+	public static MMessage clone(MMessage message) {
+		MMessage copy = new MMessage();
+		copy.setFrom(message.getFrom());
+		copy.setTo(message.getTo());
+		copy.setCc(message.getCc());
+		copy.setBcc(message.getBcc());
+		copy.setDateTime(message.getDateTime());
+		copy.setSubject(message.getSubject());
+		copy.setContent(message.getContent());
+		copy.setUnread(message.unread);
+		message.getAccount().addMessage(copy);
+		for (Tag tag : message.getTags())
+			copy.addTag(tag);
+		for (Attachment attachment : message.getAttachments())
+			copy.addAttachment(Attachment.clone(attachment));
+		
+		return copy;
+	}
+	
 }

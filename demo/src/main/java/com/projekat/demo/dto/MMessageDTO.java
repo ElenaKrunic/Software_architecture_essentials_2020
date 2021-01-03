@@ -1,5 +1,7 @@
 package com.projekat.demo.dto;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,29 +12,28 @@ import com.projekat.demo.entity.Folder;
 import com.projekat.demo.entity.MMessage;
 import com.projekat.demo.entity.Tag;
 
-public class MMessageDTO {
+public class MMessageDTO implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1364408015539579586L;
 	
 	private Integer id; 
 	private String from; 
-	//private Set<String> to; 
-	//private Set<String> cc; 
-	//private Set<String> bcc; 
 	private String to; 
 	private String cc; 
 	private String bcc; 
-	private Date dateTime; 
+	private LocalDateTime dateTime; 
 	private String subject; 
 	private String content; 
 	private boolean unread; 
-	private Set<Attachment> attachments = new HashSet<Attachment>(); 
-	private Account account; 
-	private Set<Tag> tags = new HashSet<Tag>(); 
-	private Folder folder;
-	
+	private Set<AttachmentDTO> attachments = new HashSet<AttachmentDTO>();	
+	private Set<TagDTO> tags = new HashSet<TagDTO>(); 
 
-	public MMessageDTO(Integer id, String from, String to, String cc, String bcc, Date dateTime, String subject,
-			String content, boolean unread, Set<Attachment> attachments, Account account, Set<Tag> tags,
-			Folder folder) {
+	
+	public MMessageDTO(Integer id, String from, String to, String cc, String bcc, LocalDateTime dateTime, String subject,
+			String content, boolean unread) {
 		super();
 		this.id = id;
 		this.from = from;
@@ -43,44 +44,25 @@ public class MMessageDTO {
 		this.subject = subject;
 		this.content = content;
 		this.unread = unread;
-		this.attachments = attachments;
-		this.account = account;
-		this.tags = tags;
-		this.folder = folder;
 	}
 	
 	public MMessageDTO(MMessage message) {
 		this(message.getId(), message.getFrom(), message.getTo(), message.getCc(), message.getBcc(), message.getDateTime(), message.getSubject(),
-				message.getContent(), message.getUnread(), message.getAttachments(), message.getAccount(), message.getTags(), message.getFolder());
+				message.getContent(), message.getUnread());
+		
+		for(Tag tag : message.getTags()) {
+			this.tags.add(new TagDTO(tag));
+		}
+		
+		for(Attachment attachment : message.getAttachments()) {
+			this.attachments.add(new AttachmentDTO(attachment));
+		}
 	}
 
 	
-	/*
-	public MMessageDTO(Integer id, String from, Set<String> to, Set<String> cc, Set<String> bcc, Date dateTime,
-			String subject, String content, boolean unread, Set<Attachment> attachments, Account account, Set<Tag> tags,
-			Folder folder) {
-		super();
-		this.id = id;
-		this.from = from;
-		this.to = to;
-		this.cc = cc;
-		this.bcc = bcc;
-		this.dateTime = dateTime;
-		this.subject = subject;
-		this.content = content;
-		this.unread = unread;
-		this.attachments = attachments;
-		this.account = account;
-		this.tags = tags;
-		this.folder = folder;
+	public MMessageDTO() {
+		
 	}
-*/
-	/*
-	public MMessageDTO(MMessage message) {
-		this(message.getId(), message.getFrom(), message.getTo(), message.getCc(),message.getBcc(), message.getDateTime(), message.getSubject(), message.getContent(), 
-				message.getUnread(), message.getAttachments(), message.getAccount(), message.getTags(), message.getFolder());
-	}
-	*/
 	
 	public Integer getId() {
 		return id;
@@ -98,33 +80,7 @@ public class MMessageDTO {
 		this.from = from;
 	}
 
-	/*
-	public Set<String> getTo() {
-		return to;
-	}
-
-	public void setTo(Set<String> to) {
-		this.to = to;
-	}
-
-	public Set<String> getCc() {
-		return cc;
-	}
-
-	public void setCc(Set<String> cc) {
-		this.cc = cc;
-	}
-
-	public Set<String> getBcc() {
-		return bcc;
-	}
-
-	public void setBcc(Set<String> bcc) {
-		this.bcc = bcc;
-	}
-
-*/
-	public Date getDateTime() {
+	public LocalDateTime getDateTime() {
 		return dateTime;
 	}
 
@@ -152,7 +108,7 @@ public class MMessageDTO {
 		this.bcc = bcc;
 	}
 
-	public void setDateTime(Date dateTime) {
+	public void setDateTime(LocalDateTime dateTime) {
 		this.dateTime = dateTime;
 	}
 
@@ -180,36 +136,21 @@ public class MMessageDTO {
 		this.unread = unread;
 	}
 
-	public Set<Attachment> getAttachments() {
-		return attachments;
-	}
-
-	public void setAttachments(Set<Attachment> attachments) {
-		this.attachments = attachments;
-	}
-
-	public Account getAccount() {
-		return account;
-	}
-
-	public void setAccount(Account account) {
-		this.account = account;
-	}
-
-	public Set<Tag> getTags() {
+	public Set<TagDTO> getTags() {
 		return tags;
 	}
 
-	public void setTags(Set<Tag> tags) {
+	public void setTags(Set<TagDTO> tags) {
 		this.tags = tags;
 	}
+	
 
-	public Folder getFolder() {
-		return folder;
+	public Set<AttachmentDTO> getAttachmentsDTO() {
+		return attachments;
 	}
 
-	public void setFolder(Folder folder) {
-		this.folder = folder;
-	} 
+	public void setAttachmentsDTO(Set<AttachmentDTO> attachments) {
+		this.attachments = attachments;
+	}
 
 }
