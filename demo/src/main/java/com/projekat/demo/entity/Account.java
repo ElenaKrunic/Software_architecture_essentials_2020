@@ -3,7 +3,6 @@ package com.projekat.demo.entity;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -18,17 +17,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="accounts")
 public class Account implements Serializable {
-
-	/**
-	 * 
-	 */
+ 
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -91,6 +85,18 @@ public class Account implements Serializable {
 		getMessages().remove(message);
 	}
 	
+	public void addFolder(Folder folder) {
+		if(folder.getAccount()!= null)
+			folder.getAccount().removeFolder(folder);
+		folder.setAccount(this);
+		getFolders().add(folder);
+	}
+	
+	private void removeFolder(Folder folder) {
+		folder.setAccount(null);
+		getFolders().remove(folder);
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -98,7 +104,6 @@ public class Account implements Serializable {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 
 	public String getSmtpAddress() {
 		return smtpAddress;
@@ -164,14 +169,6 @@ public class Account implements Serializable {
 		this.displayName = displayName;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-	
 	public Set<Folder> getFolders() {
 		return folders;
 	}
@@ -188,9 +185,12 @@ public class Account implements Serializable {
 		this.messages = messages;
 	}
 
-	@Override
-	public String toString() {
-		return "Account [username=" + username + ", password=" + password + ", displayName=" + displayName + "]";
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Timestamp getLastSyncTime() {
@@ -201,17 +201,10 @@ public class Account implements Serializable {
 		this.lastSyncTime = lastSyncTime;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 	
 
-	/*
-	public void addFolder(Folder folder) {
-		if(folder.getAccount() != null) {
-			folder.getAccount().removeFolder(folder); 
-			folder.setAccount(this);
-			getFolders().add(folder);
-		}
-	}
-	*/
-	
 }
 

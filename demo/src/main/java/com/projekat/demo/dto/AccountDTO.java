@@ -1,14 +1,6 @@
 package com.projekat.demo.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.projekat.demo.entity.Account;
-import com.projekat.demo.entity.Folder;
-import com.projekat.demo.entity.MMessage;
-import com.projekat.demo.entity.User;
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountDTO {
 
 	private Integer id; 
@@ -21,50 +13,21 @@ public class AccountDTO {
 	private String password; 
 	private String displayName;
 	
-	//veze izmedju beanova
-	private UserDTO user; 
-	private List<FolderDTO> folders = new ArrayList<FolderDTO>();
-	private List<MMessageDTO> messages = new ArrayList<MMessageDTO>();
-	
 	public AccountDTO(Account account) {
-		this.id = account.getId();
-		this.smtpAddress = account.getSmtpAddress(); 
-		this.smtpPort=account.getSmtpPort(); 
-		this.inServerType=account.getInServerType(); 
-		this.inServerAddress = account.getInServerAddress();
-		this.inServerPort=account.getInServerPort();
-		this.username=account.getUsername();
-		this.password=account.getPassword();
-		this.displayName=account.getDisplayName();
-		
-		/*
-		this.user = new UserDTO(); 
-		this.user.setId(account.getUser().getId());
-		this.user.setUsername(account.getUser().getUsername());
-		this.user.setPassword(account.getUser().getPassword());
-		this.user.setFirstName(account.getUser().getFirstName());
-		this.user.setLastName(account.getUser().getLastName());
-		
-		/*
-		for(Folder folder : account.getFolders()) {
-			folders.add(new FolderDTO(folder));
-		}
-		
-		for(MMessage message : account.getMessages()) {
-			messages.add(new MMessageDTO(message));
-		} */
+	this.id = account.getId();
+	this.smtpAddress = account.getSmtpAddress(); 
+	this.smtpPort=account.getSmtpPort(); 
+	this.inServerType=account.getInServerType(); 
+	this.inServerAddress = account.getInServerAddress();
+	this.inServerPort=account.getInServerPort();
+	this.username=account.getUsername();
+	this.password=account.getPassword();
+	this.displayName=account.getDisplayName();
 	}
 
-	public UserDTO getUser() {
-		return user;
-	}
-
-	public void setUser(UserDTO user) {
-		this.user = user;
-	}
 	
 	public AccountDTO() {
-		super();
+
 	}
 
 	public Integer getId() {
@@ -99,21 +62,6 @@ public class AccountDTO {
 		this.inServerType = inServerType;
 	}
 
-	public List<FolderDTO> getFolders() {
-		return folders;
-	}
-
-	public void setFolders(List<FolderDTO> folders) {
-		this.folders = folders;
-	}
-
-	public List<MMessageDTO> getMessages() {
-		return messages;
-	}
-
-	public void setMessages(List<MMessageDTO> messages) {
-		this.messages = messages;
-	}
 
 	public String getInServerAddress() {
 		return inServerAddress;
@@ -176,8 +124,4 @@ public class AccountDTO {
 				+ ", username=" + username + ", password=" + password + ", displayName=" + displayName + "]";
 	}
 
-	
-	
-	
-	
 }

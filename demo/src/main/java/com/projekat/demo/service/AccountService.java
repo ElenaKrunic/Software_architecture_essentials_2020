@@ -1,8 +1,6 @@
 package com.projekat.demo.service;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,17 +32,12 @@ public class AccountService implements AccountServiceInterface {
 	return accountRepository.findAll();
 	}
 
-
-
 	@Override
 	public Account save(Account account) {
 		return accountRepository.save(account);
 	}
 
-
-
 	public Account findByAccountId(int accountId, String username) {
-		
 		User user = userService.findByUsername(username);
 		System.out.println("User je " + user); 
 		
@@ -74,13 +67,14 @@ public class AccountService implements AccountServiceInterface {
 
 	@Override
 	public Account findOne(Integer accountId) {
-		// TODO Auto-generated method stub
 		return accountRepository.findById(accountId);
 	}
 
 	@Override
-	public void removeAccount(Integer id) {
-		// TODO Auto-generated method stub
-		
+	public void removeAccount(Account account) {
+		accountRepository.delete(account);
 	}
+
+
+
 }

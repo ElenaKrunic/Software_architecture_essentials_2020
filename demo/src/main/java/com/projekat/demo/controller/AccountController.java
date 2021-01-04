@@ -1,11 +1,7 @@
 package com.projekat.demo.controller;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import javax.swing.text.html.parser.Entity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,8 +29,20 @@ import com.projekat.demo.service.FolderService;
 import com.projekat.demo.service.MessageService;
 import com.projekat.demo.service.UserService;
 
-
-
+/**
+ * Kontroler koji radi sa nalogom. 
+ * Metode koje su implementirane: 
+ *  1. Pronalazenje svih naloga za korisnika 
+ *  2. Pronalazenje pojedinackog naloga za korisnika 
+ *  3. Pronalazenje liste svih poruka za nalog 
+ *  4. Pronalazenje liste svih foldera za nalog 
+ *  5. Pronalazenje svih naloga iz aplikacije 
+ *  6. Dodavanje novog naloga 
+ *  7. Izmjena postojeceg naloga 
+ *  8. Brisanje naloga 
+ * @author Elena Krunic 
+ *
+ */
 @RestController
 @RequestMapping(value="api/accounts")
 public class AccountController {
@@ -57,7 +65,7 @@ public class AccountController {
 	
 	/**
 	 * 
-	 * @param id korisnika 
+	 * @param id korisnika cije naloge zelimo ispisati  
 	 * @return lista naloga za korisnika 
 	 */
 	@GetMapping("/getAccountsForUser/{id}")
@@ -73,8 +81,12 @@ public class AccountController {
 		}
 		return new ResponseEntity<List<AccountDTO>>(dtoAccounts, HttpStatus.OK);
 	}
-	
-	
+
+	/**
+	 * 
+	 * @param id korisnika 
+	 * @return pojedinacan nalog za korisnika 
+	 */
 	@GetMapping(value="/{id}")
 	public ResponseEntity<AccountDTO> getAccount(@PathVariable("id") Integer id){
 		Account account = accountService.findOne(id);
@@ -83,40 +95,6 @@ public class AccountController {
 		}
 		
 		return new ResponseEntity<AccountDTO>(new AccountDTO(account), HttpStatus.OK);
-	}
-	
-	/**
-	 * 
-	 * @param id korisnika
-	 * @param oldUsername staro korisnicko ime 
- 	 * @param newUsername novo korisnicko ime 
-	 * @return novi korisnicki nalog 
-	 */
-	@PutMapping("/changeAccount/{id}/{old_username}/{new_username}")
-	public ResponseEntity<AccountDTO> changeAccount(@PathVariable("id") Integer id, @PathVariable("old_username") String oldUsername, @PathVariable("new_username") String newUsername) {
-		
-		Account oldAccount = accountService.findByAccountIdAndUsername(id, oldUsername);
-		
-		if(oldUsername != null) {
-			if(oldAccount == null) {
-				System.out.println("Stari nalog je null "); 
-				return new ResponseEntity<AccountDTO>(HttpStatus.BAD_REQUEST); 
-			} 
-			
-			oldAccount = accountService.save(oldAccount);
-		}
-		
-		Account newAccount = accountService.findByAccountIdAndUsername(id, newUsername);
-		
-		if(newAccount == null) {
-			System.out.println("Nema novog naloga !"); 
-			return new ResponseEntity<AccountDTO>(HttpStatus.BAD_REQUEST); 
-		}
-		
-		accountService.save(newAccount);
-		System.out.println("Vrijednosti novog naloga su " + newAccount);
-	
-		return new ResponseEntity<AccountDTO>(new AccountDTO(newAccount), HttpStatus.OK); 
 	}
 	
 	
@@ -169,7 +147,7 @@ public class AccountController {
 	}
 	
 	/**
-	 * 
+	 * Metoda za ispis svih naloga iz aplikacije 
 	 * @return listu naloga 
 	 */
 	@GetMapping
@@ -186,31 +164,12 @@ public class AccountController {
 		
 	/**
 	 * dodavanje novog naloga 
-	 * @param accountDTO
-	 * @return
+	 * @param accountDTO 
+	 * @return kreiran nalog u bazi 
 	 */
 	@PostMapping("/saveAccount/{userUsername}")
 	public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO accountDTO, @PathVariable("userUsername") String username) {
-		
-		//--------------------------- VALIDACIJA ----------------------------------------------
-		/*
-		if (accountDTO.getSmtpAddress().isEmpty())
-			return new ResponseEntity<AccountDTO>("Smtp Address can't be empty!", HttpStatus.BAD_REQUEST);
-		else if (accountDTO.getSmtpPort() == 0)
-			return new ResponseEntity<String>("Smtp Port can't be empty!", HttpStatus.BAD_REQUEST);
-		else if (accountDTO.getInServerType() == 0)
-			return new ResponseEntity<String>("In Server Type can't be empty!", HttpStatus.BAD_REQUEST);
-		else if (accountDTO.getInServerAddress().isEmpty())
-			return new ResponseEntity<String>("In Server Address can't be empty!", HttpStatus.BAD_REQUEST);
-		else if (accountDTO.getInServerPort() == 0)
-			return new ResponseEntity<String>("In Server Port can't be empty!", HttpStatus.BAD_REQUEST);
-		else if (accountDTO.getUsername().isEmpty())
-			return new ResponseEntity<String>("Username can't be empty!", HttpStatus.BAD_REQUEST);
-		else if (accountDTO.getPassword().isEmpty())
-			return new ResponseEntity<String>("Password can't be empty!", HttpStatus.BAD_REQUEST);
-		else if (accountDTO.getDisplayName().isEmpty())
-			return new ResponseEntity<String>("Display Name can't be empty!", HttpStatus.BAD_REQUEST); */
-		
+			
 		User user = this.userService.findByUsername(username); 
 		Account userAccount = this.accountService.findByAccountIdAndUsername(user.getId(), username);
 		
@@ -278,8 +237,8 @@ public class AccountController {
 	/**
 	 * izmjena postojeceg naloga iz baze 
 	 * @param accountDTO
-	 * @param id
-	 * @return
+	 * @param id naloga koji mijenjamo 
+	 * @return izmijenjen nalog u bazi 
 	 */
 	@PutMapping(value="updateAccount/{accountId}", consumes="application/json")
 	public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO accountDTO, @PathVariable("accountId") Integer id) {
@@ -315,14 +274,14 @@ public class AccountController {
 	/**
 	 * brisanje naloga 
 	 * @param id
-	 * @return
+	 * @return obrisan nalog 
 	 */
-	@DeleteMapping(value="deleteAccount/{accountId}")
-	public ResponseEntity<Void> deleteAccount(@PathVariable("accountId") Integer id) {
+	@DeleteMapping(value="deleteAccount/{id}")
+	public ResponseEntity<Void> deleteAccount(@PathVariable("id") Integer id) {
 		Account account = accountService.findOne(id); 
 		
 		if(account != null) {
-			accountService.removeAccount(id); 
+			accountService.removeAccount(account); 
 			return new ResponseEntity<Void>(HttpStatus.OK); 
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
