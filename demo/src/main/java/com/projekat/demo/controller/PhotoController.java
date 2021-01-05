@@ -1,3 +1,4 @@
+/*
 package com.projekat.demo.controller;
 
 import java.util.ArrayList;
@@ -63,6 +64,6 @@ public class PhotoController {
 	
 }
 		
-
+*/
 
 	

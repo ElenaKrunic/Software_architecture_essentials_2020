@@ -1,6 +1,5 @@
 package com.projekat.demo.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,11 @@ import com.projekat.demo.repository.PhotoRepository;
 import com.projekat.demo.service.ContactServiceInterface;
 import com.projekat.demo.service.UserServiceInterface;
 
+/**
+ * Implementiran kontroler za rad sa kontaktima 
+ * @author Elena Krunic 
+ *
+ */
 @RestController
 @RequestMapping(value="api/contacts")
 public class ContactController {
@@ -38,12 +42,22 @@ public class ContactController {
 	
 	@Autowired PhotoRepository photoRepository;
 	
+	/**
+	 * 
+	 * @param id korisnika cije kontakte zelimo prikazati 
+	 * @return lista kontakata za korisnika 
+	 */
 	@GetMapping(value="/getContactsForUser/{userId}")
 	public List<Contact> getContacts(@PathVariable("userId") Integer id) { 
 		List<Contact> contacts = contactRepository.findAllByUserId(id); 
 		return contacts; 
 	}
 
+	/**
+	 * 
+	 * @param id kontakta 
+	 * @return pojedinacan kontakt 
+	 */
 	@GetMapping(value="/{id}")
 	public ResponseEntity<ContactDTO> getContact(@PathVariable("id") Integer id) {
 		Contact contact = contactService.findOne(id); 
@@ -55,6 +69,13 @@ public class ContactController {
 		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.OK);
 	} 
 	
+	
+	/**
+	 * 
+	 * @param contactDTO dto bean koji zelimo da kreiramo 
+	 * @param id korisnika kojem ce biti dodijeljen kontakt 
+	 * @return novokreirani kontakt u bazi 
+	 */
 	@PostMapping("/saveContact/{userId}")
 	public ResponseEntity<ContactDTO> saveContact(@RequestBody ContactDTO contactDTO, @PathVariable("userId") Integer id) {
 		
@@ -64,13 +85,31 @@ public class ContactController {
 			return new ResponseEntity<ContactDTO>(HttpStatus.BAD_REQUEST); 
 		}
 		
-		contactDTO.setUser(user); 
+		Photo photo = new Photo(); 
+		photo.setPath(contactDTO.getPhoto().getPath());
+		photo = this.photoRepository.save(photo); 
 		
-		Contact contact = this.contactService.addNewContact(contactDTO);
-		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.CREATED); 
+		Contact contact = new Contact(); 
+		contact.setFirstName(contactDTO.getFirstName());
+		contact.setLastName(contactDTO.getLastName());
+		contact.setDisplayName(contactDTO.getDisplayName());
+		contact.setEmail(contactDTO.getEmail());
+		contact.setNote(contactDTO.getNote());
+		contact.setPhoto(photo);
+		user.addContact(contact); 
+		
+		contact = this.contactService.save(contact);
+		
+		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.OK); 
 	}
 	
  
+	/**
+	 * 
+	 * @param contactDTO bean koji zelimo da izmijenimo 
+	 * @param id kontakta koji mijenjamo 
+	 * @return izmijenjen postojeci kontakt u bazi podataka 
+	 */
 	@PutMapping(value="/updateContact/{id}", consumes="application/json")
 	public ResponseEntity<ContactDTO> updateContact(@RequestBody ContactDTO contactDTO, @PathVariable("id") Integer id) {
 		
@@ -85,25 +124,27 @@ public class ContactController {
 		contact.setDisplayName(contactDTO.getDisplayName());
 		contact.setEmail(contactDTO.getEmail());
 		contact.setNote(contactDTO.getNote());
-		//if(contact.getPhoto() != null) {
-			//contact.getPhoto().setPath(contactDTO.getPhoto().getPath());
-		//} else {
-			//contact.getPhoto().setPath(null);
-			//System.out.println("Kontakt nema sliku, postaviti da bude nullable=false za sliku"); 
-	//	}
-		//contact.getPhoto().setPath(contactDTO.getPhoto().getPath());
-		//contact = this.contactService.save(contact);
-		contact = this.contactService.save(contactDTO);
+		if(contact.getPhoto() ==  null) {
+			contact.setPhoto(contactDTO.getPhoto());
+		} else {
+			contact.getPhoto().setPath(contactDTO.getPhoto().getPath());
+		}		
+		contact = this.contactService.save(contact);
 		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.OK); 
+		
 	} 
 	
-	
+	/**
+	 * 
+	 * @param id kontakta koji zelimo obrisati 
+	 * @return obrisan kontakt 
+	 */
 	@DeleteMapping(value="deleteContact/{id}")
 	public ResponseEntity<Void> deleteContact(@PathVariable("id") Integer id) {
 		Contact contact = contactService.findOne(id);
 
 		if(contact!=null) {
-			contactService.removeContact(id); 
+			contactService.removeContact(contact); 
 			return new ResponseEntity<Void>(HttpStatus.OK); 
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND); 

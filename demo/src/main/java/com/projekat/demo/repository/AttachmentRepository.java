@@ -11,4 +11,6 @@ import com.projekat.demo.entity.Tag;
 public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
 
 	public List<Attachment> findByMessage(MMessage message);
+	
+	public Attachment findById(Integer id);
 }

@@ -10,6 +10,8 @@ public class AttachmentDTO {
 	private String data; 
 	private String mimeType; 
 	private String name; 
+
+	public AttachmentDTO() {} 
 	
 	public AttachmentDTO(Integer id, String data, String mimeType, String name) {
 		this.id=id;
@@ -56,11 +58,4 @@ public class AttachmentDTO {
 	public String toString() {
 		return "AttachmentDTO [id=" + id + ", data=" + data + ", mimeType=" + mimeType + ", name=" + name + "]";
 	}
-
-	public AttachmentDTO() {
-		super();
-	} 
-	
-	
-
 }

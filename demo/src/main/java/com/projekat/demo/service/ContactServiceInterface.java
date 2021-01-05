@@ -13,9 +13,9 @@ public interface ContactServiceInterface {
 	//staro 
 	//Contact save(Contact contact); 
 	
-	Contact save(ContactDTO newContact);
+	Contact save(Contact newContact);
 	
-	void removeContact(Integer id);
+	void removeContact(Contact contact);
 
 	Contact addNewContact(ContactDTO contactDTO);
 

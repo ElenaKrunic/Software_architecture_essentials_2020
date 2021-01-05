@@ -1,15 +1,19 @@
 package com.projekat.demo.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+
 import com.projekat.demo.entity.Contact;
 import com.projekat.demo.entity.Photo;
 
-public class PhotoDTO {
+public class PhotoDTO implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7696981515812096529L;
 	private Integer id;
 	private String path;
 	//veze izmedju beanova
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Contact contact; 
 	
 	public PhotoDTO(Integer id, String path, Contact contact) {
@@ -48,3 +52,4 @@ public class PhotoDTO {
 		this.path = path;
 	}
 }
+

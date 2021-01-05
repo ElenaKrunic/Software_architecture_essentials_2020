@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -16,9 +15,6 @@ import javax.persistence.Table;
 @Table(name="attachments")
 public class Attachment implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -26,7 +22,7 @@ public class Attachment implements Serializable {
 	@Column(name = "id", columnDefinition = "BIGINT", unique = true, nullable = false)
 	private Integer id;
 
-	@Column(name = "data", columnDefinition = "LONGTEXT", nullable = false)
+	@Column(name = "data", nullable = false)
 	private String data;
 
 	@Column(name = "mime_type", columnDefinition = "VARCHAR(20)", nullable = false)
@@ -36,8 +32,10 @@ public class Attachment implements Serializable {
 	private String name;
 
 	@ManyToOne
-	@JoinColumn(name = "message", referencedColumnName = "id", nullable = true)
+	@JoinColumn(name = "message", referencedColumnName = "id", nullable = false)
 	private MMessage message;
+	
+	public Attachment() {}
 
 	public Integer getId() {
 		return id;

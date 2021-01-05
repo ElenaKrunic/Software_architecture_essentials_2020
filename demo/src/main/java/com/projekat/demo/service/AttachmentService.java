@@ -32,14 +32,12 @@ public class AttachmentService implements AttachmentServiceInterface {
 
 	@Override
 	public Attachment findOne(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		return attachmentRepository.findById(id);
 	}
 
 	@Override
-	public void remove(Integer id) {
-		// TODO Auto-generated method stub
-		
+	public void remove(Attachment attachment)  {
+		attachmentRepository.delete(attachment);
 	}
 
 }

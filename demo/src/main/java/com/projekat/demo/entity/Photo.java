@@ -4,31 +4,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.IDENTITY;
+import java.io.Serializable;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 
 @Entity
 @Table(name="photos")
-public class Photo {
+public class Photo implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1552222911104137525L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "photo_id", unique = true, nullable = false)
@@ -39,12 +32,14 @@ public class Photo {
 
 	//@OneToOne(mappedBy = "plate", cascade = CascadeType.ALL, orphanRemoval = true)
 	//@JsonIgnore
-	@OneToOne(mappedBy = "photo", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonBackReference
-	private Contact contact;
+	//@OneToOne(mappedBy = "photo", cascade = CascadeType.ALL, orphanRemoval = true)
+	//@JsonBackReference
+	//private Contact contact;
+	@OneToOne(mappedBy="photo")
+	private Contact contact; 
 	
 	public Photo() {
-		super();
+		
 	}
 	
 

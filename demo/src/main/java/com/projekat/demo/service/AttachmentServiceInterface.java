@@ -13,6 +13,6 @@ public Attachment findOne(Integer id);
 	
 	public Attachment save(Attachment attachment);
 	
-	public void remove(Integer id);
+	public void remove(Attachment attachment);
 
 }

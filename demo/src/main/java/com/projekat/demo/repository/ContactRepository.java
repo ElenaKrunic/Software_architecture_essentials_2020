@@ -16,4 +16,6 @@ public interface ContactRepository extends JpaRepository<Contact, Integer> {
 	
 	public List<Contact> findAllByUserId(Integer id); 
 	
+	
+	
 }

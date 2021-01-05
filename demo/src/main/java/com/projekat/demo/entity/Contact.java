@@ -1,32 +1,29 @@
 package com.projekat.demo.entity;
 
 import java.io.Serializable;
-import java.util.List;
-
-import static javax.persistence.GenerationType.IDENTITY;
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.LAZY;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="contacts")
-public class Contact {
+public class Contact implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3339913746382517243L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,24 +49,14 @@ public class Contact {
 	@JsonManagedReference
     @JoinColumn(name = "photo_id", referencedColumnName = "photo_id",nullable = true)
 	private Photo photo;
-
+	
 	@ManyToOne
 	@JsonIgnore
 	@JoinColumn(name = "user", referencedColumnName = "id", nullable = true)
 	private User user;
 
+	public Contact() {}
 	
-	public Photo getPhoto() {
-		return photo;
-	}
-
-	public void setPhoto(Photo photo) {
-		this.photo = photo;
-	}
-	
-	public Contact() {
-		super();
-	}
 	
 	public Integer getId() {
 		return id;
@@ -118,6 +105,15 @@ public class Contact {
 	public void setNote(String note) {
 		this.note = note;
 	}
+
+	public Photo getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(Photo photo) {
+		this.photo = photo;
+	}
+
 
 	public User getUser() {
 		return user;

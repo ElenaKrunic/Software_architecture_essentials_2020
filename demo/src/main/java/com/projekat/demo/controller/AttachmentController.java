@@ -17,8 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.projekat.demo.dto.AttachmentDTO;
 import com.projekat.demo.entity.Attachment;
+import com.projekat.demo.entity.MMessage;
 import com.projekat.demo.service.AttachmentServiceInterface;
+import com.projekat.demo.service.MessageService;
 
+/**
+ * Kontroler za rad sa prilozima 
+ * Implementirane su osnovne CRUD metode 
+ * 
+ * @author Elena Krunic 
+ *
+ */
 @RestController
 @RequestMapping(value="api/attachments")
 public class AttachmentController {
@@ -26,6 +35,13 @@ public class AttachmentController {
 	@Autowired
 	private AttachmentServiceInterface attachmentService; 
 	
+	@Autowired
+	private MessageService messageService; 
+	
+	/**
+	 * 
+	 * @return lista priloga iz baze 
+	 */
 	@GetMapping
 	public ResponseEntity<List<AttachmentDTO>> getAttachments() {
 		List<Attachment> attachments = attachmentService.findAll();
@@ -37,56 +53,85 @@ public class AttachmentController {
 		return new ResponseEntity<List<AttachmentDTO>>(attachmentsDTO, HttpStatus.OK);
 	}
 	
+	/**
+	 * 
+	 * @param id priloga
+	 * @return prilog iz baze ciji je ID proslijedjen 
+	 */
+	
 	@GetMapping(value="/{id}")
 	public ResponseEntity<AttachmentDTO> getAttachment(@PathVariable("id") Integer id) {
-		Attachment attachment = attachmentService.findOne(id); 
+		Attachment attachment = attachmentService.findOne(id);
 		
 		if(attachment == null) {
-			return new ResponseEntity<AttachmentDTO>(HttpStatus.BAD_REQUEST); 
-		} else {
-			return new ResponseEntity<AttachmentDTO>(new AttachmentDTO(attachment), HttpStatus.OK);
+			return new ResponseEntity<AttachmentDTO>(HttpStatus.NOT_FOUND);
 		}
+		
+		return new ResponseEntity<AttachmentDTO>(new AttachmentDTO(attachment), HttpStatus.OK);
 	}
 	
-	@PostMapping(consumes="application/json")
-	public ResponseEntity<AttachmentDTO> saveAttachment(@RequestBody AttachmentDTO attachmentDTO) {
+	/**
+	 * 
+	 * @param attachmentDTO proslijedjen je prilog koji cemo da kreiramo 
+	 * @param id poruke unutar koje cemo da sacuvamo prilog 
+	 * @return kreirani prilog u bazi 
+	 */
+	@PostMapping(value="addAttachmentForMessage/{id}", consumes="application/json")
+	public ResponseEntity<AttachmentDTO> saveAttachment(@RequestBody AttachmentDTO attachmentDTO,@PathVariable("id") Integer id) {
+		
+		MMessage message = messageService.findOne(id);
+		
+		if(message == null) {
+			return new ResponseEntity<AttachmentDTO>(HttpStatus.NOT_FOUND);
+		}
 		
 		Attachment attachment = new Attachment(); 
 		attachment.setData(attachmentDTO.getData());
-		attachment.setMessage(attachment.getMessage());
 		attachment.setMimeType(attachmentDTO.getMimeType());
 		attachment.setName(attachmentDTO.getName());
+		message.addAttachment(attachment);
 		
 		attachment = attachmentService.save(attachment);
 		
 		return new ResponseEntity<AttachmentDTO>(new AttachmentDTO(attachment), HttpStatus.CREATED); 
 	}
 	
-	@PutMapping(value="/{id}", consumes = "application/json")
+	/**
+	 * 
+	 * @param attachmentDTO tijelo priloga koje cemo da mijenjamo 
+	 * @param id postojeceg priloga 
+	 * @return izmijenjen prilog i sacuvan u bazu 
+	 */
+	@PutMapping(value="updateAttachment/{id}", consumes = "application/json")
 	public ResponseEntity<AttachmentDTO> updateAttachment(@RequestBody AttachmentDTO attachmentDTO, @PathVariable("id") Integer id) {
-		
+
 		Attachment attachment = attachmentService.findOne(id); 
-		
+				
 		if(attachment == null) {
-			return new ResponseEntity<AttachmentDTO>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<AttachmentDTO>(HttpStatus.NOT_FOUND);
 		}
 		
+		
 		attachment.setData(attachmentDTO.getData());
-		attachment.setMessage(attachment.getMessage());
 		attachment.setMimeType(attachmentDTO.getMimeType());
 		attachment.setName(attachmentDTO.getName());
 	
-		attachmentService.save(attachment);
+		attachment = this.attachmentService.save(attachment);
 		
 		return new ResponseEntity<AttachmentDTO>(new AttachmentDTO(attachment), HttpStatus.OK);
 	}
 	
-	@DeleteMapping
+	/**
+	 * 
+	 * @param id priloga kog cemo brisati 
+	 * @return obrisan prilog iz baze 
+	 */
+	@DeleteMapping(value="deleteAtt/{id}")
 	public ResponseEntity<Void> deleteAttachment(@PathVariable("id") Integer id) {
 		Attachment attachment = attachmentService.findOne(id); 
 		
 		if(attachment!=null) {
-			attachmentService.remove(id);
+			attachmentService.remove(attachment);
 			return new ResponseEntity<Void>(HttpStatus.OK); 
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);

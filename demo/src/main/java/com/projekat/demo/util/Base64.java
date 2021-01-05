@@ -57,7 +57,8 @@ public class Base64 {
    *  @return decoded data array
    */
   public static byte[] decode(char[] data) {
-    int len = ((data.length + 3) / 4) * 3;
+    //int len = ((data.length + 3) / 4) * 3;
+	  int len = ((data.length + 3) / 4) * 3; 
     if (data.length>0 && data[data.length-1] == '=') --len;
     if (data.length>1 && data[data.length-2] == '=') --len;
     byte[] out = new byte[len];

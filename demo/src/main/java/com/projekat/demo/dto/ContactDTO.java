@@ -1,18 +1,13 @@
 package com.projekat.demo.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.projekat.demo.entity.Contact;
 import com.projekat.demo.entity.Photo;
-import com.projekat.demo.entity.User;
+import com.projekat.demo.util.Base64;
+import com.projekat.demo.util.FilesUtil;
 
 public class ContactDTO implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	//atributi se isto zovu u Contact i u DTO 
 	private int id; 
@@ -21,12 +16,9 @@ public class ContactDTO implements Serializable {
 	private String displayName; 	
 	private String email; 
 	private String note; 
+	private Photo photo; 
 	
-	private Photo photo;
-	private User user;
-	
-	public ContactDTO(int id, String firstName, String lastName, String displayName, String email, String note,
-			Photo photo, User user) {
+	public ContactDTO(int id, String firstName, String lastName, String displayName, String email, String note, Photo photo) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -35,24 +27,34 @@ public class ContactDTO implements Serializable {
 		this.email = email;
 		this.note = note;
 		this.photo = photo;
-		this.user = user;
 	}
 	
 	public ContactDTO(Contact contact) {
-		this(contact.getId(), contact.getFirstName(), contact.getLastName(), contact.getDisplayName(), contact.getEmail(), contact.getNote(), contact.getPhoto(), contact.getUser());
+		this(contact.getId(), contact.getFirstName(), contact.getLastName(), contact.getDisplayName(), contact.getEmail(), contact.getNote(), contact.getPhoto());
+	/*	
+		if(contact.getPhoto() != null) {
+			byte[] photo = FilesUtil.readBytes(contact.getPhoto());
+			if(photo != null) {
+				this.photoPath = Base64.encodeToString(photo);
+			}
+		}
+		*/
+	}
+	
+	public Photo getPhoto() {
+		return photo;
 	}
 
+	public void setPhoto(Photo photo) {
+		this.photo = photo;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public ContactDTO() {
 		
-	}
-	
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
 	}
 
 	public ContactDTO(String email) {
@@ -95,14 +97,5 @@ public class ContactDTO implements Serializable {
 	}
 	public void setNote(String note) {
 		this.note = note;
-	}
-
-	public Photo getPhoto() {
-		return photo;
-	}
-
-	public void setPhoto(Photo photo) {
-		this.photo = photo;
-	}
-	
+	}	
 }
