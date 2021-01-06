@@ -73,7 +73,6 @@ public class MessageService implements MessageServiceInterface {
 	}
 
 	public List<MMessage> findByFolder(Folder folder) {
-		// TODO Auto-generated method stub
 		return messageRepository.findByFolder(folder);
 	}
 	

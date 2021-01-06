@@ -80,7 +80,7 @@ public class Account implements Serializable {
 		getMessages().add(message);
 	}
 
-	private void removeMessage(MMessage message) {
+	public void removeMessage(MMessage message) {
 		message.setAccount(null);
 		getMessages().remove(message);
 	}

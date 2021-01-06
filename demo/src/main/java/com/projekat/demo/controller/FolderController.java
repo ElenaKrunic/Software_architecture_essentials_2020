@@ -22,10 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.projekat.demo.dto.FolderDTO;
 import com.projekat.demo.dto.MMessageDTO;
+import com.projekat.demo.dto.RuleDTO;
 import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.Folder;
 import com.projekat.demo.entity.MMessage;
+import com.projekat.demo.entity.Rule;
 import com.projekat.demo.entity.User;
+import com.projekat.demo.mail.MailAPI;
 import com.projekat.demo.repository.AccountRepository;
 import com.projekat.demo.repository.FolderRepository;
 import com.projekat.demo.repository.MMessageRepository;
@@ -33,6 +36,7 @@ import com.projekat.demo.service.AccountServiceInterface;
 import com.projekat.demo.service.FolderService;
 import com.projekat.demo.service.FolderServiceInterface;
 import com.projekat.demo.service.MessageService;
+import com.projekat.demo.service.RuleService;
 import com.projekat.demo.service.UserService;
 
 /**
@@ -40,6 +44,7 @@ import com.projekat.demo.service.UserService;
  * @author ElenaKrunic 
  *
  */
+@SuppressWarnings("unused")
 @RestController
 @RequestMapping(value="api/folders")
 public class FolderController {
@@ -54,14 +59,29 @@ public class FolderController {
 	private AccountServiceInterface accountService; 
 	
 	@Autowired
-	private AccountRepository accountRepository; 
-	
-	@Autowired
-	private UserService userService; 
-	
-	@Autowired
 	private MessageService messageService;
 	
+	@Autowired
+	private RuleService ruleService;
+	
+	@Autowired
+	private MailAPI mailApi; 
+	
+	/**
+	 * 
+	 * @param id foldera
+	 * @return pojedinacan folder iz baze 
+	 */
+	@GetMapping(value="/{id}")
+	public ResponseEntity<FolderDTO> getFolder(@PathVariable("id") Integer id) {
+		Folder folder = folderService.findById(id); 
+		
+		if(folder == null) {
+			return new ResponseEntity<FolderDTO>(HttpStatus.NOT_FOUND); 
+ 		}
+		
+		return new ResponseEntity<FolderDTO>(new FolderDTO(folder), HttpStatus.OK);
+	}
 	/**
 	 * 
 	 * @param id foldera
@@ -92,86 +112,72 @@ public class FolderController {
 	 * @return lista poruka za folder 
 	 */
 	@GetMapping(value="/{id}/messages")
-	public ResponseEntity<List<MMessageDTO>> getFolderMessages(@PathVariable("id") int id) {
+	public ResponseEntity<List<MMessageDTO>> getFolderMessages(@PathVariable("id") Integer id) {
 		
-		User user = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()); 
-		
-		if(user == null) {
-			return new ResponseEntity<List<MMessageDTO>>(HttpStatus.UNAUTHORIZED); 
-		}
-		
-		Folder folder = folderService.findOne(id); 
+		Folder folder = folderService.findById(id);
 		
 		if(folder == null) {
 			return new ResponseEntity<List<MMessageDTO>>(HttpStatus.NOT_FOUND); 
 		}
 		
 		List<MMessage> messages = messageService.findByFolder(folder); 
-		
-		List<MMessageDTO> dtoMessages = new ArrayList<MMessageDTO>(); 
+		List<MMessageDTO> dtoMessages = new ArrayList<MMessageDTO>();
 		
 		for(MMessage message : messages) {
 			dtoMessages.add(new MMessageDTO(message));
 		}
-			
 		return new ResponseEntity<List<MMessageDTO>>(dtoMessages, HttpStatus.OK);
 	}
 	
 	
 	/**
 	 * 
-	 * @param newFolder novokreirani folder
-	 * @param parent_folder_id folder koji ce biti parent folder za folder koji kreiram 
-	 * @param account_id nalog za koji se kreira folder 
-	 * @return kreiran folder
+	 * @param folderDTO folder koji ce se kreirati 
+	 * @param id naloga kojem ce biti dodijeljen folder 
+	 * @return novokreirani folder u bazi podataka 
 	 */
-	 @RequestMapping(method = RequestMethod.POST,value="/addNewFolder/{parentFolderId}/{accountId}")
-	 public ResponseEntity<FolderDTO> addFolder(@RequestBody FolderDTO newFolder, @PathVariable("parentFolderId") int parent_folder_id, @PathVariable("accountId") int account_id) {
+	@PostMapping(value="addFolder/{id}",consumes="application/json")
+	public ResponseEntity<FolderDTO> addFolder(@RequestBody FolderDTO folderDTO, @PathVariable("id") Integer id) {
 		
-		 Account account = this.accountRepository.findById(account_id);
-		 if(account == null) {
-			 System.out.println("ne postoji ovaj account");
-			 //System.out.println(existFolder.getName());
-			 return new ResponseEntity<FolderDTO>(HttpStatus.BAD_REQUEST);
-		 }
-		 newFolder.setAccount(account);
-		 
-		 Folder parentFolder = null;
-		 if(parent_folder_id != 0) {
-			 parentFolder = this.folderRepository.findById(parent_folder_id);
-			 if(parentFolder == null) {
-				 System.out.println("ne postoji ovaj parent folder");
-				 return new ResponseEntity<FolderDTO>(HttpStatus.BAD_REQUEST);
-			 }
-		 }
+		Account account = accountService.findOne(id); 
 		
-		 newFolder.setParentFolder(parentFolder);
-		 		
-		 Folder folder = this.folderService.saveFolderDto(newFolder);
-		 return new ResponseEntity<FolderDTO>(new FolderDTO(folder), HttpStatus.CREATED);	
+		if(account == null) {
+			return new ResponseEntity<FolderDTO>(HttpStatus.NOT_FOUND);
+		}
+		
+		Folder folder = new Folder(); 
+		folder.setName(folderDTO.getName());
+		folder.setParentFolder(null);
+		account.addFolder(folder);
+		
+		folder = folderService.save(folder); 
+		
+		return new ResponseEntity<FolderDTO>(new FolderDTO(folder), HttpStatus.CREATED);
 	}
- 	
+	 
+	
 	/**
-	 * Metoda za izmjenu postojeceg foldera 
-	 * @param folderDTO dto foldera nad kojim se vrsi izmjena 
-	 * @param id 
-	 * @return izmijenjen folder 
+	 * 
+	 * @param folderDTO koji cemo da mijenjamo 
+	 * @param id foldera
+	 * @return izmijenjeni folder koji cuvamo u bazu 
 	 */
-	@PutMapping(value="/updateFolder/{id}", consumes="application/json")
-	public ResponseEntity<FolderDTO> updateFolder(@RequestBody FolderDTO folderDTO, @PathVariable("id") int id) {
-		Folder folder = folderService.findOne(id); 
+	@PutMapping(value="updateFolder/{id}", consumes="application/json")
+	public ResponseEntity<FolderDTO> updateFolder(@RequestBody FolderDTO folderDTO, @PathVariable("id") Integer id) {
+		
+		Folder folder = folderService.findById(id); 
 		
 		if(folder == null) {
-			return new ResponseEntity<FolderDTO>(HttpStatus.BAD_REQUEST); 
+			return new ResponseEntity<FolderDTO>(HttpStatus.NOT_FOUND); 
 		}
 		
 		folder.setName(folderDTO.getName());
+		folder.setParentFolder(null);
 		
-		folder = folderService.saveFolderDto(folderDTO); 
+		folder = this.folderRepository.save(folder);
 		
-		return new ResponseEntity<FolderDTO>(new FolderDTO(folder), HttpStatus.OK);
+		return new ResponseEntity<FolderDTO>(new FolderDTO(folder), HttpStatus.OK); 
 	}
-	
 	
 	/**
 	 *  
@@ -192,5 +198,101 @@ public class FolderController {
 		}
 	}	
 
+	/**
+	 * 
+	 * @param id podfoldera 
+	 * @return podfolder iz baze 
+	 */
+	@GetMapping(value="/{id}/subfolders")
+	public ResponseEntity<List<FolderDTO>> getSubfolders(@PathVariable("id") Integer id) {
+		
+		Folder parentFolder = folderService.findById(id); 
+		
+		if(parentFolder == null) {
+			return new ResponseEntity<List<FolderDTO>>(HttpStatus.NOT_FOUND); 
+		}
+		
+		List<Folder> folders = folderService.findByParent(parentFolder);
+		List<FolderDTO> dtoFolders = new ArrayList<FolderDTO>(); 
+		
+		for(Folder folder : folders) {
+			dtoFolders.add(new FolderDTO(folder));
+		}
+		
+		return new ResponseEntity<List<FolderDTO>>(dtoFolders, HttpStatus.OK);
+	}
 
+	/**
+	 * 
+	 * @param folderDTO podfolder koji ce se kreirati 
+	 * @param id foldera kojem ce biti dodijeljem podfolder 
+	 * @return novi podfolder u bazi 
+	 */
+	@PostMapping(value="/{id}/addSubfolder", consumes="application/json")
+	public ResponseEntity<FolderDTO> addSubfolder(@RequestBody FolderDTO folderDTO, @PathVariable("id") Integer id) {
+		
+		Folder parentFolder = folderService.findById(id); 
+		
+		if(parentFolder == null) {
+			return new ResponseEntity<FolderDTO>(HttpStatus.NOT_FOUND); 
+		}
+		
+		Folder folder = new Folder(); 
+		folder.setName(folderDTO.getName());
+		parentFolder.addSubFolder(folder);
+		parentFolder.getAccount().addFolder(folder);
+		
+		folder = folderService.save(folder);
+		
+		return new ResponseEntity<FolderDTO>(new FolderDTO(folder), HttpStatus.CREATED);   
+	}
+	
+	/**
+	 * 
+	 * @param id foldera
+	 * @return pravilo koje je primjenjeno nad odgovarajucim folderom 
+	 */
+	
+	
+	/*
+	@GetMapping(value="{id}/getRules")
+	public ResponseEntity<List<RuleDTO>> getRules(@PathVariable("id") Integer id) {
+		
+		Folder folder = folderService.findById(id);
+		
+		if(folder == null) {
+			return new ResponseEntity<List<RuleDTO>>(HttpStatus.NOT_FOUND); 
+		}
+		
+		List<Rule> rules = ruleService.findByFolder(folder);
+		List<RuleDTO> dtoRules = new ArrayList<RuleDTO>(); 
+		
+		for(Rule rule : rules) {
+			dtoRules.add(new RuleDTO(rule));
+		}
+		
+		return new ResponseEntity<List<RuleDTO>>(dtoRules, HttpStatus.OK);
+	}
+	*/
+	
+	//updateFolderRules 
+	//@PutMapping(value="/updateFolderRules")
+	//doRules 
+	/*
+	@GetMapping(value="/{id}/executeRules")
+	public ResponseEntity<Void> executeRules(@PathVariable("id") Integer id) {
+		
+		Folder folder = folderService.findById(id); 
+		
+		if(folder == null) {
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		}
+		
+		mailApi.executeRules(new ArrayList<Rule>(folder.getRules()), messageService);
+		
+		return new ResponseEntity<Void>(HttpStatus.CREATED);
+	}
+	*/
+	
+	
 }

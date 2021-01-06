@@ -31,7 +31,7 @@ public class RuleController {
 	@Autowired
 	private FolderService folderService; 
 	
-	@GetMapping
+	@GetMapping(value="/getRules")
 	public ResponseEntity<List<RuleDTO>> getRules() {
 		List<Rule> rules = ruleService.findAll(); 
 		
@@ -55,53 +55,77 @@ public class RuleController {
 		return new ResponseEntity<RuleDTO>(new RuleDTO(rule), HttpStatus.OK); 
 	}
 	
-		@PostMapping(value="/{folderId}", consumes="application/json")
-	public ResponseEntity<RuleDTO> saveRule(@RequestBody RuleDTO ruleDTO, @PathVariable("folderId") Integer folderId) {
-		Folder folder = folderService.findById(folderId); 
+	@PostMapping(value="/saveRule/{sourceFolderId}/{destinationFolderId}")
+	public ResponseEntity<RuleDTO> saveRule(@RequestBody RuleDTO ruleDTO, @PathVariable("sourceFolderId") Integer sourceFolderId, @PathVariable("destinationFolderId") Integer destinationFolderId){
 		
-		if(folder == null) {
+		Folder sourceFolder = folderService.findById(sourceFolderId);
+		
+		if(sourceFolder == null) {
 			return new ResponseEntity<RuleDTO>(HttpStatus.NOT_FOUND); 
 		}
+				
+		Folder destinationFolder = folderService.findById(destinationFolderId); 
 		
-		Rule rule = new Rule(); 
-		rule.setValue(ruleDTO.getValue());
+		if(destinationFolder == null) {
+			return new ResponseEntity<RuleDTO>(HttpStatus.NOT_FOUND); 
+		}
+				
+		Rule rule = new Rule();
 		rule.setCondition(ruleDTO.getCondition());
 		rule.setOperation(ruleDTO.getOperation());
+		rule.setValue(ruleDTO.getValue());
+		sourceFolder.addRuleToSourceFolder(rule);
+		destinationFolder.addRuleToDestinationFolder(rule);
 		
-		folder.addRule(rule);
+		rule = ruleService.save(rule);
 		
-		rule = ruleService.save(rule); 
 		return new ResponseEntity<RuleDTO>(new RuleDTO(rule), HttpStatus.CREATED);
 	}
 	
 	
-	@PutMapping(value="/{id}", consumes="application/json")
-	public ResponseEntity<RuleDTO> updateRule(@RequestBody RuleDTO ruleDTO, @PathVariable("id") Integer id) {
-		Rule rule = ruleService.findOne(id);
+	@PutMapping(value="/updateRule/{ruleId}/{sourceFolderId}/{destinationFolderId}")
+	public ResponseEntity<RuleDTO> updateRule(@RequestBody RuleDTO ruleDTO, @PathVariable("ruleId") Integer ruleId, @PathVariable("sourceFolderId") Integer sourceFolderId, @PathVariable("destinationFolderId")Integer destinationFolderId){
+		
+		Rule rule = ruleService.findOne(ruleId);
 		
 		if(rule == null) {
-			return new ResponseEntity<RuleDTO>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<RuleDTO>(HttpStatus.NOT_FOUND); 
+		}
+		
+	Folder sourceFolder = folderService.findById(sourceFolderId);
+		
+		if(sourceFolder == null) {
+			return new ResponseEntity<RuleDTO>(HttpStatus.NOT_FOUND); 
+		}
+				
+		Folder destinationFolder = folderService.findById(destinationFolderId); 
+		
+		if(destinationFolder == null) {
+			return new ResponseEntity<RuleDTO>(HttpStatus.NOT_FOUND); 
 		}
 		
 		rule.setCondition(ruleDTO.getCondition());
-		//getuj folder --- opet ona prica sa objektom 
 		rule.setOperation(ruleDTO.getOperation());
 		rule.setValue(ruleDTO.getValue());
+		sourceFolder.addRuleToSourceFolder(rule);
+		destinationFolder.addRuleToDestinationFolder(rule);
 		
-		ruleService.save(rule); 
+		rule = ruleService.save(rule);
 		
-		return new ResponseEntity<RuleDTO>(new RuleDTO(rule), HttpStatus.OK); 
+		return new ResponseEntity<RuleDTO>(new RuleDTO(rule), HttpStatus.OK);
 	}
-	
+		
 	@DeleteMapping(value="/{id}")
 	public ResponseEntity<Void> deleteRule(@PathVariable("id") Integer id) {
 		Rule rule = ruleService.findOne(id); 
 		
 		if(rule !=null) {
-			ruleService.remove(id);
+			ruleService.remove(rule);
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 
+	
+	
 }

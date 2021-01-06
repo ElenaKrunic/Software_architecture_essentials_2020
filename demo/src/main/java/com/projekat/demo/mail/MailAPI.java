@@ -48,8 +48,10 @@ import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.Attachment;
 import com.projekat.demo.entity.Folder;
 import com.projekat.demo.entity.MMessage;
+import com.projekat.demo.entity.Rule;
 import com.projekat.demo.entity.Tag;
 import com.projekat.demo.service.FolderService;
+import com.projekat.demo.service.MessageService;
 import com.sun.mail.util.BASE64DecoderStream;
 import com.sun.mail.util.MailSSLSocketFactory;
 
@@ -385,7 +387,27 @@ public class MailAPI {
 		
 		return mailSender;
 	}
-	
+
+	/*
+	public static void executeRules(ArrayList<Rule> rules, MessageService messageService) {
+		if (rules.size() > 0) {
+			List<MMessage> messages = new ArrayList<MMessage>();
+			//messages.addAll(rules.get(0).getDestination().getAccount().getMessages());
+			messages.addAll(rules.get(0).getFolder().getAccount().getMessages());
+			for (MMessage message : messages) {
+				for (Rule rule : rules) {
+					MMessage m = rule.doRule(message);
+					if (m != null && m.getAccount() == null) {
+						messageService.remove(message.getId());
+					}
+					else if (m != null) {
+						message = messageService.save(message);
+					}
+				}
+			}
+		}
+	}
+	*/
 	
 	/*
 	@SuppressWarnings("unused")

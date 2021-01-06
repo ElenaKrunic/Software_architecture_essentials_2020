@@ -19,4 +19,6 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
 		
 	public Folder findById(Integer id);
 
+	public List<Folder> findByParentFolder(Folder parentFolder);
+
 }

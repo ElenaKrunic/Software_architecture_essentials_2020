@@ -9,7 +9,9 @@ import com.projekat.demo.entity.Rule;
 
 public interface RuleRepository extends JpaRepository<Rule, Integer> {
 	
-	public Rule findByIdAndFolder(Integer id, Folder folder);
 	
-	public List<Rule> findAllByFolder(Folder folder);
+	public Rule findByIdAndSourceFolder(Integer id, Folder folder);
+	
+	public List<Rule> findBySourceFolder(Folder folder);
+	
 }

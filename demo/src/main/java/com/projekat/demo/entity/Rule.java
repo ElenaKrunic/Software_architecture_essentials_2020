@@ -1,5 +1,7 @@
 package com.projekat.demo.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -12,7 +14,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="rules")
-public class Rule {
+public class Rule implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 531596767014579078L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +37,17 @@ public class Rule {
 	@Column(columnDefinition = "BIGINT", name = "rule_operation", nullable = false)
 	private RuleOperation operation; 
 	
+	//@ManyToOne
+	//@JoinColumn(name = "folder", referencedColumnName = "id", nullable = true)
+	//private Folder folder;
+	
 	@ManyToOne
-	@JoinColumn(name = "folder", referencedColumnName = "id", nullable = true)
-	private Folder folder;
+	@JoinColumn(name="source_folder_id", referencedColumnName="id", nullable=true)
+	private Folder sourceFolder; 
+	
+	@ManyToOne
+	@JoinColumn(name="destination_folder_id", referencedColumnName="id", nullable=true)
+	private Folder destinationFolder; 
 	
 	public enum RuleCondition {
 		TO,
@@ -79,16 +94,78 @@ public class Rule {
 		this.operation = operation;
 	}
 
-	public Folder getFolder() {
-		return folder;
-	}
-
-	public void setFolder(Folder folder) {
-		this.folder = folder;
-	}
-
 	public String getValue() {
 		return value;
 	}
+
+	public Folder getSourceFolder() {
+		return sourceFolder;
+	}
+
+	public void setSourceFolder(Folder sourceFolder) {
+		this.sourceFolder = sourceFolder;
+	}
+
+	public Folder getDestinationFolder() {
+		return destinationFolder;
+	}
+
+	public void setDestinationFolder(Folder destinationFolder) {
+		this.destinationFolder = destinationFolder;
+	}
 	
+	/*
+	public MMessage doRule(MMessage message) {
+		switch(this.condition) {
+			case TO: {
+				if (message.getTo().contains(this.value)) {
+					return this.doOperation(message);
+				}
+				break;
+			}
+			case FROM: {
+				if (message.getFrom().contains(this.value)) {
+					return this.doOperation(message);	
+				}
+				break;
+			}
+			case CC: {
+				if (message.getCc().contains(this.value)) {
+					return this.doOperation(message);
+				}
+				break;
+			}
+			case SUBJECT: {
+				if (message.getSubject().contains(this.value)) {
+					return this.doOperation(message);
+				}
+				break;
+			}
+		}
+		return null;
+	}
+	
+	private MMessage doOperation(MMessage message) {
+		switch(this.operation) {
+			case MOVE: {
+				this.folder.addMessage(message);
+				return message;
+			}
+			case COPY: {
+				MMessage copy = MMessage.clone(message);
+				this.folder.addMessage(copy);
+				return copy;
+			}
+			case DELETE: {
+				message.getAccount().removeMessage(message);
+				if (message.getFolder() != null)
+					message.getFolder().removeMessage(message);
+				return message;
+			}
+			default: {
+				return null;
+			}
+		}
+	}
+	*/
 }

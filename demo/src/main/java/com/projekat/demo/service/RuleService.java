@@ -15,19 +15,10 @@ public class RuleService implements RuleServiceIntefrace {
 	@Autowired
 	RuleRepository ruleRepository;
 	
+	
 	@Override
 	public Rule findOne(Integer ruleId) {
 		return ruleRepository.getOne(ruleId); 
-	}
-
-	@Override
-	public Rule findByIdAndFolder(Integer id, Folder folder) {
-		return ruleRepository.findByIdAndFolder(id, folder); 
-	}
-
-	@Override
-	public List<Rule> findByFolder(Folder folder) {
-		return ruleRepository.findAllByFolder(folder);
 	}
 
 	@Override
@@ -41,8 +32,19 @@ public class RuleService implements RuleServiceIntefrace {
 	}
 
 	@Override
-	public void remove(Integer id) {
-		ruleRepository.deleteById(id);
+	public void remove(Rule rule) {
+		ruleRepository.delete(rule);
 		
 	}
+
+	@Override
+	public Rule findByIdAndSourceFolder(Integer id, Folder folder) {
+		return ruleRepository.findByIdAndSourceFolder(id, folder);
+	}
+
+	@Override
+	public List<Rule> findBySourceFolder(Folder folder) {
+		return ruleRepository.findBySourceFolder(folder);
+	}
+	
 }

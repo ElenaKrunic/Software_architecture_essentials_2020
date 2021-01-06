@@ -1,15 +1,10 @@
 package com.projekat.demo.entity;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.REMOVE;
-import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,9 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -58,11 +51,74 @@ public class Folder {
 	 private Set<MMessage> messages = new HashSet<MMessage>();
 		
 	@JsonIgnore
-	@OneToMany(cascade = { ALL }, fetch = LAZY, mappedBy = "folder", orphanRemoval = true)
+	@OneToMany(cascade = { ALL }, fetch = LAZY, mappedBy = "sourceFolder", orphanRemoval = true)
 	private Set<Rule> rules = new HashSet<Rule>();
 
 	public Folder() {
 			
+	}
+	
+	public void addMessage(MMessage message) {
+		if(message.getFolder() != null) {
+			message.getFolder().removeMessage(message);
+			message.setFolder(this);
+			getMessages().add(message);
+		}
+	}
+
+	public void removeMessage(MMessage message) {
+		message.setFolder(null);
+		getMessages().remove(message);
+	}	
+	
+	/*
+	public void addRule(Rule rule) {
+		if(rule.getFolder()!= null) 
+			rule.getFolder().removeRule(rule);
+		rule.setFolder(this);
+		getRules().add(rule);
+	}		
+	
+	public void removeRule(Rule rule) {
+		rule.setFolder(null);
+		getRules().add(rule);
+	}
+	*/
+	
+	public void addRuleToDestinationFolder(Rule rule) {
+		if(rule.getDestinationFolder() != null)
+			rule.getDestinationFolder().removeRuleFromDestinationFolder(rule);
+		rule.setDestinationFolder(this);
+		getRules().add(rule);
+	}
+	
+	public void removeRuleFromDestinationFolder(Rule rule) {
+		rule.setDestinationFolder(null);
+		getRules().add(rule);
+	}
+	
+	public void addRuleToSourceFolder(Rule rule) {
+		if(rule.getSourceFolder() != null) 
+			rule.getSourceFolder().removeRuleFromSourceFolder(rule);
+		rule.setSourceFolder(this);
+		getRules().add(rule);
+	}
+	
+	public void removeRuleFromSourceFolder(Rule rule) {
+		rule.setSourceFolder(null);
+		getRules().add(rule);
+	}
+	
+	public void addSubFolder(Folder folder) {
+		if(folder.getParentFolder() != null) 
+			folder.getParentFolder().removeSubFolder(folder);
+		folder.setParentFolder(this);
+		getSubFolders().add(folder);
+	}
+	
+	public void removeSubFolder(Folder folder) {
+		folder.setParentFolder(null);
+		getSubFolders().remove(folder);
 	}
 
 	public Integer getId() {
@@ -113,11 +169,13 @@ public class Folder {
 		this.messages = messages;
 	}
 
+	/*
 	public void fixRules() {
 		for (Rule rule : rules) {
 			rule.setFolder(this);
 		}
 	}
+	*/
 
 	public Set<Folder> getSubFolders() {
 		return subFolders;
@@ -133,29 +191,4 @@ public class Folder {
 					 + ", rules=" + rules + "]";
 	}
 
-	public void addMessage(MMessage message) {
-		if(message.getFolder() != null) {
-			message.getFolder().removeMessage(message);
-			message.setFolder(this);
-			getMessages().add(message);
-		}
-		
-	}
-
-	private void removeMessage(MMessage message) {
-		message.setFolder(null);
-		getMessages().remove(message);
-	}	
-	
-	public void addRule(Rule rule) {
-		if(rule.getFolder()!= null) 
-			rule.getFolder().removeRule(rule);
-		rule.setFolder(this);
-		getRules().add(rule);
-	}		
-	
-	public void removeRule(Rule rule) {
-		rule.setFolder(null);
-		getRules().add(rule);
-	}
 }

@@ -24,8 +24,8 @@ public class FolderService implements FolderServiceInterface {
 	public Folder saveFolderDto(FolderDTO folderDTO) {
 		Folder folder = new Folder(); 
 		folder.setName(folderDTO.getName());
-		folder.setParentFolder(folderDTO.getParentFolder());
-		folder.setAccount(folderDTO.getAccount());
+		//folder.setParentFolder(folderDTO.getParentFolder());
+		//folder.setAccount(folderDTO.getAccount());
 		
 		folder = folderRepository.save(folder); 
 		return folder; 
@@ -55,4 +55,11 @@ public class FolderService implements FolderServiceInterface {
 	public Folder findInbox(Account account) {
 		return folderRepository.findByNameAndAccount("Inbox", account);
 	}
+
+	@Override
+	public List<Folder> findByParent(Folder parentFolder) {
+		return folderRepository.findByParentFolder(parentFolder);
+	}
+
+
 }

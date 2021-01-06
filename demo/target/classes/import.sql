@@ -22,7 +22,9 @@ INSERT INTO tags (name, user) VALUES ('tag1', 1);
 
 INSERT INTO message_tags (message_id, tag_id) VALUES (1,1);
 
-INSERT INTO rules (rule_condition, rule_operation, value, folder) VALUES (1, 0, 'lelekrunic1@gmail.com', 4);
+--INSERT INTO rules (rule_condition, rule_operation, value, folder) VALUES (1, 0, 'lelekrunic1@gmail.com', 4);
+INSERT INTO rules (rule_condition, rule_operation, value, source_folder_id,destination_folder_id ) VALUES (1, 0, 'lelekrunic1@gmail.com', 1, 4);
+
 
 --INSERT INTO photos (path) VALUES (1, 'C:/Users/lenovo/Desktop/Desktop/III/OSA/osaGitRepo/osa_projekat_2020/loyle.jpg');
 INSERT INTO PHOTOS(photo_id, path) VALUES(1, 'C:/Users/lenovo/Desktop/III/OSA/osa_projekat_2020-master/loyle.jpg')

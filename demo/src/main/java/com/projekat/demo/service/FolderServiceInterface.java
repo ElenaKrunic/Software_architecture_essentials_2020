@@ -20,5 +20,7 @@ public interface FolderServiceInterface {
 	Folder saveFolderDto(FolderDTO folderDTO);
 	
 	Folder findById(Integer folderId);
+	
+	List<Folder> findByParent(Folder parentFolder);
 
 }
