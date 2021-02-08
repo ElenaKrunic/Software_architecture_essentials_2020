@@ -25,8 +25,8 @@ function login() {
 			type: "POST", 
 			contentType: "application/json", 
 			data: JSON.stringify(data),
-			success:function() {
-				location.assign("chooseAccount.html");
+			success: function(){
+				location.assign("chooseAccount.html")
 			}, 
 			error: function() {
 				alert("Ne postoji korisnik sa datim kredencijalima!"); 

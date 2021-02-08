@@ -1,4 +1,4 @@
-/*
+
 package com.projekat.demo.service;
 
 import java.util.List;
@@ -32,4 +32,3 @@ public class PhotoService implements PhotoServiceInterface {
 	}
 	
 }
-*/

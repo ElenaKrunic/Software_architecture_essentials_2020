@@ -1,4 +1,4 @@
-/*
+
 package com.projekat.demo.service;
 
 import java.util.List;
@@ -14,4 +14,3 @@ public interface PhotoServiceInterface {
 
 
 }
-*/

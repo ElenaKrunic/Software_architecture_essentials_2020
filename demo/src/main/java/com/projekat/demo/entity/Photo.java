@@ -8,6 +8,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 
@@ -31,7 +32,7 @@ public class Photo implements Serializable {
 	private String path;
 
 	//@OneToOne(mappedBy = "plate", cascade = CascadeType.ALL, orphanRemoval = true)
-	//@JsonIgnore
+	@JsonIgnore
 	//@OneToOne(mappedBy = "photo", cascade = CascadeType.ALL, orphanRemoval = true)
 	//@JsonBackReference
 	//private Contact contact;

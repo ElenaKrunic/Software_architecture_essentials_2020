@@ -23,7 +23,7 @@ public class UserService implements UserServiceInterface {
 	}
 	   
 	public User findByUsernameAndPassword(String username, String password) {
-		return userRepository.findByUsernameAndPassword(username,password);
+		return userRepository.findByUsernameAndPassword(username,password);	
 	}
 
 	@Override

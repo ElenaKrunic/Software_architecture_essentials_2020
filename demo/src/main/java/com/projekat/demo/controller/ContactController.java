@@ -47,9 +47,9 @@ public class ContactController {
 	 * @param id korisnika cije kontakte zelimo prikazati 
 	 * @return lista kontakata za korisnika 
 	 */
-	@GetMapping(value="/getContactsForUser/{userId}")
-	public List<Contact> getContacts(@PathVariable("userId") Integer id) { 
-		List<Contact> contacts = contactRepository.findAllByUserId(id); 
+	@GetMapping("/getContactsForUser")
+	public List<Contact> getContacts() { 
+		List<Contact> contacts = contactRepository.findAllByUserId(UserController.korisnikID); 
 		return contacts; 
 	}
 

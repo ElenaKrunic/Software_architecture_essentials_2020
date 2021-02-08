@@ -68,9 +68,9 @@ public class AccountController {
 	 * @param id korisnika cije naloge zelimo ispisati  
 	 * @return lista naloga za korisnika 
 	 */
-	@GetMapping("/getAccountsForUser/{id}")
-	public ResponseEntity<List<AccountDTO>> getAllAccountsForUser(@PathVariable("id") Integer id) {
-		List<Account> accounts = accountService.findAllByUserId(id);
+	@GetMapping("/getAccountsForUser")
+	public ResponseEntity<List<AccountDTO>> getAllAccountsForUser() {
+		List<Account> accounts = accountService.findAllByUserId(UserController.korisnikID);
 		List<AccountDTO> dtoAccounts = new ArrayList<AccountDTO>(); 
 		if(accounts == null) {
 			return new ResponseEntity<List<AccountDTO>>(HttpStatus.BAD_REQUEST);
@@ -105,6 +105,7 @@ public class AccountController {
 	 */
 	@GetMapping(value="/{id}/messages")
 	public ResponseEntity<List<MMessageDTO>> getMessageByAccount(@PathVariable("id") Integer id) {
+		System.out.println(id.toString());
 		Account account = accountService.findOne(id);
 		
 		if(account == null ) {

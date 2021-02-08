@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Inboks</title>
+<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="js/messages.js"></script>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+
+</head>
+<body>
+	<ul>
+			<li><a class="navbar-brand" href="#"><img class="logo" src="img/logo.png" ></a>
+  			<li><a href="#">Inbox</a></li>
+  			<li><a href="folder.html">Folders</a></li>
+  			<li><a href="contacts.html">Contacts</a></li>
+  			<li><a href="account.html">Account</a></li>
+  			<li><a id="logoutButton" href="#">Logout</a></li>
+		</ul>
+	<div id="container" class="container-fluid">
+		<div class="row">
+			<div class="col-3">
+				<button class="btn btn-dark" id="sync">Refresh</button>
+				<select class="custom-select" id="sorting">
+					<option value="subject">Subject</option>
+					<option value="from">From</option>
+					<option value="date">Date</option>
+				</select> <select class="custom-select" id="ascDesc">
+					<option value="asc">Asc</option>
+					<option value="desc">Desc</option>
+				</select>
+				<button class="btn btn-dark" id="sort">Sortiraj</button>
+				<br>
+				<br>
+				<h3>Pretrazi po emailu</h3>
+				<div id="search">
+					<input class="form-control" type="text" id="searchInput">
+					<button class="btn btn-dark" id="searchButton">Search</button>
+					<button class="btn btn-dark" id="reload">Reload</button>
+					<br>
+					<br>
+					<br>
+				</div>
+				<div id="messages"></div>
+			</div>
+			
+			
+		</div>
+	</div>
+</body>
+</html>

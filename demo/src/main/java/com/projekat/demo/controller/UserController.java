@@ -40,6 +40,8 @@ public class UserController {
 	private PasswordEncoder passwordEncoder;
 	
 	
+	static Integer korisnikID;
+	
 	/**
 	 * Metoda koja vraca listu svih korisnika iz baze 
 	 * @return listu korisnika 
@@ -72,6 +74,7 @@ public class UserController {
 		
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK); 
 	}
+	
 	
 	/**
 	 * 
@@ -120,10 +123,13 @@ public class UserController {
 	 */
 	@PostMapping("/login")
 	public ResponseEntity<?> ulogujKorisnika(@RequestBody UserDTO userDTO) {
+		System.out.println(userDTO.getUsername().toString());
 		
 		User existsUser = userService.findByUsernameAndPassword(userDTO.getUsername(), userDTO.getPassword());
-	
+		
+		
 		if(existsUser != null) {
+			korisnikID = existsUser.getId();
 			return new ResponseEntity<UserDTO>(HttpStatus.OK);
 		} else {
 			System.out.println("Ne postoji korisnik sa datim imenom i sifrom!"); 

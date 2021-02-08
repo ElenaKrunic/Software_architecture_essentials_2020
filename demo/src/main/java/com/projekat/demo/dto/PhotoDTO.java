@@ -1,4 +1,5 @@
 package com.projekat.demo.dto;
+ 
 
 import java.io.Serializable;
 
@@ -7,9 +8,7 @@ import com.projekat.demo.entity.Photo;
 
 public class PhotoDTO implements Serializable{
 	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 7696981515812096529L;
 	private Integer id;
 	private String path;

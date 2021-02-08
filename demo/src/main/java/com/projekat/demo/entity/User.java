@@ -37,12 +37,15 @@ public class User {
 	@Column(name = "last_name", nullable = false)
 	private String lastName;
 	
+	@JsonIgnore
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Contact> contacts;
 	
+	@JsonIgnore
 	@OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, mappedBy="user")
 	private List<Account> accounts; 
 
+	@JsonIgnore
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Tag> tags;
 
