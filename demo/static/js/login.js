@@ -1,27 +1,42 @@
-var link = "http://localhost:8080";
+var URL = "http://localhost:8080";
 var prijaviSeDugme; 
 var username; 
-var password;
+var password; 
+var userID;
 
 $(document).ready(function(){
+	
+	var containerLogin = $("#containerLogin");
+	
+	containerLogin.on("click", ".login", function() {
+		username = user.username; 
+		localStorage.setItem("user", $(this).data("index")); 
+		window.location.assign("chooseAccount.html")
+
+	});
+	
+	
 	 prijaviSeDugme = $("#loginButton"); 
 	 username= $("#username"); 
-	 password = $("#password"); 
+	 password = $("#password");
 	
-	login(); 
+	 login(); 
 })
+
+
+
 
 function login() {
 	
 	prijaviSeDugme.click(function(){
-		
+				
 		var data = {
 				"username" : username.val(), 
-				"password" : password.val()
+				"password" : password.val(), 
 		}
-				
+						
 		$.ajax({
-			url : link + '/api/users/login', 
+			url : URL + '/api/users/login', 
 			type: "POST", 
 			contentType: "application/json", 
 			data: JSON.stringify(data),

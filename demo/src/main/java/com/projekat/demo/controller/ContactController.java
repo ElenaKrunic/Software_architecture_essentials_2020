@@ -1,5 +1,7 @@
 package com.projekat.demo.controller;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projekat.demo.dto.ContactDTO;
+import com.projekat.demo.dto.UserDTO;
 import com.projekat.demo.entity.Contact;
 import com.projekat.demo.entity.Photo;
 import com.projekat.demo.entity.User;
@@ -41,6 +44,20 @@ public class ContactController {
 	@Autowired UserServiceInterface userService;
 	
 	@Autowired PhotoRepository photoRepository;
+	
+	@GetMapping
+	public ResponseEntity<List<ContactDTO>> getAllContacts() {
+		List<Contact> contacts = contactService.findAll(); 
+		
+		//System.out.println("Kontakti su " + contacts);
+		//konvertovanje u beanove dto 
+		List<ContactDTO> dtoContacts = new ArrayList<ContactDTO>(); 
+		
+		for(Contact contact : contacts) {
+			dtoContacts.add(new ContactDTO(contact));
+		}
+		return new ResponseEntity<List<ContactDTO>>(dtoContacts, HttpStatus.OK); 
+	}
 	
 	/**
 	 * 
@@ -76,7 +93,7 @@ public class ContactController {
 	 * @param id korisnika kojem ce biti dodijeljen kontakt 
 	 * @return novokreirani kontakt u bazi 
 	 */
-	@PostMapping("/saveContact/{userId}")
+	@PostMapping(value= "/saveContact/{userId}",consumes="application/json")
 	public ResponseEntity<ContactDTO> saveContact(@RequestBody ContactDTO contactDTO, @PathVariable("userId") Integer id) {
 		
 		User user = userService.findOne(id);
@@ -85,9 +102,9 @@ public class ContactController {
 			return new ResponseEntity<ContactDTO>(HttpStatus.BAD_REQUEST); 
 		}
 		
-		Photo photo = new Photo(); 
-		photo.setPath(contactDTO.getPhoto().getPath());
-		photo = this.photoRepository.save(photo); 
+		//Photo photo = new Photo(); 
+		//photo.setPath(contactDTO.getPhoto().getPath());
+		//photo = this.photoRepository.save(photo); 
 		
 		Contact contact = new Contact(); 
 		contact.setFirstName(contactDTO.getFirstName());
@@ -95,7 +112,12 @@ public class ContactController {
 		contact.setDisplayName(contactDTO.getDisplayName());
 		contact.setEmail(contactDTO.getEmail());
 		contact.setNote(contactDTO.getNote());
-		contact.setPhoto(photo);
+		//contact.setPhoto(photo);
+		if(contact.getPhoto() ==  null) {
+			contact.setPhoto(contactDTO.getPhoto());
+		} else {
+			contact.getPhoto().setPath(contactDTO.getPhoto().getPath());
+		}		
 		user.addContact(contact); 
 		
 		contact = this.contactService.save(contact);
@@ -150,6 +172,36 @@ public class ContactController {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND); 
 		}
 	
-	} 
+	} 	
 	
+	
+	//===========================================
+	
+	
+	@PostMapping("/saveContactForUser")
+	public ResponseEntity<ContactDTO> saveContactToUser(@RequestBody ContactDTO contactDTO, Principal principal) {
+		
+		User user = userService.findByUsername(principal.getName());
+		 
+		if(user == null) {
+			return new ResponseEntity<ContactDTO>(HttpStatus.BAD_REQUEST); 
+		}
+		
+		Photo photo = new Photo(); 
+		photo.setPath(contactDTO.getPhoto().getPath());
+		photo = this.photoRepository.save(photo); 
+		
+		Contact contact = new Contact(); 
+		contact.setFirstName(contactDTO.getFirstName());
+		contact.setLastName(contactDTO.getLastName());
+		contact.setDisplayName(contactDTO.getDisplayName());
+		contact.setEmail(contactDTO.getEmail());
+		contact.setNote(contactDTO.getNote());
+		contact.setPhoto(photo);
+		user.addContact(contact); 
+		
+		contact = this.contactService.save(contact);
+		
+		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.OK); 
+	}
 }

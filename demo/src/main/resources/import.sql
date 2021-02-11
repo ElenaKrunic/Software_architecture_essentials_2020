@@ -34,3 +34,5 @@ INSERT INTO contacts (display_name, email, first_name, last_name, note, photo_id
 insert into contacts (display_name, email, first_name, last_name, note, photo_id, user) values ('Dule','dulekovac@gmail.com','Dusan','Kovacevic','duletova biljeskica',null,1); 
 insert into contacts (display_name, email, first_name, last_name, note, photo_id, user) values ('Mitar','mitarmitar@gmail.com','Mitar','Petrovic','mitrovaBiljeskica',null,1); 
 insert into contacts (display_name, email, first_name, last_name, note, photo_id, user) values ('Simona','simonamosi@gmail.com','Simona','Jelic','simoninabiljeskica',null,1);
+insert into contacts (display_name, email, first_name, last_name, note, photo_id, user) values ('Lepenka','lepanos@gmail.com','Lepa','Kiconi','leplep',null,2);
+

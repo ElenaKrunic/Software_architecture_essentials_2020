@@ -5,11 +5,9 @@ var URL = "http://localhost:8080/api/folders";
 var navigation;
 var subfolders;
 var messages;
-
 var rules;
 
 var FOLDER;
-
 
 var accountIndex = localStorage.getItem("account");
 
@@ -66,11 +64,9 @@ function getFolder(folderId) {
 					subfolders.append("<a href='folder.html?id=" + folder.id + "' class='subfolder'>" + folder.name + "</a>"); 
 				}
 			}
-
 		}
 	});
 	
-
 	$.ajax({
 		url: URL + "/" + folderId + "/messages",
 		type: "GET",
@@ -81,7 +77,6 @@ function getFolder(folderId) {
 
 		}
 	});
-
 }
 
 // ucitava foldere

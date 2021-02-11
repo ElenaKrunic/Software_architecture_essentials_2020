@@ -1,11 +1,16 @@
+//var userId = getUrlVars()["userId"];  
 // ucitava listu kontakata 
+
+var accountIndex = localStorage.getItem("account");
+var logoutButton; 
+
 var ContactManager = {
 	//vraca url 
 		basePath: function() { return 'http://localhost:8080/api'; }, 
 		
 	showContactsList: function() {
 			$.ajax({
-				url : this.basePath() + '/contacts', 
+				url : this.basePath() + '/contacts' +  '/getContactsForUser', 
 				cache : false, 
 				dataType : 'json', 
 				success: function(list) {	
@@ -80,19 +85,18 @@ var ContactManager = {
 			"note" : $("#contactNote").val()
 		});
 	}, 
-	
+		
 	createContactUrl: function (requestType) {
 		if(requestType == 'POST') {
-			return this.basePath() + '/contacts'; 
+			return this.basePath() + '/contacts/' + 'saveContact/' + accountIndex;
 		}
-		
-		return this.basePath() + '/contacts/' + encodeURIComponent($("#contactID").val());
+		return this.basePath() + '/contacts/' + 'updateContact/' + encodeURIComponent($("#contactID").val());
 	},
 	
 	//za sacuvaj promjene ide put,ako je korisnik vec postojao 
 	//ide post ako ne postoji,nego se nanovo kreira 
 	sacuvajKontakt: function() {
-		if(!confirm('Sacuvaj?')) return;
+		if(!confirm('Da li zelite da sacuvate ?')) return;
 		var requestType= $("#contactID").val() != '' ? 'PUT' : 'POST';
 		$.ajax({
 			url: this.createContactUrl(requestType), 
@@ -108,7 +112,7 @@ var ContactManager = {
 			}
 		});
 	}, 
-	
+		
 	obrisiKontakt: function() {
 		if(!confirm('Da li ste sigurni? ')) return; 
 		$.ajax({
@@ -120,7 +124,6 @@ var ContactManager = {
 			error: function(error) {alert(error);}
 		});
 	}
-
 };
 
 
@@ -138,11 +141,11 @@ $(document).ready(function(){
 	$('#sacuvajIzmjene').click(function(e){
 		e.preventDefault(); 
 		ContactManager.sacuvajKontakt();
+		alert("Klik na dugme");
 	});
 	
 	$("#obrisiKontakt").click(function(e){
 		e.preventDefault();
-		//dodai 
 		ContactManager.obrisiKontakt();
 	});
 	
@@ -151,7 +154,10 @@ $(document).ready(function(){
 		ContactManager.dodajKontakt();
 	});
 	
-	$("#accounts").show(); 
-	$("#poruke").show();
-	
+	$("#logoutButton").click(function(e){
+		e.preventDefault(); 
+		localStorage.removeItem("account"); 
+		window.location.replace("index.html");
+	});
 }); 
+

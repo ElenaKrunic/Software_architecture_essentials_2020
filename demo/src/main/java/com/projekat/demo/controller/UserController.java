@@ -39,7 +39,6 @@ public class UserController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	
 	static Integer korisnikID;
 	
 	/**
@@ -127,7 +126,6 @@ public class UserController {
 		
 		User existsUser = userService.findByUsernameAndPassword(userDTO.getUsername(), userDTO.getPassword());
 		
-		
 		if(existsUser != null) {
 			korisnikID = existsUser.getId();
 			return new ResponseEntity<UserDTO>(HttpStatus.OK);
@@ -199,9 +197,6 @@ public class UserController {
 		
 		return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 	}
-	
-
-	
 }
 
 

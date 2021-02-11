@@ -7,6 +7,7 @@ var deleteButton;
 var FOLDER;
 
 var accountIndex = localStorage.getItem("account");
+//alert(accountIndex); ispise id naloga 
 
 $(document).ready(function() {
 	
@@ -37,7 +38,6 @@ function editFolder(folderId) {
 
 	confirmButton.text("Sacuvaj izmene");
 
-
 	$.ajax({
 		url: URL + "/" + folderId,
 		type: "GET",
@@ -48,7 +48,6 @@ function editFolder(folderId) {
 
 			// izmena
 			confirmButton.click(function() {
-
 				var data = {
 					id: FOLDER.id,
 					name: folderName.val()
@@ -76,11 +75,8 @@ function editFolder(folderId) {
 					}
 				});
 			});
-
 		}
 	});
-
-
 }
 
 // kreiranje foldera
@@ -88,7 +84,6 @@ function createFolder() {
 
 	confirmButton.text("Dodaj folder");
 	deleteButton.remove();
-
 	confirmButton.click(function() {
 
 		var data = {

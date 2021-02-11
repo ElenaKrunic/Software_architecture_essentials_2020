@@ -188,6 +188,8 @@ public class MailAPI {
 		return false;
 	}
 	
+	//RADITI NA OVOM 
+	
 	/**
 	 * Pulls new e-mails using JavaMailAPI and returns them
 	 * as a List. You can do further operations to those mails.
