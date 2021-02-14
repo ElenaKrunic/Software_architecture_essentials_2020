@@ -1,5 +1,6 @@
 package com.projekat.demo.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import com.projekat.demo.dto.MMessageDTO;
 import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.Folder;
 import com.projekat.demo.entity.MMessage;
+import com.projekat.demo.entity.Rule;
 import com.projekat.demo.entity.User;
 import com.projekat.demo.mail.MailAPI;
 import com.projekat.demo.service.AccountService;
@@ -61,6 +63,9 @@ public class AccountController {
 	
 	@Autowired
 	private UserService userService; 
+	
+	@Autowired 
+	private MailAPI mailApi;
 		
 	
 	/**
@@ -87,8 +92,8 @@ public class AccountController {
 	 * @param id korisnika 
 	 * @return pojedinacan nalog za korisnika 
 	 */
-	@GetMapping(value="/{id}")
-	public ResponseEntity<AccountDTO> getAccount(@PathVariable("id") Integer id){
+	@GetMapping(value="/{accountIndex}")
+	public ResponseEntity<AccountDTO> getAccount(@PathVariable("accountIndex") Integer id){
 		Account account = accountService.findOne(id);
 		if(account == null){
 			return new ResponseEntity<AccountDTO>(HttpStatus.NOT_FOUND);
@@ -271,6 +276,7 @@ public class AccountController {
 			return new ResponseEntity<AccountDTO>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	
 	
 	/**
 	 * brisanje naloga 

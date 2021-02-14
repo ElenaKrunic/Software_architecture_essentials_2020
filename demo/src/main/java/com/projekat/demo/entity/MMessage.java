@@ -55,8 +55,15 @@ public class MMessage implements Serializable {
 	private String bcc;
 
 	//RADI TESTIRANJA SAM STAVILA DA MI JE NULLABLE TRUE
-	@Column(name = "date_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = true)
-	private LocalDateTime dateTime;
+	//@Column(name = "date_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = true)
+	//private LocalDateTime dateTime;
+	
+	@Column(name="date_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
+	private Timestamp dateTime;
+
+	public void setDateTime(Timestamp dateTime) {
+		this.dateTime = dateTime;
+	}
 
 	@Column(name = "subject", columnDefinition = "VARCHAR(250)", unique = false, nullable = false)
 	private String subject;
@@ -79,11 +86,15 @@ public class MMessage implements Serializable {
 
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "message")
 	@JsonIgnore
-	private Set<Attachment> attachments = new HashSet<Attachment>();
+	private List<Attachment> attachments = new ArrayList<Attachment>();
+
+	public Timestamp getDateTime() {
+		return dateTime;
+	}
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "message_tags", joinColumns = @JoinColumn(name = "message_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
-	private Set<Tag> tags = new HashSet<Tag>();
+	private List<Tag> tags = new ArrayList<Tag>();
 	
 	public MMessage() {
 		
@@ -150,6 +161,7 @@ public class MMessage implements Serializable {
 		this.bcc = bcc;
 	}
 
+	/*
 	public LocalDateTime getDateTime() {
 		return dateTime;
 	}
@@ -157,6 +169,7 @@ public class MMessage implements Serializable {
 	public void setDateTime(LocalDateTime dateTime) {
 		this.dateTime = dateTime;
 	}
+	*/
 
 	public String getSubject() {
 		return subject;
@@ -178,6 +191,25 @@ public class MMessage implements Serializable {
 		return unread;
 	}
 
+	public MMessage(Integer id, String from, String to, String cc, String bcc, Timestamp dateTime, String subject,
+			String content, Boolean unread, Folder folder, Account account, List<Attachment> attachments,
+			List<Tag> tags) {
+		super();
+		this.id = id;
+		this.from = from;
+		this.to = to;
+		this.cc = cc;
+		this.bcc = bcc;
+		this.dateTime = dateTime;
+		this.subject = subject;
+		this.content = content;
+		this.unread = unread;
+		this.folder = folder;
+		this.account = account;
+		this.attachments = attachments;
+		this.tags = tags;
+	}
+
 	public void setUnread(Boolean unread) {
 		this.unread = unread;
 	}
@@ -190,19 +222,19 @@ public class MMessage implements Serializable {
 		this.folder = folder;
 	}
 
-	public Set<Attachment> getAttachments() {
+	public List<Attachment> getAttachments() {
 		return attachments;
 	}
 
-	public void setAttachments(Set<Attachment> attachments) {
+	public void setAttachments(List<Attachment> attachments) {
 		this.attachments = attachments;
 	}
 
-	public Set<Tag> getTags() {
+	public List<Tag> getTags() {
 		return tags;
 	}
 
-	public void setTags(Set<Tag> tags) {
+	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
 
@@ -232,5 +264,28 @@ public class MMessage implements Serializable {
 		
 		return copy;
 	}
-	
+
+	public MMessage(MMessage message) {
+		super();
+		this.id = message.getId();
+		this.from = message.getFrom();
+		this.to = message.getTo();
+		this.cc = message.getCc();
+		this.bcc = message.getBcc();
+		this.dateTime = message.getDateTime();
+		this.subject = message.getSubject();
+		this.content = message.getContent();
+		this.unread = message.getUnread();
+		this.folder = message.getFolder();
+		this.attachments = new ArrayList<Attachment>();
+		for (Attachment attachment : message.getAttachments())
+			this.attachments.add(attachment);
+		
+		this.tags = new ArrayList<Tag>();
+		for (Tag tag : message.getTags())
+			this.tags.add(tag);
+		
+		this.account = message.getAccount();
+	}
+
 }

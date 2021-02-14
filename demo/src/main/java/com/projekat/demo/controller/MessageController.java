@@ -1,6 +1,7 @@
 package com.projekat.demo.controller;
 
 import java.security.Principal;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.Attachment;
 import com.projekat.demo.entity.Folder;
 import com.projekat.demo.entity.MMessage;
+import com.projekat.demo.entity.Rule;
 import com.projekat.demo.entity.Tag;
 import com.projekat.demo.entity.User;
 import com.projekat.demo.mail.MailAPI;
@@ -190,7 +192,7 @@ public class MessageController {
 		message.setCc(emailDTO.getCc());
 		message.setBcc(emailDTO.getBcc());
 		//message.setDateTime(LocalDateTime.now());
-		message.setDateTime(LocalDateTime.now());
+		message.setDateTime(new Timestamp(System.currentTimeMillis()));
 		message.setSubject(emailDTO.getSubject());
 		message.setContent(emailDTO.getContent());
 		message.setUnread(false);
@@ -248,9 +250,6 @@ public class MessageController {
 		}
 	}
 	
-	//NEURADJENO: 
-	// 1.metoda za filtriranje poruka naloga -> PostMapping
-
 	/**
 	 * metoda pomocu koje neprocitana poruka postaje procitana 
 	 * @param id poruke 
@@ -324,7 +323,7 @@ public class MessageController {
 		User user = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 		
 		//set tagova koji vec postoje 
-		Set<Tag> postojeciTagovi = message.getTags(); 
+		List<Tag> postojeciTagovi = message.getTags(); 
 		//set tagova koje cemo da kreiramo 
 		Set<Tag> updatedTags = new HashSet<Tag>();
 		Set<Tag> tagoviZaBrisanje = new HashSet<Tag>();
@@ -393,7 +392,161 @@ public class MessageController {
 	}
 	
 	
+	@PostMapping("{accountIndex}/sync")
+	public ResponseEntity<?> getMessagesFromServer(@PathVariable("accountIndex") int accountIndex, Principal principal) {
+	
+		if(accountIndex < 0) {
+			return new ResponseEntity<> ("Account nema ID!", HttpStatus.BAD_REQUEST);
+		}
+		
+		Account account = accountService.findAccount(principal, accountIndex); 
+		//Account account = accountService.findByAccountId(accountIndex, username);
+		
+		if(account == null) {
+			return new ResponseEntity<>("Nepostojeci nalog!", HttpStatus.NOT_FOUND); 
+		}
+		
+		List<MMessage> messages = mailApi.loadMessages(account);
+		System.out.println("Duzina poruka sa mejla " + messages.size());
+		
+		messages = primjeniPravila(messages,account);
+		
+		for(MMessage message : messages) {
+			messageService.save(message);
+		}
+		
+		account.setLastSyncTime(new Timestamp(System.currentTimeMillis()));
+		accountService.save(account);
+		
+		return new ResponseEntity<String>("Gotova sinhronizacija!", HttpStatus.OK);
+	}
+	
+	private List<MMessage> primjeniPravila(List<MMessage> messages, Account account) {
+		// ----- Obtaining data from database -----
+				//List<Folder> folders = folderService.findAll(account);
+				List<Folder> folders = folderService.findAllByAccount(account);
+				if (folders == null)
+					return messages;
+
+				List<Rule> rules = new ArrayList<Rule>();
+				for (Folder folder : folders)
+					for (Rule rule : folder.getRules())
+						rules.add(rule);
+
+				// ----- Applying rules -----
+				List<MMessage> updatedMessages = new ArrayList<MMessage>();
+				for (MMessage message : messages)
+					updatedMessages.add(message);
+
+				for (MMessage message : messages) {
+					for (Rule rule : rules) {
+						switch (rule.getCondition()) {
+						case CC:
+							if (message.getCc().contains(rule.getConditionValue())) {
+								switch (rule.getOperation()) {
+								case COPY:
+									MMessage copy = new MMessage(message);
+
+									copy.setFolder(rule.getSourceFolder());
+
+									updatedMessages.add(copy);
+									break;
+								case MOVE:
+									message.setFolder(rule.getSourceFolder());
+									if (!updatedMessages.contains(message))
+										updatedMessages.add(message);
+									break;
+								case DELETE:
+									if (rule.getSourceFolder().getName().equals("Inbox"))
+										updatedMessages.remove(message);
+									break;
+								}
+							}
+							break;
+						case TO:
+							if (message.getTo().contains(rule.getConditionValue())) {
+								switch (rule.getOperation()) {
+								case COPY:
+									MMessage copy = new MMessage(message);
+
+									copy.setFolder(rule.getSourceFolder());
+
+									updatedMessages.add(copy);
+									break;
+								case MOVE:
+									message.setFolder(rule.getSourceFolder());
+									if (!updatedMessages.contains(message))
+										updatedMessages.add(message);
+									break;
+								case DELETE:
+									if (rule.getSourceFolder().getName().equals("Inbox"))
+										updatedMessages.remove(message);
+									break;
+								}
+							}
+							break;
+						case FROM:
+							if (message.getFrom().contains(rule.getConditionValue())) {
+								switch (rule.getOperation()) {
+								case COPY:
+									MMessage copy = new MMessage(message);
+
+									copy.setFolder(rule.getSourceFolder());
+
+									updatedMessages.add(copy);
+									break;
+								case MOVE:
+									message.setFolder(rule.getSourceFolder());
+									if (!updatedMessages.contains(message))
+										updatedMessages.add(message);
+									break;
+								case DELETE:
+									if (rule.getSourceFolder().getName().equals("Inbox"))
+										updatedMessages.remove(message);
+									break;
+								}
+							}
+							break;
+						case SUBJECT:
+							if (message.getSubject().contains(rule.getConditionValue())) {
+								switch (rule.getOperation()) {
+								case COPY:
+									MMessage copy = new MMessage(message);
+
+									copy.setFolder(rule.getSourceFolder());
+
+									updatedMessages.add(copy);
+									break;
+								case MOVE:
+									message.setFolder(rule.getSourceFolder());
+									if (!updatedMessages.contains(message))
+										updatedMessages.add(message);
+									break;
+								case DELETE:
+									if (rule.getSourceFolder().getName().equals("Inbox"))
+										updatedMessages.remove(message);
+									break;
+								}
+							}
+							break;
+						}
+					}
+				}
+
+				return updatedMessages;
+	}
+	
 	// ============================================ METODA ZA FILTRIRANJE  ===========================================
+	
+	// ============================================ METODA ZA SORTIRANJE   ===========================================
+
+	// ============================================ METODA ZA SINHRONIZACIJU  ==========================================
+	
+	
+	
+	
+	// ============================================ METODA ZA CITANJE PORUKA SA GMAIL SERVERA =========================
+	
 	
 }
 

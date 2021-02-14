@@ -1,9 +1,11 @@
 package com.projekat.demo.dto;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.projekat.demo.entity.Account;
@@ -24,7 +26,8 @@ public class MMessageDTO implements Serializable{
 	private String to; 
 	private String cc; 
 	private String bcc; 
-	private LocalDateTime dateTime; 
+	//private LocalDateTime dateTime; 
+	private Timestamp dateTime; 
 	private String subject; 
 	private String content; 
 	private boolean unread; 
@@ -32,7 +35,7 @@ public class MMessageDTO implements Serializable{
 	private Set<TagDTO> tags = new HashSet<TagDTO>(); 
 
 	
-	public MMessageDTO(Integer id, String from, String to, String cc, String bcc, LocalDateTime dateTime, String subject,
+	public MMessageDTO(Integer id, String from, String to, String cc, String bcc, Timestamp dateTime, String subject,
 			String content, boolean unread) {
 		super();
 		this.id = id;
@@ -46,6 +49,7 @@ public class MMessageDTO implements Serializable{
 		this.unread = unread;
 	}
 	
+		
 	public MMessageDTO(MMessage message) {
 		this(message.getId(), message.getFrom(), message.getTo(), message.getCc(), message.getBcc(), message.getDateTime(), message.getSubject(),
 				message.getContent(), message.getUnread());
@@ -60,10 +64,28 @@ public class MMessageDTO implements Serializable{
 	}
 
 	
+	public Timestamp getDateTime() {
+		return dateTime;
+	}
+
+	public void setDateTime(Timestamp dateTime) {
+		this.dateTime = dateTime;
+	}
+
+	public Set<AttachmentDTO> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(Set<AttachmentDTO> attachments) {
+		this.attachments = attachments;
+	}
+
+	
+	
 	public MMessageDTO() {
 		
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -80,9 +102,9 @@ public class MMessageDTO implements Serializable{
 		this.from = from;
 	}
 
-	public LocalDateTime getDateTime() {
-		return dateTime;
-	}
+//	public LocalDateTime getDateTime() {
+	//	return dateTime;
+//	}
 
 	public String getTo() {
 		return to;
@@ -108,9 +130,9 @@ public class MMessageDTO implements Serializable{
 		this.bcc = bcc;
 	}
 
-	public void setDateTime(LocalDateTime dateTime) {
-		this.dateTime = dateTime;
-	}
+	//public void setDateTime(LocalDateTime dateTime) {
+	//	this.dateTime = dateTime;
+	//}
 
 	public String getSubject() {
 		return subject;
@@ -151,6 +173,18 @@ public class MMessageDTO implements Serializable{
 
 	public void setAttachmentsDTO(Set<AttachmentDTO> attachments) {
 		this.attachments = attachments;
+	}
+
+	public static String recipientsToString(List<EmailDTO> emails) {
+		StringBuilder builder = new StringBuilder(); 
+		
+		for(EmailDTO email : emails ) {
+			builder.append(email.getEmail() + ", ");
+		}
+		
+		int length = builder.length();
+		
+		return (length > 0) ? builder.toString().substring(0, length -2) : builder.toString();
 	}
 
 }

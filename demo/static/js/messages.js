@@ -17,8 +17,6 @@ var reload;
 
 var message;
 
-
-
 var accountIndex = localStorage.getItem("account");
 
 $(document).ready(function(){
@@ -50,6 +48,9 @@ $(document).ready(function(){
 				alert("Deleted!");
 				getReloadMessages();
 				window.location.reload()
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert('greska kod sinhronizacije contacts'); 
 			}
 		});
 	});
@@ -63,13 +64,17 @@ $(document).ready(function(){
 
 	syncButton.click(function() {
 		$.ajax({
-			url: "http://localhost:8080/api/accounts/" + accountIndex + "/messages/sync",
+			url: URL + "/" + accountIndex + "/sync",
 			type: "POST",
 			success: function(){
+				alert("Zapoceta sihnronizacija!");
 				messagesList.empty();
 				getMessages();
 				alert("Sync complete");
 				window.location.reload()
+			},
+			error: function() {
+				alert("Greska kod sinhronizacije poruka");
 			}
 		});
 	});

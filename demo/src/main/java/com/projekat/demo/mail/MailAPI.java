@@ -75,6 +75,9 @@ import javax.mail.Store;
 @Component
 public class MailAPI {
 	
+	@Autowired
+	private FolderService folderService; 
+	
 	/*
 	private final String TMP_PATH = Objects.requireNonNull(getClass()
             .getClassLoader()
@@ -197,7 +200,7 @@ public class MailAPI {
 	 * @param Account that is going to be synchronized.
 	 * @return List of new e-mails.
 	 */
-	/*
+	
 	public List<MMessage> loadMessages(Account account) {
 		
 		ArrayList<MMessage> messages = new ArrayList<MMessage>();
@@ -272,18 +275,13 @@ public class MailAPI {
 		            
 		            Date timestamp = APImessage.getSentDate();
 		            message.setDateTime(new Timestamp(timestamp.getTime()));
-		            
 		            message.setSubject(APImessage.getSubject());
-		            
 		            //setMessageContent(APImessage, message);
-		            
-		            message.setTags(new ArrayList<Tag>());
-		            
+		            //message.setTags(new Set<Tag>());
+		           // message.setTags(new Set<Tag>());
 		            message.setFolder(inbox);
 		            message.setAccount(account);
 		            message.setUnread(true);
-		            
-		            
 		            ArrayList<Attachment> attachments = new ArrayList<Attachment>();
 		            
 		            MimeMultipart multipart = (MimeMultipart) APImessage.getContent();
@@ -389,6 +387,31 @@ public class MailAPI {
 		
 		return mailSender;
 	}
+	
+	// Pomocna metoda za izvlacenje attachmenta iz API-jeve poruke
+		private ArrayList<BodyPart> extractParts(MimeMultipart multipart) {
+			ArrayList<BodyPart> parts = new ArrayList<BodyPart>();
+			
+			try {
+				for (int i = 0; i < multipart.getCount(); i++) {
+		            MimeBodyPart bodyPart = (MimeBodyPart) multipart.getBodyPart(i);
+		            if (bodyPart.isMimeType("text/plain")) {
+		            	parts.add(bodyPart);
+		            } else if (bodyPart.isMimeType("image/*")) {
+		            	parts.add(bodyPart);
+		            } else if (bodyPart.isMimeType("multipart/*")) {
+		            	for (BodyPart part : extractParts((MimeMultipart)bodyPart.getContent())) {
+		            		parts.add(part);
+		            	}
+		            }
+		        }
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			return parts;
+		}
+
 
 	/*
 	public static void executeRules(ArrayList<Rule> rules, MessageService messageService) {
@@ -685,30 +708,7 @@ public class MailAPI {
 
 
 
-	// Pomocna metoda za izvlacenje attachmenta iz API-jeve poruke
-	private ArrayList<BodyPart> extractParts(MimeMultipart multipart) {
-		ArrayList<BodyPart> parts = new ArrayList<BodyPart>();
-		
-		try {
-			for (int i = 0; i < multipart.getCount(); i++) {
-	            MimeBodyPart bodyPart = (MimeBodyPart) multipart.getBodyPart(i);
-	            if (bodyPart.isMimeType("text/plain")) {
-	            	parts.add(bodyPart);
-	            } else if (bodyPart.isMimeType("image/*")) {
-	            	parts.add(bodyPart);
-	            } else if (bodyPart.isMimeType("multipart/*")) {
-	            	for (BodyPart part : extractParts((MimeMultipart)bodyPart.getContent())) {
-	            		parts.add(part);
-	            	}
-	            }
-	        }
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		return parts;
-	}
-
+	
 	public List<MMessage> main(Account account, Folder folder, MMessage lastMessage) throws IOException {
 		String protocol = ""; 
 		
