@@ -2,7 +2,9 @@ package com.projekat.demo.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -56,7 +58,7 @@ public class Account implements Serializable {
 	
 	@JsonIgnore
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "account")
-	private Set<Folder> folders = new HashSet<Folder>();
+	private List<Folder> folders = new ArrayList<Folder>();
 	
 	@OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, mappedBy = "account")
 	private Set<MMessage> messages = new HashSet<MMessage>(); 
@@ -169,11 +171,11 @@ public class Account implements Serializable {
 		this.displayName = displayName;
 	}
 
-	public Set<Folder> getFolders() {
+	public List<Folder> getFolders() {
 		return folders;
 	}
 
-	public void setFolders(Set<Folder> folders) {
+	public void setFolders(List<Folder> folders) {
 		this.folders = folders;
 	}
 

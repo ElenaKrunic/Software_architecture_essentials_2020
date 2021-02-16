@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -23,10 +25,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projekat.demo.dto.AttachmentDTO;
 import com.projekat.demo.dto.EmailDTO;
+import com.projekat.demo.dto.FilterDTO;
 import com.projekat.demo.dto.MMessageDTO;
 import com.projekat.demo.dto.TagDTO;
 import com.projekat.demo.entity.Account;
@@ -41,6 +45,7 @@ import com.projekat.demo.repository.AttachmentRepository;
 import com.projekat.demo.repository.FolderRepository;
 import com.projekat.demo.service.AccountService;
 import com.projekat.demo.service.AttachmentService;
+import com.projekat.demo.service.ContactService;
 import com.projekat.demo.service.FolderService;
 import com.projekat.demo.service.MessageService;
 import com.projekat.demo.service.MessageServiceInterface;
@@ -87,6 +92,10 @@ public class MessageController {
 	
 	@Autowired
 	private UserService userService; 
+	
+	@Autowired
+	private ContactService contactService; 
+	
 	
 	
 	/**
@@ -536,17 +545,191 @@ public class MessageController {
 				return updatedMessages;
 	}
 	
-	// ============================================ METODA ZA FILTRIRANJE  ===========================================
+	/**
+	 * 
+	 * @param accountIndex
+	 * @param filterDTO
+	 * @return
+	 */
 	
-	// ============================================ METODA ZA SORTIRANJE   ===========================================
+	@PostMapping(value="/filter/{accountIndex}")
+	public ResponseEntity<List<MMessageDTO>> filterMessages(@PathVariable("accountIndex") int accountIndex, @RequestBody FilterDTO filterDTO) {
+		
+		Account account = accountService.findOne(accountIndex);
+		
+		if(account == null) {
+			return new ResponseEntity<List<MMessageDTO>>(HttpStatus.NOT_FOUND); 
+		}
+		
+		List<MMessage> messages = messageService.findAllByAccount(account); 
+		
+		if(messages == null) {
+			return new ResponseEntity<List<MMessageDTO>>(HttpStatus.NOT_FOUND); 
+		}
+		
+		Set<MMessage> filteredSet = new HashSet<MMessage>(); 
+		
+		if(filterDTO.getTags().size() > 0) {
+			for(MMessage message : messages) {
+				loop : for (Tag tag : message.getTags()) {
+					for(TagDTO tagDTO : filterDTO.getTags()) {
+						if(tag.getId() == tagDTO.getId()) {
+							filteredSet.add(message);
+							break loop;
+						}
+					}
+				}
+			}
+		}
+		
+		if(!filterDTO.getSearch().isEmpty()) {
+			for(MMessage message : messages) {
+				
+				if(message.getSubject().toLowerCase().contains(filterDTO.getSearch().toLowerCase())) {
+					filteredSet.add(message); 
+					continue; 
+				}
+				
+				if(message.getFrom().toLowerCase().contains(filterDTO.getSearch().toLowerCase())) {
+					filteredSet.add(message);
+					continue; 
+				}
+				
+				if(message.getTo().toLowerCase().contains(filterDTO.getSearch().toLowerCase())) {
+					filteredSet.add(message); 
+					continue; 
+				}
+				
+				if(message.getCc().toLowerCase().contains(filterDTO.getSearch().toLowerCase())) {
+					filteredSet.add(message); 
+					continue; 
+				}
+				
+				if(message.getBcc().toLowerCase().contains(filterDTO.getSearch().toLowerCase())) {
+					filteredSet.add(message); 
+					continue; 
+				}
+				
+				if(message.getContent().toLowerCase().contains(filterDTO.getSearch().toLowerCase())) {
+					filteredSet.add(message); 
+					continue;
+				}
+			}
+		}
+		
+		List<MMessage> filtered = new ArrayList<MMessage>(); 
+		filtered.addAll(filteredSet);
+		
+		List<MMessageDTO> messagesForAccount = new ArrayList<MMessageDTO>(); 
+		
+		for(int i = 0; i < 50; i++ ) {
+			if(i == filtered.size()) 
+				break;
+			messagesForAccount.add(new MMessageDTO(filtered.get(i)));
+		}
+		return new ResponseEntity<List<MMessageDTO>>(messagesForAccount, HttpStatus.OK);
+	}
+	
+	
+	/**
+	 * 	
+	 * @param accountIndex
+	 * @param principal 
+	 * @param sortBy
+	 * @param asc
+	 * @return
+	 */
+	@GetMapping("/sort")
+	public ResponseEntity<?> sortMessages(@PathVariable("index") int accountIndex, Principal principal , @RequestParam String sortBy, @RequestParam String asc) {
+		
+		if(accountIndex < 0) {
+			return new ResponseEntity<>("Nalog nema ID!", HttpStatus.BAD_REQUEST);
+		}
+		
+		Account account = accountService.findAccount(principal, accountIndex);
 
-	// ============================================ METODA ZA SINHRONIZACIJU  ==========================================
-	
-	
-	
-	
-	// ============================================ METODA ZA CITANJE PORUKA SA GMAIL SERVERA =========================
-	
-	
+		
+		if(account == null) {
+			return new ResponseEntity<>("Nalog ne postoji!", HttpStatus.NOT_FOUND);
+		}
+		
+		List<MMessageDTO> messagesDTO = new ArrayList<MMessageDTO>(); 
+		Comparator<MMessage> comparator; 
+		
+		if(sortBy.equals("subject") && asc.equals("asc")) {
+			comparator = new Comparator<MMessage>() {
+
+				@Override
+				public int compare(MMessage o1, MMessage o2) {
+					return o1.getSubject().compareTo(o2.getSubject());
+				}
+			};
+		} else if (sortBy.equals("subject") && asc.equals("desc")) {
+			comparator = new Comparator<MMessage>() {
+
+				@Override
+				public int compare(MMessage o1, MMessage o2) {
+					return o1.getSubject().compareTo(o2.getSubject()) * -1; 
+				}
+			};
+		}
+		
+		else if (sortBy.equals("from") && asc.equals("asc")) {
+			comparator = new Comparator<MMessage>() {
+
+				@Override
+				public int compare(MMessage o1, MMessage o2) {
+					return o1.getFrom().compareTo(o2.getFrom());
+				}
+			};
+		} else if (sortBy.equals("from") && asc.equals("desc")) {
+			comparator = new Comparator<MMessage>() {
+
+				@Override
+				public int compare(MMessage o1, MMessage o2) {
+					return o1.getFrom().compareTo(o2.getFrom()) * -1; 
+				}
+			};
+		}
+		
+		else if(sortBy.equals("date") && asc.equals("asc")) {
+			comparator = new Comparator<MMessage>() {
+
+				@Override
+				public int compare(MMessage o1, MMessage o2) {
+					return o1.getDateTime().compareTo(o2.getDateTime());
+				}
+			};
+		}
+		
+		else if(sortBy.equals("date") && asc.equals("desc")) {
+			comparator = new Comparator<MMessage>() {
+
+				@Override
+				public int compare(MMessage o1, MMessage o2) {
+					return o1.getDateTime().compareTo(o2.getDateTime()) * -1; 
+				}
+			};
+		} else {
+			comparator = new Comparator<MMessage>() {
+
+				@Override
+				public int compare(MMessage o1, MMessage o2) {
+					return o1.getId().compareTo(o2.getId());
+				}
+			};
+		}
+		
+		List<MMessage> messages = messageService.findAllByAccount(account); 
+		
+		Collections.sort(messages, comparator);
+		
+		for(MMessage message : messages) {
+			messagesDTO.add(new MMessageDTO(message));
+		}
+		
+		return new ResponseEntity<List<MMessageDTO>>(messagesDTO, HttpStatus.OK);
+	}
+
 }
 

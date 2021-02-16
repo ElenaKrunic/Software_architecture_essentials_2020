@@ -10,9 +10,11 @@ import java.util.Set;
 
 import com.projekat.demo.entity.Account;
 import com.projekat.demo.entity.Attachment;
+import com.projekat.demo.entity.Contact;
 import com.projekat.demo.entity.Folder;
 import com.projekat.demo.entity.MMessage;
 import com.projekat.demo.entity.Tag;
+import com.projekat.demo.service.ContactService;
 
 public class MMessageDTO implements Serializable{
 	
@@ -33,6 +35,8 @@ public class MMessageDTO implements Serializable{
 	private boolean unread; 
 	private Set<AttachmentDTO> attachments = new HashSet<AttachmentDTO>();	
 	private Set<TagDTO> tags = new HashSet<TagDTO>(); 
+	
+	private String dateTimeContact = dateTime.toString(); 
 
 	
 	public MMessageDTO(Integer id, String from, String to, String cc, String bcc, Timestamp dateTime, String subject,
@@ -62,7 +66,6 @@ public class MMessageDTO implements Serializable{
 			this.attachments.add(new AttachmentDTO(attachment));
 		}
 	}
-
 	
 	public Timestamp getDateTime() {
 		return dateTime;
