@@ -36,7 +36,7 @@ public class MMessageDTO implements Serializable{
 	private Set<AttachmentDTO> attachments = new HashSet<AttachmentDTO>();	
 	private Set<TagDTO> tags = new HashSet<TagDTO>(); 
 	
-	private String dateTimeContact = dateTime.toString(); 
+	//private String dateTimeContact = dateTime.toString(); 
 
 	
 	public MMessageDTO(Integer id, String from, String to, String cc, String bcc, Timestamp dateTime, String subject,
