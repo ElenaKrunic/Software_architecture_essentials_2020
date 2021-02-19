@@ -61,7 +61,7 @@ function getFolder(folderId) {
 			
 			for (folder of folders) {
 				if(folder.parent_folder == folderId){
-					subfolders.append("<a href='folder.html?id=" + folder.id + "' class='subfolder'>" + folder.name + "</a>"); 
+					subfolders.append("<a href='folder.html?id=" + folder.id + "' class='subfolder'>" + folder.name + "</a><br><br><br>"); 
 				}
 			}
 		}
@@ -72,7 +72,7 @@ function getFolder(folderId) {
 		type: "GET",
 		success: function(mess) {
 			for (message of mess) {	
-				messages.append("<a href='email.html?id=" + message.id + "' class='message'>" + message.subject + "</a>"); 
+				messages.append("<a href='email.html?id=" + message.id + "' class='message'>" + message.subject + "</a><br><br><br>"); 
 			}
 
 		}
@@ -90,7 +90,7 @@ function getRootFolders() {
 			
 			for (folder of folders) {
 				if(folder.parent_folder == null){
-					subfolders.append("<a href='folder.html?id=" + folder.id + "' class='subfolder'>" + folder.name + "</a>"); 
+					subfolders.append("<a href='folder.html?id=" + folder.id + "' class='subfolder'>" + folder.name + "</a><br><br><br>"); 
 				}
 			}
 

@@ -79,6 +79,8 @@ $(document).ready(function(){
 		});
 	});
 
+	getSortMessages();
+	getSearchedMessage();
 	getReloadMessages();
 
 });
@@ -127,7 +129,7 @@ function getSortMessages(){
 		}
 		console.log(data);
 	$.ajax({
-		url:URL + "/" + accountIndex + "/sort?sortBy=" + sorting.val() + "&asc=" + ascDesc.val(),
+		url: "http://localhost:8080/api/messages/" + accountIndex + "/sort?sortBy=" + sorting.val() + "&asc=" + ascDesc.val(),
 		type: "GET",
 		success: function(messages){
 			messagesList.empty();
@@ -142,4 +144,32 @@ function getSortMessages(){
 		}
 	});
 });
+}
+
+function getSearchedMessage(){
+	
+	searchButton.click(function(){
+		
+		var data = {
+				searchInput : searchInput.val(),				
+			}
+		console.log(data);
+		
+		$.ajax({
+			url: "http://localhost:8080/api/messages/" + accountIndex + "/search?userEmail=" + searchInput.val(),
+			type: "GET",
+			success: function(messages){
+				messagesList.empty();
+				for(message of messages){
+					
+					if(message.unread){
+						messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd><b> " + message.content + "</b></dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");
+					}else{
+						messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd>" + message.content + "</dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");	
+					}				
+				}
+		}
+	});
+});
+
 }

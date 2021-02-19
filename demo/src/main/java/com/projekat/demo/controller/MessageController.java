@@ -1,5 +1,6 @@
 package com.projekat.demo.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,6 +55,7 @@ import com.projekat.demo.service.TagService;
 import com.projekat.demo.service.UserService;
 import com.projekat.demo.util.Base64;
 import com.projekat.demo.util.FilesUtil;
+
 
 /**
  * Problem: ne ucitava mi se account kao json objekat u porukama 
@@ -639,7 +642,7 @@ public class MessageController {
 	 * @return
 	 */
 	@GetMapping("{accountIndex}/sort")
-	public ResponseEntity<?> sortMessages(@PathVariable("index") int accountIndex , @RequestParam String sortBy, @RequestParam String asc) {
+	public ResponseEntity<?> sortMessages(@PathVariable("accountIndex") int accountIndex , @RequestParam String sortBy, @RequestParam String asc) {
 		System.out.println("pogodio");
 		if(accountIndex < 0) {
 			return new ResponseEntity<>("Nalog nema ID!", HttpStatus.BAD_REQUEST);
@@ -727,6 +730,34 @@ public class MessageController {
 		}
 		
 		return new ResponseEntity<List<MMessageDTO>>(messagesDTO, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("{accountIndex}/search")
+	public ResponseEntity<?> getSearchedMessages(@PathVariable("accountIndex") int accountIndex,
+			@RequestParam Optional<String> userEmail) throws IOException {
+
+		if (accountIndex < 0) {
+			return new ResponseEntity<>("You must provide an ID for an account!", HttpStatus.BAD_REQUEST);
+		}
+
+		Account account = accountService.findAccount(UserController.korisnikID, accountIndex); 
+		if (account == null) {
+			return new ResponseEntity<>("Unexisting account.", HttpStatus.NOT_FOUND);
+		}
+
+		List<MMessageDTO> messagesDTO = new ArrayList<MMessageDTO>();
+
+		if (userEmail != null) {
+			List<MMessage> mess = messageService.findByFrom(userEmail.orElse("_"));
+			for (MMessage message : mess) {
+
+				messagesDTO.add(new MMessageDTO(message));
+				return new ResponseEntity<List<MMessageDTO>>(messagesDTO, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<List<MMessageDTO>>(messagesDTO, HttpStatus.OK);
+
 	}
 
 }
