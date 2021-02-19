@@ -402,14 +402,13 @@ public class MessageController {
 	
 	
 	@PostMapping("{accountIndex}/sync")
-	public ResponseEntity<?> getMessagesFromServer(@PathVariable("accountIndex") int accountIndex, Principal principal) {
+	public ResponseEntity<?> getMessagesFromServer(@PathVariable("accountIndex") int accountIndex) {
 	
 		if(accountIndex < 0) {
 			return new ResponseEntity<> ("Account nema ID!", HttpStatus.BAD_REQUEST);
 		}
 		
-		Account account = accountService.findAccount(principal, accountIndex); 
-		//Account account = accountService.findByAccountId(accountIndex, username);
+		Account account = accountService.findAccount(UserController.korisnikID, accountIndex); 		//Account account = accountService.findByAccountId(accountIndex, username);
 		
 		if(account == null) {
 			return new ResponseEntity<>("Nepostojeci nalog!", HttpStatus.NOT_FOUND); 
@@ -640,14 +639,13 @@ public class MessageController {
 	 * @return
 	 */
 	@GetMapping("/sort")
-	public ResponseEntity<?> sortMessages(@PathVariable("index") int accountIndex, Principal principal , @RequestParam String sortBy, @RequestParam String asc) {
+	public ResponseEntity<?> sortMessages(@PathVariable("index") int accountIndex , @RequestParam String sortBy, @RequestParam String asc) {
 		
 		if(accountIndex < 0) {
 			return new ResponseEntity<>("Nalog nema ID!", HttpStatus.BAD_REQUEST);
 		}
 		
-		Account account = accountService.findAccount(principal, accountIndex);
-
+		Account account = accountService.findAccount(UserController.korisnikID, accountIndex); 
 		
 		if(account == null) {
 			return new ResponseEntity<>("Nalog ne postoji!", HttpStatus.NOT_FOUND);

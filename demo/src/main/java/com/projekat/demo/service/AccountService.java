@@ -75,20 +75,22 @@ public class AccountService implements AccountServiceInterface {
 		}	
 	}
 
-	public Account findAccount(Principal principal, int accountId) {
-		User user = userService.findByUsername(principal.getName()); 
+	public Account findAccount(Integer id, int accountId) {
+		User user = userService.findOne(id);
 		
 		List<Account> userAccounts = user.getAccounts(); 
 		
-		Account account; 
 		
 		try {
-			account = userAccounts.get(accountId);
-			return account; 
+			for(Account account : userAccounts) {
+				if(account.getId() == accountId) {
+					return account;
+				}
+			} 
 		} catch(Exception e) {
 			e.printStackTrace();
-			return null;
 		}
+		return null;
 	}
 
 
