@@ -638,9 +638,9 @@ public class MessageController {
 	 * @param asc
 	 * @return
 	 */
-	@GetMapping("/sort")
+	@GetMapping("{accountIndex}/sort")
 	public ResponseEntity<?> sortMessages(@PathVariable("index") int accountIndex , @RequestParam String sortBy, @RequestParam String asc) {
-		
+		System.out.println("pogodio");
 		if(accountIndex < 0) {
 			return new ResponseEntity<>("Nalog nema ID!", HttpStatus.BAD_REQUEST);
 		}

@@ -16,10 +16,10 @@ $(document).ready(function() {
 		url: URL + '/getAccountsForUser',
 		type: "GET",
 		success: function(accounts) {
-			var counter = 1;
+			//var counter = 1;
 			for (account of accounts) {
-				container.append("<button class='account' data-index='" + counter + "'>" + account.displayName + '</br>' + account.username + "</button>");
-				counter++;
+				container.append("<button class='account' data-index='" + account.id + "'>" + account.displayName + '</br>' + account.username + "</button>");
+				//counter++;
 			}
 		}
 	});

@@ -1,9 +1,11 @@
 INSERT INTO users (first_name, last_name, username, password) VALUES ('elena', 'krunic', 'lele', 'sifra');
 INSERT INTO users (first_name, last_name, username, password) VALUES ('melema', 'pantic', 'mele', 'sifra');
+INSERT INTO users (first_name, last_name, username, password) VALUES ('dragan', 'petrovic', 'dragan', 'sifra');
 
 INSERT INTO accounts (smtp_address, smtp_port, in_server_type, in_server_address, in_server_port, username, password, display_name, user) VALUES ('smtp.gmail.com', 587, 1, 'imap.gmail.com', 993, 'lelekrunic1@gmail.com', 'pereCvetka!8', 'Elena', 1);
 INSERT INTO accounts (smtp_address, smtp_port, in_server_type, in_server_address, in_server_port, username, password, display_name, user) VALUES ('smtp.gmail.com', 587, 1, 'imap.gmail.com', 993, 'korisnicko2', 'hesovana2', 'DrugiDisplayName', 2);
 INSERT INTO accounts (smtp_address, smtp_port, in_server_type, in_server_address, in_server_port, username, password, display_name, user) VALUES ('smtp.gmail.com', 587, 1, 'imap.gmail.com', 993, 'elenakrunic@gmail.com', 'Bijelazavjesaa', 'TreciDisplayName', 1);
+INSERT INTO accounts (smtp_address, smtp_port, in_server_type, in_server_address, in_server_port, username, password, display_name, user) VALUES ('smtp.gmail.com', 587, 1, 'imap.gmail.com', 993, 'mila021mila@gmail.com', '247365021', 'DraganEmail', 3);
 
 INSERT INTO folders (name, parent_folder, account) VALUES ('Inbox', null, 1);
 INSERT INTO folders (name, parent_folder, account) VALUES ('Outbox', null, 2);

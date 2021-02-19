@@ -93,9 +93,9 @@ function getMessages(){
 			for(message of messages){
 				
 				if(message.unread){
-					messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><dd><b> " + message.content + "</b></dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button>");
+					messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd><b> " + message.content + "</b></dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");
 				}else{
-					messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><dd>" + message.content + "</dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button>");	
+					messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd>" + message.content + "</dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");	
 				}				
 			}
 		}
@@ -116,4 +116,30 @@ function getReloadMessages(){
 			
 		})
 	})
+}
+
+function getSortMessages(){
+	sortButton.click(function(){
+		
+		var data = {
+			sorting : sorting.val(),
+			ascDesc : ascDesc.val()
+		}
+		console.log(data);
+	$.ajax({
+		url:URL + "/" + accountIndex + "/sort?sortBy=" + sorting.val() + "&asc=" + ascDesc.val(),
+		type: "GET",
+		success: function(messages){
+			messagesList.empty();
+			for(message of messages){
+				
+				if(message.unread){
+					messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd><b> " + message.content + "</b></dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");
+				}else{
+					messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd>" + message.content + "</dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");	
+				}				
+			}
+		}
+	});
+});
 }
