@@ -286,8 +286,9 @@ public class MessageController {
 	 * @param folderId foldera 
 	 * @return poruka premjestena u folder sa zadatim id-jem 
 	 */
-	@PutMapping(value="/{id}/moveTo/{folderId}")
+	@PostMapping(value="/{id}/moveTo/{folderId}")
 	public ResponseEntity<MMessageDTO> moveMessage(@PathVariable("id")Integer id, @PathVariable("folderId") Integer folderId) {
+		System.out.println("pogodio");
 		MMessage message = messageServiceInt.findOne(id); 
 		
 		if(message == null) {
@@ -300,6 +301,7 @@ public class MessageController {
 		}
 		
 		folder.addMessage(message);
+		message.setFolder(folder);
 		message = messageServiceInt.save(message); 
 		
 		return new ResponseEntity<MMessageDTO>(new MMessageDTO(message), HttpStatus.OK);

@@ -4,14 +4,19 @@
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+	<script type="text/javascript" src="js/email.js"></script>
+	
 	</head>
 	<body>
 		<ul>
 			<li><a class="navbar-brand" href="#"><img class="logo" src="img/logo.png" ></a>
   			<li><a href="messages.html">Inbox</a></li>
-  			<li><a href="#news">Folders</a></li>
-  			<li><a href="#contact">Contacts</a></li>
-  			<li><a href="#about">Account</a></li>
+  			<li><a href="folder.html">Folders</a></li>
+  			<li><a href="contacts.html">Contacts</a></li>
+  			<li><a href="account.html">Account</a></li>
+         	<li id="logoutli">
+       		<a  id="logoutButton" href="#">Logout<span class="sr-only">(current)</span></a>
+      		</li>
 		</ul>
 	
 	
@@ -38,8 +43,8 @@
 			</div>
 			
 			<div>
-				<label for="content">Content:</label>
-				<textarea cols="50" rows="40" id="content"></textarea>
+				<label for="content" class="align-top">Content:</label>
+				<textarea cols="50" rows="10" id="content"></textarea>
 			</div>
 		</div>
 	</body>

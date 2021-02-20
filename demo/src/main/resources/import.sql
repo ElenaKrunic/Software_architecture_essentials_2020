@@ -17,6 +17,7 @@ INSERT INTO folders (name, parent_folder, account) VALUES ('Moj', 3, 3);
 
 INSERT INTO messages (message_from, message_to, cc, bcc, date_time, subject, content, account, unread, folder) VALUES ('lelekrunic1@gmail.com', 'elenakrunic@gmail.com', 'ccPoruke1', 'bccPoruke1', '2020-12-25 12:59:00', 'SubjectPoruke1Naloga1', 'ContentPoruke1Naloga1', 1, true, 1);
 INSERT INTO messages (message_from, message_to, cc, bcc, date_time, subject, content, account, unread, folder) VALUES ('elenakrunic@gmail.com', 'lelekrunic1@gmail.com', 'ccPoruke2', 'bccPoruke2', '2020-12-26 19:02:00', 'SubjectPoruke2Naloga2', 'ContentPoruke2Naloga2', 2, true, 2);
+INSERT INTO `bazabaza2`.`messages` (`id`, `bcc`, `cc`, `content`, `date_time`, `message_from`, `subject`, `message_to`, `unread`, `account`) VALUES ('8', 'bcc', 'cc', 'aaaaaaaaaaa', '2020-12-25 12:59:00', 'elenakrunic@gmail.com', 'Hitno!', 'mila021mila@gmail.com', true, '4' );
 
 --INSERT INTO attachments (data, mime_type, name, message) VALUES ('C:/Users/lenovo/Desktop/Desktop/III/OSA/osaGitRepo/osa_projekat_2020/loyle.jpg', 'image/bmp', 'loyle slika', 1);
 
