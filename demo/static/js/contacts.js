@@ -3,6 +3,7 @@
 
 var accountIndex = localStorage.getItem("account");
 var logoutButton; 
+var navigation; 
 
 var ContactManager = {
 	//vraca url 
@@ -128,6 +129,10 @@ var ContactManager = {
 
 
 $(document).ready(function(){
+	
+	navigation = $("#navigation");
+	var logoutButton = $("#logoutButton");
+	
 	ContactManager.showContactsList();
 	ContactManager.showContactDetails();
 	$('#ContactListPanel').show();
@@ -141,7 +146,6 @@ $(document).ready(function(){
 	$('#sacuvajIzmjene').click(function(e){
 		e.preventDefault(); 
 		ContactManager.sacuvajKontakt();
-		alert("Klik na dugme");
 	});
 	
 	$("#obrisiKontakt").click(function(e){
@@ -154,10 +158,37 @@ $(document).ready(function(){
 		ContactManager.dodajKontakt();
 	});
 	
+	logoutButton.click(function() {
+		localStorage.removeItem("account");
+		window.location.replace("index.html");
+	});
+	
+		/**
 	$("#logoutButton").click(function(e){
 		e.preventDefault(); 
 		localStorage.removeItem("account"); 
 		window.location.replace("index.html");
 	});
+	
+	$("#home").click(function(e) {
+		e.preventDefault(); 
+		localStorage.removeItem("account"); 
+		window.location.replace("messages.html")
+	});
+	
+	$("#folders").click(function(e) {
+		e.preventDefault(); 
+		localStorage.removeItem("account");
+		window.location.replace("folder.html");  
+	});
+	
+	$("#accounts").click(function(e) {
+		e.preventDefault(); 
+		localStorage.removeItem("account"); 
+		window.location.replace("chooseAccount.html"); 
+	});
+	 */
+	
+	
 }); 
 

@@ -12,7 +12,6 @@ var FOLDER;
 var accountIndex = localStorage.getItem("account");
 
 $(document).ready(function() {
-
 	// Initializing page components
 	navigation = $("#navigation");
 	subfolders = $("#subfolders");

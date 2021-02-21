@@ -34,8 +34,8 @@ $(document).ready(function(){
 	searchInput = $("#searchInput");
 	searchButton = $("#searchButton");
 	reloadButton = $("#reload");
-	var messageId = window.location.href.split("=")[1];
 	
+	var messageId = window.location.href.split("=")[1];
 	
 	messagesList.on("click", ".deleteButton", function(){
 		var id = $(this).data("messageid");
