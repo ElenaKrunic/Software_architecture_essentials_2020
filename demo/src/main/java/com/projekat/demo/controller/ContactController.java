@@ -93,10 +93,10 @@ public class ContactController {
 	 * @param id korisnika kojem ce biti dodijeljen kontakt 
 	 * @return novokreirani kontakt u bazi 
 	 */
-	@PostMapping(value= "/saveContact/{userId}",consumes="application/json")
-	public ResponseEntity<ContactDTO> saveContact(@RequestBody ContactDTO contactDTO, @PathVariable("userId") Integer id) {
+	@PostMapping(value= "/saveContact",consumes="application/json")
+	public ResponseEntity<ContactDTO> saveContact(@RequestBody ContactDTO contactDTO) {
 		
-		User user = userService.findOne(id);
+		User user = userService.findOne(UserController.korisnikID);
 		 
 		if(user == null) {
 			return new ResponseEntity<ContactDTO>(HttpStatus.BAD_REQUEST); 

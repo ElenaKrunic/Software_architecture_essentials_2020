@@ -23,4 +23,6 @@ public interface FolderServiceInterface {
 	
 	List<Folder> findByParent(Folder parentFolder);
 
+	Folder findOutbox(Account account);
+
 }

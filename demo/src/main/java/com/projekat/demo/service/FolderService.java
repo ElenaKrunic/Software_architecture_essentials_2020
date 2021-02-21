@@ -55,6 +55,11 @@ public class FolderService implements FolderServiceInterface {
 	public Folder findInbox(Account account) {
 		return folderRepository.findByNameAndAccount("Inbox", account);
 	}
+	
+	@Override
+	public Folder findOutbox(Account account) {
+		return folderRepository.findByNameAndAccount("Outbox", account);
+	}
 
 	@Override
 	public List<Folder> findByParent(Folder parentFolder) {

@@ -34,6 +34,7 @@ $(document).ready(function(){
 	searchInput = $("#searchInput");
 	searchButton = $("#searchButton");
 	reloadButton = $("#reload");
+	
 	var messageId = window.location.href.split("=")[1];
 	
 	

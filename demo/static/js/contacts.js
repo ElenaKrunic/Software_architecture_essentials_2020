@@ -2,7 +2,8 @@
 // ucitava listu kontakata 
 
 var accountIndex = localStorage.getItem("account");
-var logoutButton; 
+var logoutButton;
+var navigation; 
 
 var ContactManager = {
 	//vraca url 
@@ -88,7 +89,7 @@ var ContactManager = {
 		
 	createContactUrl: function (requestType) {
 		if(requestType == 'POST') {
-			return this.basePath() + '/contacts/' + 'saveContact/' + accountIndex;
+			return this.basePath() + '/contacts/saveContact/';
 		}
 		return this.basePath() + '/contacts/' + 'updateContact/' + encodeURIComponent($("#contactID").val());
 	},
@@ -128,6 +129,11 @@ var ContactManager = {
 
 
 $(document).ready(function(){
+
+	navigation = $("#navigation");
+	var logoutButton = $("#logoutButton");
+
+	ContactManager.showContactsList();	
 	ContactManager.showContactsList();
 	ContactManager.showContactDetails();
 	$('#ContactListPanel').show();
@@ -141,7 +147,7 @@ $(document).ready(function(){
 	$('#sacuvajIzmjene').click(function(e){
 		e.preventDefault(); 
 		ContactManager.sacuvajKontakt();
-		alert("Klik na dugme");
+
 	});
 	
 	$("#obrisiKontakt").click(function(e){
@@ -154,9 +160,8 @@ $(document).ready(function(){
 		ContactManager.dodajKontakt();
 	});
 	
-	$("#logoutButton").click(function(e){
-		e.preventDefault(); 
-		localStorage.removeItem("account"); 
+	logoutButton.click(function() {
+		localStorage.removeItem("account");
 		window.location.replace("index.html");
 	});
 }); 
