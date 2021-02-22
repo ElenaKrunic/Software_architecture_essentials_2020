@@ -197,9 +197,11 @@ public class MessageController {
 			return new ResponseEntity<MMessageDTO>(HttpStatus.NOT_FOUND);
 		}
 		
+		//emailDTO.setFrom(account.getUsername());
+		
 		MMessage message = new MMessage(); 
 		//message.setFrom(emailDTO.getMessageDTO().getFrom());
-		message.setFrom(emailDTO.getFrom());
+		message.setFrom(account.getUsername());
 		message.setTo(emailDTO.getTo());
 		message.setCc(emailDTO.getCc());
 		message.setBcc(emailDTO.getBcc());
