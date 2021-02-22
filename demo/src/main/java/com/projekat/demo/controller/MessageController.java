@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 import javax.mail.Message;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +67,9 @@ import com.projekat.demo.util.FilesUtil;
 @RestController
 @RequestMapping("api/messages")
 public class MessageController {
+	
+    private static final Logger LOGGER = LogManager.getLogger(MessageController.class);
+
 	
 	@Autowired
 	private MessageServiceInterface messageServiceInt; 
@@ -117,6 +122,8 @@ public class MessageController {
 			dtoMessages.add(new MMessageDTO(message));
 		}
 		
+		LOGGER.info("Uspjesno vracena lista poruka"); 
+
 		return new ResponseEntity<List<MMessageDTO>>(dtoMessages, HttpStatus.OK);
 	}
 	/**
@@ -132,6 +139,9 @@ public class MessageController {
 		if(message == null) {
 			return new ResponseEntity<MMessageDTO>(HttpStatus.NOT_FOUND); 
 		} else {
+			
+			LOGGER.info("Uspjesno vracena poruka za odgovarajuci ID"); 
+
 			return new ResponseEntity<MMessageDTO>(new MMessageDTO(message), HttpStatus.OK); 
 		}
 	}
@@ -156,6 +166,8 @@ public class MessageController {
 			tagsDto.add(new TagDTO(tag));
 		}
 		
+		LOGGER.info("Uspjesno vracena lista tagova za poruku"); 
+
 		return new ResponseEntity<List<TagDTO>>(tagsDto, HttpStatus.OK);
 	}
 	/**
@@ -179,6 +191,8 @@ public class MessageController {
 			messageAttachmentsDto.add(attachmentDTO);
 		}
 		
+		LOGGER.info("Uspjesno vracena odgovarajuci prilog"); 
+
 		return new ResponseEntity<List<AttachmentDTO>>(messageAttachmentsDto, HttpStatus.OK);
 	}
 	
@@ -241,8 +255,10 @@ public class MessageController {
 		
 		if(sent) {
 			message = messageServiceInt.save(message);
-			System.out.println("Ovo je poruka koja se vratila kao true ili false sa mail api-ja" + message);
+			//System.out.println("Ovo je poruka koja se vratila kao true ili false sa mail api-ja" + message);
 			
+			LOGGER.info("Poruka uspjesno poslata!"); 
+
 			return new ResponseEntity<MMessageDTO>(new MMessageDTO(message), HttpStatus.CREATED);
 		}
 		
@@ -279,6 +295,9 @@ public class MessageController {
 		
 		message.setUnread(false);
 		message = messageServiceInt.save(message); 
+		
+		LOGGER.info("Poruka je procitana!"); 
+
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 	
@@ -306,6 +325,8 @@ public class MessageController {
 		message.setFolder(folder);
 		message = messageServiceInt.save(message); 
 		
+		LOGGER.info("Uspjesno prebacena poruka u drugi folder!"); 
+		
 		return new ResponseEntity<MMessageDTO>(new MMessageDTO(message), HttpStatus.OK);
 	}
 	
@@ -316,98 +337,16 @@ public class MessageController {
 		
 		if(message != null) {
 			messageServiceInt.remove(id);
+			
+			LOGGER.info("Uspjesno obrisana poruka"); 
+
 			return new ResponseEntity<Void>(HttpStatus.OK); 
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
 	}
 
-/**
- * 	
- * @param messageDTO tijelo poruke koja ce da primi novi tag ili odradi update postojeceg 
- * @param id poruke 
- * @return poruka sa izmijenjenim tagom 
- */
-	@PutMapping(value= "/addTag/{id}", consumes="application/json")
-	public ResponseEntity<MMessageDTO> addTagToMessage(@RequestBody MMessageDTO messageDTO, @PathVariable("id") Integer id) {
-		
-		MMessage message = messageService.findOne(id);
-		if(message == null) {
-			return new ResponseEntity<MMessageDTO>(HttpStatus.NOT_FOUND);
-		}
-		
-		User user = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-		
-		//set tagova koji vec postoje 
-		List<Tag> postojeciTagovi = message.getTags(); 
-		//set tagova koje cemo da kreiramo 
-		Set<Tag> updatedTags = new HashSet<Tag>();
-		Set<Tag> tagoviZaBrisanje = new HashSet<Tag>();
-		Set<Tag> tagoviZaDodavanje = new HashSet<Tag>();
-		boolean shouldDelete = false; 
-		boolean shouldAdd = true; 
-		
-		Tag tagToWork;
-	
-		for(TagDTO tagDTO : messageDTO.getTags()) {
-			//ako ne postoji id taga 
-			if(tagDTO.getId() == null) {
-				//inicijalizujemo novi
-				tagToWork = new Tag();
-				//postavljamo mu ime 
-				tagToWork.setName(tagDTO.getName());
-				//dodajemo ga korisniku 
-				user.addTag(tagToWork);
-				//cuvamo preko servisne metode 
-				tagToWork = tagService.save(tagToWork);
-			} else {
-				//u suprotnom,pronalazimo ga po proslijednom id-u 
-				tagToWork = tagService.findById(id);
-			}
-			
-			if(tagToWork != null) {
-				updatedTags.add(tagToWork);
-			}
-		}
-		
-		for(Tag postojeciTag : postojeciTagovi) {
-			for(Tag updatedTag : updatedTags) {
-				if(postojeciTag.getId() == updatedTag.getId()) {
-					shouldDelete = false; 
-					break; 
-				}
-			}
-			
-			if(shouldDelete) {
-				tagoviZaBrisanje.add(postojeciTag);
-			}
-		}
-		
-		for(Tag updatedTag : updatedTags) {
-			for(Tag postojeciTag : postojeciTagovi) {
-				if(updatedTag.getId() == postojeciTag.getId()) {
-					shouldAdd= false; 
-					break; 
-				}
-			}
-			
-			if(shouldAdd) {
-				tagoviZaDodavanje.add(updatedTag);
-			}
-		}
-		
-		for(Tag tag : tagoviZaBrisanje) 
-			message.removeTag(tag);
-		
-		for(Tag tag : tagoviZaDodavanje) 
-			message.addTag(tag);
-		
-		message = messageService.save(message);
-		return new ResponseEntity<MMessageDTO>(new MMessageDTO(message), HttpStatus.CREATED);
-		
-	}
-	
-	
+
 	@PostMapping("{accountIndex}/sync")
 	public ResponseEntity<?> getMessagesFromServer(@PathVariable("accountIndex") int accountIndex) {
 	
@@ -432,6 +371,8 @@ public class MessageController {
 		
 		account.setLastSyncTime(new Timestamp(System.currentTimeMillis()));
 		accountService.save(account);
+		
+		LOGGER.info("Uspjesno odradjena sinhronizacija poruka sa gmail-a!"); 
 		
 		return new ResponseEntity<String>("Gotova sinhronizacija!", HttpStatus.OK);
 	}
@@ -733,6 +674,8 @@ public class MessageController {
 			messagesDTO.add(new MMessageDTO(message));
 		}
 		
+		LOGGER.info("Uspjesno odradjeno sortiranje poruka"); 
+
 		return new ResponseEntity<List<MMessageDTO>>(messagesDTO, HttpStatus.OK);
 	}
 	
@@ -760,6 +703,9 @@ public class MessageController {
 				return new ResponseEntity<List<MMessageDTO>>(messagesDTO, HttpStatus.OK);
 			}
 		}
+		
+		LOGGER.info("Uspjesno odradjena pretraga po mejlu! "); 
+
 		return new ResponseEntity<List<MMessageDTO>>(messagesDTO, HttpStatus.OK);
 
 	}

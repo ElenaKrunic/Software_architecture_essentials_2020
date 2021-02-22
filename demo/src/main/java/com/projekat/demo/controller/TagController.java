@@ -3,6 +3,8 @@ package com.projekat.demo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ import com.projekat.demo.service.UserService;
 @RestController
 @RequestMapping(value="api/tags")
 public class TagController {
+	
+    private static final Logger LOGGER = LogManager.getLogger(TagController.class);
 
 	@Autowired
 	TagService tagService; 

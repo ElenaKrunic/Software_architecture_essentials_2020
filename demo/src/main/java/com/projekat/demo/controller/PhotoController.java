@@ -61,7 +61,6 @@ public class PhotoController {
 		
 		return new ResponseEntity<>(HttpStatus.OK); 
 	}
-	
 }
 		
 

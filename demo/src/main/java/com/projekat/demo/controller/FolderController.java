@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -48,6 +50,8 @@ import com.projekat.demo.service.UserService;
 @RestController
 @RequestMapping(value="api/folders")
 public class FolderController {
+	
+    private static final Logger LOGGER = LogManager.getLogger(FolderController.class);
 
 	@Autowired
 	private FolderService folderService; 
@@ -80,6 +84,8 @@ public class FolderController {
 			return new ResponseEntity<FolderDTO>(HttpStatus.NOT_FOUND); 
  		}
 		
+		LOGGER.info("Uspjesno pronadjen folder"); 
+
 		return new ResponseEntity<FolderDTO>(new FolderDTO(folder), HttpStatus.OK);
 	}
 	/**
@@ -102,6 +108,8 @@ public class FolderController {
 				dtoFolders.add(dto);
 			}
 			
+			LOGGER.info("Uspjesno vracena lista foldera za odredjen nalog"); 
+
 			return new ResponseEntity<List<FolderDTO>>(dtoFolders, HttpStatus.OK);
 		}
 	}
@@ -126,6 +134,9 @@ public class FolderController {
 		for(MMessage message : messages) {
 			dtoMessages.add(new MMessageDTO(message));
 		}
+		
+		LOGGER.info("Uspjesno vracena lista poruka za folder"); 
+
 		return new ResponseEntity<List<MMessageDTO>>(dtoMessages, HttpStatus.OK);
 	}
 	
@@ -152,6 +163,8 @@ public class FolderController {
 		
 		folder = folderService.save(folder); 
 		
+		LOGGER.info("Uspjesno odradjeno dodavanje novog foldera"); 
+
 		return new ResponseEntity<FolderDTO>(new FolderDTO(folder), HttpStatus.CREATED);
 	}
 	 
@@ -176,6 +189,8 @@ public class FolderController {
 		
 		folder = this.folderRepository.save(folder);
 		
+		LOGGER.info("Uspjesno odradjena izmjena foldera"); 
+		
 		return new ResponseEntity<FolderDTO>(new FolderDTO(folder), HttpStatus.OK); 
 	}
 	
@@ -191,6 +206,7 @@ public class FolderController {
 		
 		if(folder != null) {
 			folderService.remove(folder);
+			LOGGER.info("Uspjesno obrisan folder"); 
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}else {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND); 
@@ -219,6 +235,8 @@ public class FolderController {
 			dtoFolders.add(new FolderDTO(folder));
 		}
 		
+		LOGGER.info("Uspjesno vracena lista podfoldera"); 
+
 		return new ResponseEntity<List<FolderDTO>>(dtoFolders, HttpStatus.OK);
 	}
 
@@ -244,55 +262,8 @@ public class FolderController {
 		
 		folder = folderService.save(folder);
 		
+		LOGGER.info("Uspjesno dodavanje novog podfoldera"); 
+
 		return new ResponseEntity<FolderDTO>(new FolderDTO(folder), HttpStatus.CREATED);   
 	}
-	
-	/**
-	 * 
-	 * @param id foldera
-	 * @return pravilo koje je primjenjeno nad odgovarajucim folderom 
-	 */
-	
-	
-	/*
-	@GetMapping(value="{id}/getRules")
-	public ResponseEntity<List<RuleDTO>> getRules(@PathVariable("id") Integer id) {
-		
-		Folder folder = folderService.findById(id);
-		
-		if(folder == null) {
-			return new ResponseEntity<List<RuleDTO>>(HttpStatus.NOT_FOUND); 
-		}
-		
-		List<Rule> rules = ruleService.findByFolder(folder);
-		List<RuleDTO> dtoRules = new ArrayList<RuleDTO>(); 
-		
-		for(Rule rule : rules) {
-			dtoRules.add(new RuleDTO(rule));
-		}
-		
-		return new ResponseEntity<List<RuleDTO>>(dtoRules, HttpStatus.OK);
-	}
-	*/
-	
-	//updateFolderRules 
-	//@PutMapping(value="/updateFolderRules")
-	//doRules 
-	/*
-	@GetMapping(value="/{id}/executeRules")
-	public ResponseEntity<Void> executeRules(@PathVariable("id") Integer id) {
-		
-		Folder folder = folderService.findById(id); 
-		
-		if(folder == null) {
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-		}
-		
-		mailApi.executeRules(new ArrayList<Rule>(folder.getRules()), messageService);
-		
-		return new ResponseEntity<Void>(HttpStatus.CREATED);
-	}
-	*/
-	
-	
 }

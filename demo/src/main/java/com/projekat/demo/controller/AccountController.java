@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projekat.demo.Aplikacija;
 import com.projekat.demo.dto.AccountDTO;
 import com.projekat.demo.dto.FolderDTO;
 import com.projekat.demo.dto.MMessageDTO;
@@ -48,6 +51,8 @@ import com.projekat.demo.service.UserService;
 @RestController
 @RequestMapping(value="api/accounts")
 public class AccountController {
+	
+    private static final Logger LOGGER = LogManager.getLogger(AccountController.class);
 	
 	@Autowired
 	private AccountServiceInterface accountServiceInterface; 
@@ -84,6 +89,9 @@ public class AccountController {
 			AccountDTO dto = new AccountDTO(account); 
 			dtoAccounts.add(dto);
 		}
+		
+		LOGGER.info("Vracena lista naloga za jednog korisnika");
+		
 		return new ResponseEntity<List<AccountDTO>>(dtoAccounts, HttpStatus.OK);
 	}
 
@@ -98,6 +106,8 @@ public class AccountController {
 		if(account == null){
 			return new ResponseEntity<AccountDTO>(HttpStatus.NOT_FOUND);
 		}
+		
+		LOGGER.info("Vracen nalog za jednog korisnika");
 		
 		return new ResponseEntity<AccountDTO>(new AccountDTO(account), HttpStatus.OK);
 	}
@@ -124,6 +134,7 @@ public class AccountController {
 				dtoMessages.add(dto);
 			}
 			
+			LOGGER.info("Vracena lista poruka za nalog"); 
 			return new ResponseEntity<List<MMessageDTO>>(dtoMessages, HttpStatus.OK);
 		}
 	}
@@ -148,6 +159,7 @@ public class AccountController {
 				dtoFolders.add(dto);
 			}
 			
+			LOGGER.info("Vracena lista poruka za foldera"); 
 			return new ResponseEntity<List<FolderDTO>>(dtoFolders, HttpStatus.OK);
 		}
 	}
@@ -165,6 +177,9 @@ public class AccountController {
 		for(Account account : accounts) {
 			dtoAccounts.add(new AccountDTO(account));
 		}
+		
+		LOGGER.info("Metoda za sve naloge iz aplikacije"); 
+
 		return new ResponseEntity<List<AccountDTO>>(dtoAccounts, HttpStatus.OK);  
 	}
 		
@@ -233,6 +248,9 @@ public class AccountController {
 		
 		if(connectAccountToUser) {
 			Account connectedAccount = this.accountService.save(account);
+			
+			LOGGER.info("Uspjesno izvrseno dodavanje novog naloga"); 
+
 			return new ResponseEntity<AccountDTO>(new AccountDTO(connectedAccount), HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<AccountDTO>(HttpStatus.BAD_REQUEST);
@@ -271,7 +289,11 @@ public class AccountController {
 		
 		if(connectAccountToUser) {
 			Account connectedAccount = this.accountService.save(account);
+			
+			LOGGER.info("Uspjesno uradjena izmjena naloga"); 
+
 			return new ResponseEntity<AccountDTO>(new AccountDTO(connectedAccount), HttpStatus.OK);
+			
 		} else {
 			return new ResponseEntity<AccountDTO>(HttpStatus.BAD_REQUEST);
 		}
@@ -289,6 +311,9 @@ public class AccountController {
 		
 		if(account != null) {
 			accountService.removeAccount(account); 
+			
+			LOGGER.info("Uspjesno odradjeno brisanje naloga"); 
+
 			return new ResponseEntity<Void>(HttpStatus.OK); 
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);

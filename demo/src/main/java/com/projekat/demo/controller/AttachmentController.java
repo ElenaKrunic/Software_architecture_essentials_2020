@@ -3,6 +3,8 @@ package com.projekat.demo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,8 @@ import com.projekat.demo.service.MessageService;
 @RequestMapping(value="api/attachments")
 public class AttachmentController {
 
+    private static final Logger LOGGER = LogManager.getLogger(AttachmentController.class);
+
 	@Autowired
 	private AttachmentServiceInterface attachmentService; 
 	
@@ -50,6 +54,8 @@ public class AttachmentController {
 		for(Attachment attachment : attachments) {
 			attachmentsDTO.add(new AttachmentDTO(attachment));
 		}
+		
+		LOGGER.info("Uspjesno vracena lista priloga"); 
 		return new ResponseEntity<List<AttachmentDTO>>(attachmentsDTO, HttpStatus.OK);
 	}
 	
@@ -67,6 +73,8 @@ public class AttachmentController {
 			return new ResponseEntity<AttachmentDTO>(HttpStatus.NOT_FOUND);
 		}
 		
+		LOGGER.info("Uspjesno vracen jedan prilog"); 
+
 		return new ResponseEntity<AttachmentDTO>(new AttachmentDTO(attachment), HttpStatus.OK);
 	}
 	
@@ -93,6 +101,8 @@ public class AttachmentController {
 		
 		attachment = attachmentService.save(attachment);
 		
+		LOGGER.info("Uspjesno sacuvan novi prilog"); 
+
 		return new ResponseEntity<AttachmentDTO>(new AttachmentDTO(attachment), HttpStatus.CREATED); 
 	}
 	
@@ -118,6 +128,8 @@ public class AttachmentController {
 	
 		attachment = this.attachmentService.save(attachment);
 		
+		LOGGER.info("Uspjesno odradjena izmjena priloga"); 
+
 		return new ResponseEntity<AttachmentDTO>(new AttachmentDTO(attachment), HttpStatus.OK);
 	}
 	
@@ -132,6 +144,7 @@ public class AttachmentController {
 		
 		if(attachment!=null) {
 			attachmentService.remove(attachment);
+			LOGGER.info("Uspjesno odradjeno brisanje priloga"); 
 			return new ResponseEntity<Void>(HttpStatus.OK); 
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);

@@ -3,6 +3,8 @@ package com.projekat.demo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,8 @@ import javassist.expr.NewArray;
 @RequestMapping("api/users")
 public class UserController {
 	
+    private static final Logger LOGGER = LogManager.getLogger(UserController.class);
+	
 	@Autowired
 	private UserService userService; 
 	
@@ -55,6 +59,7 @@ public class UserController {
 			dtoUsers.add(new UserDTO(user)); 
 		}
 		
+		LOGGER.info("Uspjesno vracena lista korisnika!"); 
 		return new ResponseEntity<List<UserDTO>>(dtoUsers, HttpStatus.OK);
 	}
 	
@@ -71,6 +76,8 @@ public class UserController {
 			return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND); 
 		}
 		
+		LOGGER.info("Uspjesno vracen korisnik!"); 
+
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK); 
 	}
 	
@@ -111,6 +118,9 @@ public class UserController {
 		user.setTags(new ArrayList<Tag>());
 		
 		user = userService.save(user); 
+		
+		LOGGER.info("Uspjesno sacuvan korisnik u bazu!"); 
+
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.CREATED);
 
 	}
@@ -132,6 +142,9 @@ public class UserController {
 		} else {
 			System.out.println("Ne postoji korisnik sa datim imenom i sifrom!"); 
 		}
+		
+		LOGGER.info("Uspjesna prijava!"); 
+
 		return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
 	}
 
@@ -150,6 +163,8 @@ public class UserController {
 		
 		userService.save(user); 
 		
+		LOGGER.info("Uspjesna registracija!"); 
+
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.CREATED); 
 	}	
 	
@@ -176,6 +191,9 @@ public class UserController {
 		}
 		
 		userService.save(user); 
+		
+		LOGGER.info("Uspjesno izmjenjen korisnik!"); 
+
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK); 
 		
 	} 
@@ -195,6 +213,8 @@ public class UserController {
 			return new ResponseEntity<Void>(HttpStatus.OK); 
 		}
 		
+		LOGGER.info("Uspjesno obrisan korisnik iz baze!"); 
+
 		return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 	}
 }

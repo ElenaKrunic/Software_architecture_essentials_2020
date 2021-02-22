@@ -3,6 +3,8 @@ package com.projekat.demo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,8 @@ import com.projekat.demo.service.RuleServiceIntefrace;
 @RestController
 @RequestMapping("api/rules")
 public class RuleController {
+	
+    private static final Logger LOGGER = LogManager.getLogger(RuleController.class);
 
 	@Autowired
 	private RuleServiceIntefrace ruleService; 
@@ -41,6 +45,8 @@ public class RuleController {
 			rulesDTO.add(new RuleDTO(rule));
 		}
 		
+		LOGGER.info("Uspjesno vracena lista pravila"); 
+
 		return new ResponseEntity<List<RuleDTO>>(rulesDTO, HttpStatus.OK);
 	}
 	
@@ -52,6 +58,8 @@ public class RuleController {
 			return new ResponseEntity<RuleDTO>(HttpStatus.NOT_FOUND); 
 		}
 		
+		LOGGER.info("Uspjesno vraceno jedno pravilo"); 
+
 		return new ResponseEntity<RuleDTO>(new RuleDTO(rule), HttpStatus.OK); 
 	}
 	
@@ -79,6 +87,8 @@ public class RuleController {
 		
 		rule = ruleService.save(rule);
 		
+		LOGGER.info("Uspjesno sacuvano pravilo u folder"); 
+
 		return new ResponseEntity<RuleDTO>(new RuleDTO(rule), HttpStatus.CREATED);
 	}
 	
@@ -112,6 +122,8 @@ public class RuleController {
 		
 		rule = ruleService.save(rule);
 		
+		LOGGER.info("Uspjesno odradjena izmjena pravila!"); 
+		
 		return new ResponseEntity<RuleDTO>(new RuleDTO(rule), HttpStatus.OK);
 	}
 		
@@ -121,6 +133,9 @@ public class RuleController {
 		
 		if(rule !=null) {
 			ruleService.remove(rule);
+			
+			LOGGER.info("Uspjesno obrisano pravilo!"); 
+	
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);

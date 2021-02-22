@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,8 @@ import com.projekat.demo.service.UserServiceInterface;
 @RequestMapping(value="api/contacts")
 public class ContactController {
 	
+    private static final Logger LOGGER = LogManager.getLogger(ContactController.class);
+
 	@Autowired
 	private ContactServiceInterface contactService;
 	
@@ -56,6 +60,9 @@ public class ContactController {
 		for(Contact contact : contacts) {
 			dtoContacts.add(new ContactDTO(contact));
 		}
+		
+		LOGGER.info("Uspjesno vracena lista kontakata"); 
+
 		return new ResponseEntity<List<ContactDTO>>(dtoContacts, HttpStatus.OK); 
 	}
 	
@@ -67,6 +74,9 @@ public class ContactController {
 	@GetMapping("/getContactsForUser")
 	public List<Contact> getContacts() { 
 		List<Contact> contacts = contactRepository.findAllByUserId(UserController.korisnikID); 
+		
+		LOGGER.info("Uspjesno vraceni kontakti za korisnika"); 
+
 		return contacts; 
 	}
 
@@ -83,6 +93,8 @@ public class ContactController {
 			return new ResponseEntity<ContactDTO>(HttpStatus.NOT_FOUND);
 		}
 		
+		LOGGER.info("Uspjesno vracen jedan kontakt"); 
+
 		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.OK);
 	} 
 	
@@ -113,15 +125,17 @@ public class ContactController {
 		contact.setEmail(contactDTO.getEmail());
 		contact.setNote(contactDTO.getNote());
 		//contact.setPhoto(photo);
-		if(contact.getPhoto() ==  null) {
-			contact.setPhoto(contactDTO.getPhoto());
-		} else {
-			contact.getPhoto().setPath(contactDTO.getPhoto().getPath());
-		}		
+		//if(contact.getPhoto() ==  null) {
+			//contact.setPhoto(contactDTO.getPhoto());
+		//} else {
+		//	contact.getPhoto().setPath(contactDTO.getPhoto().getPath());
+		//}		
 		user.addContact(contact); 
 		
 		contact = this.contactService.save(contact);
 		
+		LOGGER.info("Uspjesno sacuvan novi kontakt"); 
+
 		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.OK); 
 	}
 	
@@ -152,6 +166,9 @@ public class ContactController {
 			contact.getPhoto().setPath(contactDTO.getPhoto().getPath());
 		}		
 		contact = this.contactService.save(contact);
+		
+		LOGGER.info("Uspjesno odradjena izmjena kontakata"); 
+
 		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.OK); 
 		
 	} 
@@ -167,6 +184,9 @@ public class ContactController {
 
 		if(contact!=null) {
 			contactService.removeContact(contact); 
+			
+			LOGGER.info("Uspjesno obrisan kontakt"); 
+
 			return new ResponseEntity<Void>(HttpStatus.OK); 
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND); 
@@ -201,6 +221,9 @@ public class ContactController {
 		user.addContact(contact); 
 		
 		contact = this.contactService.save(contact);
+		
+		LOGGER.info("Uspjesno sacuvan kontakt za korisnika"); 
+
 		
 		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.OK); 
 	}
