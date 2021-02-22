@@ -5,6 +5,8 @@ var content;
 var subject;
 var send;
 
+var blabla;
+
 $(document).ready(function(){
 	
 	to = $("input[name=to]");
@@ -32,9 +34,6 @@ function createEmail(){
 		stringBCC = bcc.val();
 		stringTO = to.val();
 		
-		
-		
-
 		var file = document.querySelector('input[type="file"]').files[0];
 		if (file != null) {
 			let reader = new FileReader();
