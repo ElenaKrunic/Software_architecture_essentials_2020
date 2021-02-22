@@ -37,8 +37,8 @@ public class AccountService implements AccountServiceInterface {
 
 	@Override
 	public List<Account> findAll() {
-	LOGGER.info("Metoda u servisu za pronalazenje svih naloga");
-	return accountRepository.findAll();
+		LOGGER.info("Metoda u servisu za pronalazenje svih naloga");
+		return accountRepository.findAll();
 	}
 
 	@Override
