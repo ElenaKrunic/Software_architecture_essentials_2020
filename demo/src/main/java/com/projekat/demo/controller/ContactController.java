@@ -146,11 +146,13 @@ public class ContactController {
 		contact.setDisplayName(contactDTO.getDisplayName());
 		contact.setEmail(contactDTO.getEmail());
 		contact.setNote(contactDTO.getNote());
+		/*
 		if(contact.getPhoto() ==  null) {
 			contact.setPhoto(contactDTO.getPhoto());
 		} else {
 			contact.getPhoto().setPath(contactDTO.getPhoto().getPath());
-		}		
+		}
+		*/		
 		contact = this.contactService.save(contact);
 		return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.OK); 
 		

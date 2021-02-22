@@ -758,6 +758,7 @@ public class MessageController {
 				return new ResponseEntity<List<MMessageDTO>>(messagesDTO, HttpStatus.OK);
 			}
 		}
+		
 		return new ResponseEntity<List<MMessageDTO>>(messagesDTO, HttpStatus.OK);
 
 	}
