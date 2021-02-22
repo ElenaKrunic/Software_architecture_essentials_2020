@@ -1,6 +1,8 @@
 var URL = "http://localhost:8080/api/accounts";
 var accID;
 
+var testVarijabla; 
+
 $(document).ready(function() {
 	
 	var container = $("#container");
