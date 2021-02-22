@@ -63,9 +63,9 @@ public class UserController {
 	 * @param id korisnika kog zelim da izvucem iz baze 
 	 * @return korisnik 
 	 */
-	@GetMapping(value="/{id}")
-	public ResponseEntity<UserDTO> getUser(@PathVariable("id") Integer id) {
-		User user = userService.findOne(id); 
+	@GetMapping("/findUser")
+	public ResponseEntity<UserDTO> getUser() {
+		User user = userService.findOne(korisnikID); 
 		
 		if(user == null) {
 			return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND); 
@@ -159,9 +159,9 @@ public class UserController {
 	 * @param id
 	 * @return
 	 */
-	@PutMapping(value="/{id}", consumes="application/json")
-	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO, @PathVariable("id") Integer id) {
-		User user = userService.findOne(id); 
+	@PutMapping(value="/update", consumes="application/json")
+	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) {
+		User user = userService.findOne(korisnikID); 
 		
 		if(user == null) {
 			return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
@@ -172,7 +172,7 @@ public class UserController {
 		user.setUsername(userDTO.getUsername());
 		
 		if(userDTO.getPassword() != null) {
-			user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+			user.setPassword(userDTO.getPassword());
 		}
 		
 		userService.save(user); 
