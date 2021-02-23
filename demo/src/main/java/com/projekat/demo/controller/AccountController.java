@@ -188,11 +188,11 @@ public class AccountController {
 	 * @param accountDTO 
 	 * @return kreiran nalog u bazi 
 	 */
-	@PostMapping("/saveAccount/{userUsername}")
-	public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO accountDTO, @PathVariable("userUsername") String username) {
-			
-		User user = this.userService.findByUsername(username); 
-		Account userAccount = this.accountService.findByAccountIdAndUsername(user.getId(), username);
+	@PostMapping("/saveAccount")
+	public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO accountDTO) {
+		
+		User user = this.userService.findOne(UserController.korisnikID);
+		Account userAccount = this.accountService.findByAccountIdAndUsername(user.getId(), user.getUsername());
 		
 		if(user == null || userAccount != null) {
 			return new ResponseEntity<AccountDTO>(HttpStatus.BAD_REQUEST); 

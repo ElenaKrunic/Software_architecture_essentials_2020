@@ -31,7 +31,7 @@ $(document).ready(function() {
 
 	} else {
 		getFolder(folderId);
-		navigation.append("<a href='#' id='apply_rules'>Apply rules</a>");
+		navigation.append("<a href='#' id='apply_rules' class='btn btn-warning col-3'>Apply rules</a>");
 
 		createButton.click(function(){
 			createButton.attr("href", "createFolder.html?folderid=" + folderId);

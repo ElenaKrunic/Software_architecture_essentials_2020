@@ -309,7 +309,6 @@ public class MessageController {
 	 */
 	@PostMapping(value="/{id}/moveTo/{folderId}")
 	public ResponseEntity<MMessageDTO> moveMessage(@PathVariable("id")Integer id, @PathVariable("folderId") Integer folderId) {
-		System.out.println("pogodio");
 		MMessage message = messageServiceInt.findOne(id); 
 		
 		if(message == null) {
