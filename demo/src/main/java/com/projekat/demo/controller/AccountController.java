@@ -211,11 +211,6 @@ public class AccountController {
 		
 		List<Folder> defaultFolders = new ArrayList<Folder>(); 
 		
-		Folder inbox = new Folder(); 
-		inbox.setName("Inbox");
-		inbox.setAccount(account);
-		inbox.setParentFolder(null);
-		inbox.setSubFolders(null);
 		
 		Folder outbox = new Folder(); 
 		outbox.setName("Outbox");
@@ -238,7 +233,7 @@ public class AccountController {
 		defaultFolders.add(primary);
 		defaultFolders.add(outbox);
 		defaultFolders.add(drafts);
-		defaultFolders.add(inbox); 
+
 
 		account.setFolders(defaultFolders);
 		

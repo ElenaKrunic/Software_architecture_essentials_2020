@@ -273,7 +273,7 @@ public class MessageController {
 	
 	private void addMessageInSentFolder(MMessage message, Account account) {
 		for(Folder folder : account.getFolders()) {
-			if(folder.getName().equalsIgnoreCase("Sent")) {
+			if(folder.getName().equalsIgnoreCase("Outbox")) {
 				folder.addMessage(message);
 				break; 
 			}

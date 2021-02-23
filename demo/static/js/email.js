@@ -62,7 +62,7 @@ function getEmail(messageId){
 					container.append("<div><a href='data:" + attachment.mimeType + ";base64," + attachment.data + "' download='" + attachment.name + "'>" + attachment.name + "</a></div>");
 				}
 
-				container.append("<a href='premestanjePoruke.html?id=" + MESSAGE.id + "'>Move to folder</a>");
+				container.append("<a class='btn btn-dark' href='premestanjePoruke.html?id=" + MESSAGE.id + "'>Move to folder</a>");
 			}
 			
 		});

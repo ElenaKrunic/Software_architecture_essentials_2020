@@ -95,11 +95,12 @@ function getMessages(){
 			
 			for(message of messages){
 				
-				if(message.unread){
-					messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd><b> " + message.content + "</b></dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");
-				}else{
-					messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd>" + message.content + "</dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");	
-				}				
+					if(message.unread){
+						messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd><b> " + message.content + "</b></dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");
+					}else{
+						messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd>" + message.content + "</dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");	
+					}
+				
 			}
 		}
 	});
@@ -136,11 +137,12 @@ function getSortMessages(){
 			messagesList.empty();
 			for(message of messages){
 				
-				if(message.unread){
-					messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd><b> " + message.content + "</b></dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");
-				}else{
-					messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd>" + message.content + "</dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");	
-				}				
+					if(message.unread){
+						messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd><b> " + message.content + "</b></dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");
+					}else{
+						messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd>" + message.content + "</dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");	
+					}
+				
 			}
 		}
 	});
@@ -162,12 +164,12 @@ function getSearchedMessage(){
 			success: function(messages){
 				messagesList.empty();
 				for(message of messages){
-					
 					if(message.unread){
 						messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd><b> " + message.content + "</b></dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");
 					}else{
 						messagesList.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd>" + message.content + "</dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");	
-					}				
+					}
+					
 				}
 		}
 	});

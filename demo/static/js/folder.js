@@ -31,7 +31,7 @@ $(document).ready(function() {
 
 	} else {
 		getFolder(folderId);
-		navigation.append("<a href='#' id='apply_rules' class='btn btn-warning col-3'>Apply rules</a>");
+		navigation.append("<a href='#' id='apply_rules' >Apply rules</a>");
 
 		createButton.click(function(){
 			createButton.attr("href", "createFolder.html?folderid=" + folderId);
@@ -61,7 +61,7 @@ function getFolder(folderId) {
 			
 			for (folder of folders) {
 				if(folder.parent_folder == folderId){
-					subfolders.append("<a href='folder.html?id=" + folder.id + "' class='subfolder'>" + folder.name + "</a><br><br><br>"); 
+					subfolders.append("<a href='folder.html?id=" + folder.id + "' class='btn btn-dark'>" + folder.name + "</a><br><br><br>"); 
 				}
 			}
 		}
@@ -72,7 +72,11 @@ function getFolder(folderId) {
 		type: "GET",
 		success: function(mess) {
 			for (message of mess) {	
-				messages.append("<a href='email.html?id=" + message.id + "' class='message'>" + message.subject + "</a><br><br><br>"); 
+				if(message.unread){
+					messages.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd><b> " + message.content + "</b></dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");
+				}else{
+					messages.append("<a href='email.html?id=" + message.id + "'class='mess'>" + message.subject + "</a><br>" + message.from + "<dd>" + message.content + "</dd><button class='deleteButton' data-messageid = '"+ message.id + "'>Obrisi</button><br><br><br>");	
+				} 
 			}
 
 		}
@@ -85,12 +89,11 @@ function getRootFolders() {
 	$.ajax({
 		url: URL + "/" + accountIndex + "/folders",
 		type: "GET",
-		headers: {"Authorization": "Bearer " + localStorage.getItem("token")},
 		success: function(folders) {
 			
 			for (folder of folders) {
-				if(folder.parent_folder == null){
-					subfolders.append("<a href='folder.html?id=" + folder.id + "' class='subfolder'>" + folder.name + "</a><br><br><br>"); 
+				if(folder.parentFolder == null){
+					subfolders.append("<a href='folder.html?id=" + folder.id + "' class='btn btn-dark'>" + folder.name + "</a><br><br><br>"); 
 				}
 			}
 
@@ -103,7 +106,6 @@ function applyRules() {
 	$.ajax({
 		url: URL + "/" + accountIndex + "/folders/" + FOLDER.id + "/rules/apply",
 		type: "POST",
-		headers: {"Authorization": "Bearer " + localStorage.getItem("token")},
 		success: function(folders) {
 			alert("Success");
 			location.reload();
